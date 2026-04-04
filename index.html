@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Memory Journal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav>
+    <div class="logo">My Memory Journal</div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="new.html">New Entry</a></li>
+      <li><a href="saai.html">Chat with Saai</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li>
+        <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
+          <i class="fas fa-moon"></i>
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="hero" id="hero-banner" style="background-image: url('assets/images/welcome_background.png');">
+      <div class="hero-content">
+        <h1>Welcome to Your Mental Oasis</h1>
+        <p>A safe, private space to write your thoughts, save your memories, and reflect on your daily life. Stored completely local to your device.</p>
+        <div class="hero-buttons">
+          <a href="new.html" class="btn btn-primary"><i class="fas fa-pen"></i> Start Writing</a>
+          <a href="entries.html" class="btn btn-secondary"><i class="fas fa-book-open"></i> View Entries</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="quote-section" id="daily-quote">
+      <!-- Quote will be randomly inserted here by JS -->
+    </div>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

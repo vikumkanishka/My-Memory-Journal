@@ -129,18 +129,38 @@
   <div class="modal-overlay" id="export-pdf-modal">
     <div class="modal">
       <h3>Export to PDF</h3>
-      <p>Select a date range to generate a beautiful journal PDF.</p>
+      <p>Filter by date range, mood, or both to generate your journal PDF.</p>
       
       <div class="form-group" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
         <div style="flex: 1;">
           <label for="pdf-start-date">Start Date</label>
-          <input type="date" id="pdf-start-date" class="form-control" required>
+          <input type="date" id="pdf-start-date" class="form-control">
         </div>
         <div style="flex: 1;">
           <label for="pdf-end-date">End Date</label>
-          <input type="date" id="pdf-end-date" class="form-control" required>
+          <input type="date" id="pdf-end-date" class="form-control">
         </div>
       </div>
+
+      <div class="form-group" style="margin-bottom: 1rem;">
+        <label for="pdf-filter-mood">Mood (Optional)</label>
+        <select id="pdf-filter-mood" class="form-control">
+          <option value="all" selected>All Moods</option>
+          <option value="😊">😊 Happy</option>
+          <option value="😢">😢 Sad</option>
+          <option value="😌">😌 Calm</option>
+          <option value="😤">😤 Frustrated</option>
+          <option value="🤩">🤩 Excited</option>
+          <option value="😴">😴 Tired</option>
+          <option value="🤔">🤔 Thoughtful</option>
+          <option value="😰">😰 Anxious</option>
+          <option value="🥰">🥰 Loved</option>
+        </select>
+      </div>
+
+      <p style="font-size: 0.9rem; color: var(--secondary-color); margin-bottom: 0.25rem;">
+        Tip: choose both dates for range filtering, or leave dates empty and select a mood.
+      </p>
 
       <div class="modal-actions" style="position: relative;">
         <!-- Loading spinner placeholder -->

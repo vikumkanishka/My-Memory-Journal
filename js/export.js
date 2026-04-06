@@ -9,15 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   const startDateInput = document.getElementById('pdf-start-date');
   const endDateInput = document.getElementById('pdf-end-date');
+  const moodFilterInput = document.getElementById('pdf-filter-mood');
   const pdfContainer = document.getElementById('pdf-export-container');
-
-  // Set default dates
-  const today = new Date();
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(today.getDate() - 30);
-  
-  startDateInput.value = thirtyDaysAgo.toISOString().split('T')[0];
-  endDateInput.value = today.toISOString().split('T')[0];
 
   openBtn.addEventListener('click', () => {
     modal.classList.add('active');
@@ -30,27 +23,43 @@ document.addEventListener('DOMContentLoaded', () => {
   generateBtn.addEventListener('click', async () => {
     const start = startDateInput.value;
     const end = endDateInput.value;
-    
-    if (!start || !end) {
-      showToast('Please select both start and end dates.', true);
+    const selectedMood = moodFilterInput ? moodFilterInput.value : 'all';
+    const hasDateRange = Boolean(start && end);
+    const hasPartialDateRange = Boolean((start && !end) || (!start && end));
+    const hasMoodFilter = selectedMood !== 'all';
+
+    if (hasPartialDateRange) {
+      showToast('Please select both start and end dates for date-range filtering.', true);
       return;
     }
 
-    if (start > end) {
+    if (hasDateRange && start > end) {
       showToast('Start date must be before end date.', true);
+      return;
+    }
+
+    if (!hasDateRange && !hasMoodFilter) {
+      showToast('Choose a date range, a mood, or both before exporting.', true);
       return;
     }
 
     const allEntries = getEntries();
     // Sort ascending for chronological reading in PDF
-    let filtered = allEntries.filter(e => e.date >= start && e.date <= end);
+    let filtered = allEntries.filter((e) => {
+      const inRange = hasDateRange ? (e.date >= start && e.date <= end) : true;
+      const moodMatch = hasMoodFilter ? e.mood === selectedMood : true;
+      return inRange && moodMatch;
+    });
     filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     if (filtered.length === 0) {
-      showToast('No memories found for this time period 💭', true);
+      showToast('No memories found for the selected filter(s) 💭', true);
       modal.classList.remove('active');
       return;
     }
+
+    const filterTitle = getFilterTitle(start, end, selectedMood, hasDateRange, hasMoodFilter);
+    const fileSuffix = getFileSuffix(start, end, selectedMood, hasDateRange, hasMoodFilter);
 
     // Disable UI & Show loading
     generateBtn.disabled = true;
@@ -58,11 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loadingIndicator.classList.add('active');
 
     try {
-      buildPdfHtml(filtered, start, end);
+      buildPdfHtml(filtered, filterTitle);
       
       const opt = {
         margin:       10,
-        filename:     `journal_${start}_to_${end}.pdf`,
+        filename:     `journal_${fileSuffix}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { scale: 2, useCORS: true },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -95,25 +104,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function buildPdfHtml(entries, start, end) {
+  function getFilterTitle(start, end, mood, hasDateRange, hasMoodFilter) {
+    const parts = [];
+
+    if (hasDateRange) {
+      parts.push(`${formatDate(start)} to ${formatDate(end)}`);
+    }
+
+    if (hasMoodFilter) {
+      parts.push(`Mood: ${mood}`);
+    }
+
+    return parts.join(' | ');
+  }
+
+  function getFileSuffix(start, end, mood, hasDateRange, hasMoodFilter) {
+    const parts = [];
+
+    if (hasDateRange) {
+      parts.push(`${start}_to_${end}`);
+    }
+
+    if (hasMoodFilter) {
+      parts.push(`mood_${encodeURIComponent(mood)}`);
+    }
+
+    return parts.join('_') || 'filtered';
+  }
+
+  function formatDate(ds) {
+    try {
+      const d = new Date(ds);
+      // Adjust to avoid timezone shift making date wrong
+      d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
+      return d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    } catch (e) {
+      return ds;
+    }
+  }
+
+  function buildPdfHtml(entries, subtitleText) {
     let html = '';
-    
-    // Formatting date safely
-    const formatDate = (ds) => {
-        try { 
-            const d = new Date(ds);
-            // Adjust to avoiding timezone shift making date wrong
-            d.setMinutes(d.getMinutes() + d.getTimezoneOffset());
-            return d.toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
-        }
-        catch(e) { return ds; }
-    };
 
     // Cover Page
     html += `
       <div class="pdf-cover-page">
         <h1 class="pdf-cover-title">My Memory Journal</h1>
-        <div class="pdf-cover-subtitle">${formatDate(start)} <br>to<br> ${formatDate(end)}</div>
+        <div class="pdf-cover-subtitle">${subtitleText}</div>
       </div>
     `;
 

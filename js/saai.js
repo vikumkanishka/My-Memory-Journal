@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
   const STORAGE_KEY = 'saai_chat_history';
-  const API_KEY_KEY = 'gemini_api_key';
+  const FIXED_API_KEY = (window.SAAI_CONFIG && window.SAAI_CONFIG.GEMINI_API_KEY)
+    ? String(window.SAAI_CONFIG.GEMINI_API_KEY).trim()
+    : '';
 
   const chatMessages = document.getElementById('chat-messages');
   const chatInput = document.getElementById('chat-input');
@@ -12,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveApiBtn = document.getElementById('save-api');
   const cancelApiBtn = document.getElementById('cancel-api');
 
+  if (apiKeyBtn) {
+    apiKeyBtn.style.display = 'none';
+  }
+
   let chatHistory = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   
   // Automatically greet if fresh
@@ -22,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     scrollToBottom();
   }
 
-  function getApiKey() {
-    return localStorage.getItem(API_KEY_KEY);
+  function isLikelyGeminiKey(key) {
+    return /^AIza[\w-]{20,}$/.test(key);
   }
 
   apiKeyBtn.addEventListener('click', () => {
-    apiKeyInput.value = getApiKey() || '';
+    apiKeyInput.value = FIXED_API_KEY || '';
+    apiKeyInput.disabled = true;
+    saveApiBtn.disabled = true;
     apiModal.classList.add('active');
   });
 
@@ -36,13 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   saveApiBtn.addEventListener('click', () => {
-    const key = apiKeyInput.value.trim();
-    if (key) {
-      localStorage.setItem(API_KEY_KEY, key);
-      showToast('Gemini API Key saved securely!');
-    } else {
-      localStorage.removeItem(API_KEY_KEY);
-    }
+    showToast('API key is managed by app configuration.', false);
     apiModal.classList.remove('active');
   });
 
@@ -75,10 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const text = chatInput.value.trim();
     if (!text) return;
     
-    const apiKey = getApiKey();
+    const apiKey = FIXED_API_KEY;
     if (!apiKey) {
+      showToast('Saai is not configured yet. Please contact the app admin.', true);
+      return;
+    }
+
+    if (!isLikelyGeminiKey(apiKey)) {
+      showToast('Gemini API key looks invalid. Please update it.', true);
       apiModal.classList.add('active');
-      showToast('Please set your Gemini API key first.', true);
       return;
     }
 
@@ -99,9 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
 
     try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey
+        },
         body: JSON.stringify({
           systemInstruction: {
              parts: [{text: "You are Saai, a friendly, empathetic, and supportive AI companion located inside a 'Memory Journal' app. Your goal is to be a best friend, respond casually, ask empathetic questions, provide encouragement, and just listen to the user. Speak like a friend texting natively. Use emojis generously."}]
@@ -114,7 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
       
       loadingDiv.remove();
 
-      if (data.error) {
+      if (!response.ok || data.error) {
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
+          showToast('Gemini rejected the API key. Please check your key.', true);
+        }
         throw new Error(data.error.message);
       }
 
@@ -124,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (e) {
       loadingDiv.remove();
-      renderMessage('system', 'System Error: Connect to Gemini failed. Is the API key valid?');
+      renderMessage('system', 'System Error: Connection to Gemini failed. Check your API key and internet connection.');
       scrollToBottom();
     } finally {
       sendBtn.disabled = false;

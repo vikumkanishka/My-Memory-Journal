@@ -19,27 +19,51 @@
 #pdf-export-container {
   font-family: 'Poppins', sans-serif;
   color: #333;
-  width: 850px; /* Force an A4-ish width context that exactly matches the app's view container */
+  width: 794px;
+  min-width: 794px;
+  max-width: 794px;
+  --pdf-page-width-px: 794px;
+  --pdf-page-height-px: 1123px;
+  --pdf-page-padding-px: 40px;
+  --pdf-content-width-px: 714px;
   background: #fdfbf7; /* Soft creamy background */
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
-.pdf-page-break {
+#pdf-export-container .pdf-page {
+  width: var(--pdf-page-width-px);
+  min-height: var(--pdf-page-height-px);
+  height: var(--pdf-page-height-px);
+  box-sizing: border-box;
+  background: #fdfbf7;
+  overflow: hidden;
+  position: relative;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#pdf-export-container .pdf-page-content {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--pdf-page-padding-px);
+  overflow: hidden;
+}
+
+#pdf-export-container .pdf-page-break {
+  break-before: page;
   page-break-before: always;
 }
 
-.pdf-cover-page {
-  /* Fits ~A4 page vertically */
-  height: 1100px; 
+.pdf-cover-page .pdf-page-content {
   display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   background-color: #fdfbf7;
-  padding: 40px;
 }
 
 .pdf-cover-title {
@@ -55,18 +79,16 @@
   margin-top: 10px;
 }
 
-.pdf-entry {
-  padding: 40px;
-  background-color: #fdfbf7;
-}
-
 .journal-entry {
   page-break-inside: avoid;
   break-inside: avoid;
-  page-break-before: always;
-  margin-bottom: 40px;
-  padding: 20px;
-  border: 1px solid red;
+  margin: 0;
+  padding: 0;
+}
+
+.pdf-entry-page .pdf-scale-target {
+  width: 100%;
+  transform-origin: top left;
 }
 
 .pdf-entry-header {
@@ -87,13 +109,15 @@
   font-size: 1rem;
   display: flex;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .pdf-entry-content {
   font-size: 1.1rem;
   line-height: 1.8;
   color: #4a4a4a;
-  white-space: pre-wrap; /* preserving the raw text spacing */
+  white-space: normal;
+  width: var(--pdf-content-width-px);
 }
 
 .pdf-entry-image {
@@ -118,8 +142,7 @@
 /* Scrapbook specific rendering - Exact replica of the absolute positioning */
 .pdf-scrapbook-canvas {
   position: relative;
-  width: 100%;
-  min-height: 800px;
+  width: var(--pdf-content-width-px);
   overflow: hidden;
   background-size: cover;
   background-position: center;
@@ -153,4 +176,22 @@
   border: 10px solid #fcf9f2;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+@page {
+  size: auto;
+  margin: 0;
+}
+
+@media print {
+  #pdf-export-container,
+  #pdf-export-container * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  #pdf-export-container .pdf-page {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
 }

@@ -176,8 +176,8 @@
   </div>
 
   <!-- Hidden Container for PDF Rendering -->
-  <div style="display: none;">
-    <div id="pdf-export-container"></div>
+  <div style="position: fixed; left: -99999px; top: 0; opacity: 0; pointer-events: none;">
+    <div id="pdf-export-container" data-pdf-size="a4" data-pdf-width-mm="210" data-pdf-height-mm="297" data-pdf-padding-px="40"></div>
   </div>
 
   <script src="js/app.js"></script>

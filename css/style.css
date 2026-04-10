@@ -277,6 +277,61 @@ main {
   letter-spacing: 1px;
 }
 
+/* Rich entry cards */
+.card-badges,
+.card-status-row,
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.card-tags {
+  margin-top: 0.85rem;
+}
+
+.card-badge,
+.status-pill,
+.location-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.38rem 0.72rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.status-pill.private,
+.status-pill.draft {
+  background: rgba(216, 180, 226, 0.2);
+  color: #6b5476;
+}
+
+.status-pill.public {
+  background: rgba(151, 201, 160, 0.18);
+  color: #4f7355;
+}
+
+.location-pill {
+  background: rgba(244, 194, 194, 0.16);
+  color: #7a564d;
+}
+
+.card-badge.favorite {
+  background: rgba(255, 225, 140, 0.24);
+  color: #8f6937;
+}
+
+.card-tags .tag-chip {
+  background: rgba(244, 194, 194, 0.12);
+  color: #705b54;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+}
+
 /* Forms */
 .page-title {
   text-align: center;

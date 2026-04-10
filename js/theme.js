@@ -42,7 +42,7 @@ export const Theme = {
       const btn = document.querySelector('#theme-toggle');
       if (btn) {
         btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-        btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('aria-pressed', String(theme === 'dark'));
       }
     }
   }

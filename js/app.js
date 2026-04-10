@@ -52,6 +52,11 @@ function updateThemeIcon(theme) {
   const icon = document.querySelector('#theme-toggle i');
   if (icon) {
     icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const button = document.querySelector('#theme-toggle');
+    if (button) {
+      button.setAttribute('aria-pressed', String(theme === 'dark'));
+      button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
   }
 }
 
@@ -92,10 +97,117 @@ function setRandomQuote() {
   }
 }
 
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function sanitizeJournalHtml(html = '') {
+  const template = document.createElement('template');
+  template.innerHTML = String(html);
+
+  const allowedTags = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'SPAN', 'DIV']);
+  const allowedAttrs = {
+    A: new Set(['href', 'target', 'rel', 'title'])
+  };
+
+  const sanitizeNode = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return document.createTextNode(node.textContent || '');
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return document.createDocumentFragment();
+    }
+
+    const tagName = node.tagName.toUpperCase();
+    const children = Array.from(node.childNodes).map(sanitizeNode);
+
+    if (!allowedTags.has(tagName)) {
+      const fragment = document.createDocumentFragment();
+      children.forEach((child) => fragment.appendChild(child));
+      return fragment;
+    }
+
+    const element = document.createElement(tagName.toLowerCase());
+
+    if (tagName === 'A') {
+      const href = node.getAttribute('href') || '';
+      if (/^(https?:|mailto:|#)/i.test(href)) {
+        element.setAttribute('href', href);
+      }
+      element.setAttribute('target', '_blank');
+      element.setAttribute('rel', 'noreferrer noopener');
+    }
+
+    Array.from(node.attributes).forEach((attribute) => {
+      const allowed = allowedAttrs[tagName];
+      if (allowed && allowed.has(attribute.name)) {
+        element.setAttribute(attribute.name, attribute.value);
+      }
+    });
+
+    children.forEach((child) => element.appendChild(child));
+    return element;
+  };
+
+  const container = document.createElement('div');
+  Array.from(template.content.childNodes).forEach((node) => {
+    container.appendChild(sanitizeNode(node));
+  });
+
+  return container.innerHTML;
+}
+
+function renderJournalContent(content = '') {
+  const rawContent = String(content || '');
+  if (!rawContent.trim()) {
+    return '';
+  }
+
+  if (/<[a-z][\s\S]*>/i.test(rawContent)) {
+    return sanitizeJournalHtml(rawContent);
+  }
+
+  return `<p>${escapeHtml(rawContent).replace(/\n/g, '<br>')}</p>`;
+}
+
+function getEntryCoverImage(entry) {
+  if (Array.isArray(entry?.images) && entry.images.length > 0) {
+    const firstImage = entry.images[0];
+    if (typeof firstImage === 'string') {
+      return firstImage;
+    }
+
+    if (firstImage && typeof firstImage === 'object') {
+      return firstImage.src || firstImage.url || '';
+    }
+  }
+
+  return entry?.image || '';
+}
+
+function normalizeEntryTags(entry) {
+  if (Array.isArray(entry?.tags)) {
+    return entry.tags.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+
+  if (typeof entry?.tags === 'string') {
+    return entry.tags.split(',').map((tag) => tag.trim()).filter(Boolean);
+  }
+
+  return [];
+}
+
 // --- View Initializers ---
 
 function initNewEntryPage() {
   const form = document.getElementById('entry-form');
+  if (!form) return;
   const imageInput = document.getElementById('image');
   const imagePreview = document.getElementById('image-preview');
   const previewContainer = document.getElementById('preview-container');
@@ -307,8 +419,10 @@ function initEntriesPage() {
 
 function searchEntries(query, entries) {
   return entries.filter(e => 
-    e.title.toLowerCase().includes(query) || 
-    e.content.toLowerCase().includes(query)
+    String(e.title || '').toLowerCase().includes(query) || 
+    String(e.content || '').toLowerCase().includes(query) ||
+    normalizeEntryTags(e).join(' ').toLowerCase().includes(query) ||
+    String(e.location || '').toLowerCase().includes(query)
   );
 }
 
@@ -317,10 +431,10 @@ function filterEntries(mood, entries) {
 }
 
 function highlightText(text, query) {
-  if (!query) return text;
-  // Replace the exact matching string ignoring case
+  const safeText = escapeHtml(text || '');
+  if (!query) return safeText;
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  return text.replace(regex, '<mark>$1</mark>');
+  return safeText.replace(regex, '<mark>$1</mark>');
 }
 
 function displayEntries(entriesList, highlightQuery = '') {
@@ -342,17 +456,21 @@ function displayEntries(entriesList, highlightQuery = '') {
     const card = document.createElement('div');
     card.className = 'entry-card';
     
+    const coverImage = getEntryCoverImage(entry);
+    const tags = normalizeEntryTags(entry);
+    const statusPill = entry.isDraft ? 'Draft' : (entry.privacy === 'public' ? 'Public' : 'Private');
+
     let imgHtml = '';
-    if (entry.image) {
+    if (coverImage) {
       imgHtml = `
         <div class="card-img-wrapper">
-          <img src="${entry.image}" class="card-img" alt="Memory thumbnail">
+          <img src="${escapeHtml(coverImage)}" class="card-img" alt="Memory thumbnail">
         </div>
       `;
     }
     
     // Preview - Limit to first 100-150 characters
-    let plainTextContent = entry.content.replace(/<[^>]+>/g, '');
+    let plainTextContent = String(entry.content || '').replace(/<[^>]+>/g, '');
     let preview = plainTextContent.length > 150 ? plainTextContent.substring(0, 150) + '...' : plainTextContent;
     
     let highlightedTitle = highlightText(entry.title, highlightQuery);
@@ -371,12 +489,20 @@ function displayEntries(entriesList, highlightQuery = '') {
       <div class="card-content">
         <div class="card-header">
           <div>
-            <div class="card-date">${formattedDate}</div>
+            <div class="card-date">${escapeHtml(formattedDate)}</div>
             <h3 class="card-title">${highlightedTitle}</h3>
           </div>
-          <div class="mood">${entry.mood}</div>
+          <div class="card-badges">
+            ${entry.favorite ? '<span class="card-badge favorite"><i class="fas fa-star"></i></span>' : ''}
+            <div class="mood">${escapeHtml(entry.mood || '')}</div>
+          </div>
         </div>
         <div class="card-text">${highlightedPreview}</div>
+        ${tags.length ? `<div class="card-tags">${tags.slice(0, 3).map((tag) => `<span class="tag-chip">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+        <div class="card-status-row">
+          <span class="status-pill ${entry.isDraft ? 'draft' : entry.privacy === 'public' ? 'public' : 'private'}">${escapeHtml(statusPill)}</span>
+          ${entry.location ? `<span class="location-pill"><i class="fas fa-location-dot"></i> ${escapeHtml(entry.location)}</span>` : ''}
+        </div>
         <div class="card-footer">
           <div class="card-actions">
             <a href="view.html?id=${entry.id}" class="icon-btn" title="View"><i class="fas fa-eye"></i></a>
@@ -411,14 +537,44 @@ function initViewPage() {
       });
   } catch(e) {}
 
-  document.getElementById('view-title').textContent = entry.title;
-  document.getElementById('view-date').innerHTML = `<i class="far fa-calendar-alt"></i> ${formattedDate}`;
-  document.getElementById('view-mood').textContent = entry.mood;
+  const titleEl = document.getElementById('view-title');
+  const dateEl = document.getElementById('view-date');
+  const moodEl = document.getElementById('view-mood');
+  const privacyEl = document.getElementById('view-privacy');
+  const favoriteEl = document.getElementById('view-favorite');
+  const locationEl = document.getElementById('view-location');
+  const tagsEl = document.getElementById('view-tags');
+  const galleryEl = document.getElementById('view-gallery');
+  const contentEl = document.getElementById('view-content');
+
+  if (titleEl) titleEl.textContent = entry.title;
+  if (dateEl) dateEl.innerHTML = `<i class="far fa-calendar-alt"></i> ${escapeHtml(formattedDate)}`;
+  if (moodEl) moodEl.textContent = entry.mood || '';
+  if (privacyEl) privacyEl.textContent = entry.isDraft ? 'Draft' : (entry.privacy === 'public' ? 'Public memory' : 'Private memory');
+  if (favoriteEl) favoriteEl.innerHTML = entry.favorite ? '<i class="fas fa-star"></i> Highlighted memory' : '<i class="far fa-star"></i> Regular memory';
+  if (locationEl) locationEl.textContent = entry.location ? `Captured in ${entry.location}` : 'No location added';
+
+  const tags = normalizeEntryTags(entry);
+  if (tagsEl) {
+    tagsEl.innerHTML = tags.length ? tags.map((tag) => `<span class="tag-chip">${escapeHtml(tag)}</span>`).join('') : '<span class="tag-chip muted">No tags</span>';
+  }
+
+  const images = Array.isArray(entry.images) && entry.images.length > 0 ? entry.images : (entry.image ? [entry.image] : []);
+  if (galleryEl) {
+    galleryEl.innerHTML = images.length
+      ? images.map((image, index) => {
+        const src = typeof image === 'string' ? image : image?.src || image?.url || '';
+        const label = typeof image === 'string' ? `Photo ${index + 1}` : image?.name || `Photo ${index + 1}`;
+        return `<figure class="view-gallery-item"><img src="${escapeHtml(src)}" alt="Memory photo ${index + 1}"><figcaption>${escapeHtml(label)}</figcaption></figure>`;
+      }).join('')
+      : '';
+  }
 
   if (entry.isScrapbook) {
-     const viewContent = document.getElementById('view-content');
-     viewContent.innerHTML = '';
-     viewContent.style.padding = '0';
+     if (contentEl) {
+       contentEl.innerHTML = '';
+       contentEl.style.padding = '0';
+     }
      
      const canvasWrap = document.createElement('div');
      canvasWrap.className = 'scrapbook-canvas';
@@ -457,18 +613,14 @@ function initViewPage() {
         }
         canvasWrap.appendChild(node);
      });
-     viewContent.appendChild(canvasWrap);
-     
-     const imgEl = document.getElementById('view-image');
-     if (imgEl) imgEl.style.display = 'none';
+     if (contentEl) {
+       contentEl.appendChild(canvasWrap);
+     }
      
      document.getElementById('edit-btn').onclick = () => window.location.href = `new.html?id=${entry.id}`;
   } else {
-     document.getElementById('view-content').textContent = entry.content;
-     if (entry.image) {
-       const imgEl = document.getElementById('view-image');
-       imgEl.src = entry.image;
-       imgEl.style.display = 'block';
+     if (contentEl) {
+       contentEl.innerHTML = renderJournalContent(entry.content || '');
      }
      document.getElementById('edit-btn').onclick = () => window.location.href = `new.html?id=${entry.id}`;
   }
@@ -504,7 +656,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (path.endsWith('index.html') || path === '/' || path.endsWith('memory-journal/')) {
     setRandomQuote();
   } else if (path.endsWith('new.html')) {
-    initNewEntryPage();
+    if (typeof window.initJournalComposerPage === 'function' && document.getElementById('journal-entry-form')) {
+      window.initJournalComposerPage();
+    } else {
+      initNewEntryPage();
+    }
   } else if (path.endsWith('entries.html')) {
     initEntriesPage();
   } else if (path.endsWith('view.html')) {

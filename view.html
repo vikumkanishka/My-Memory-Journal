@@ -14,8 +14,7 @@
     <div class="logo">My Memory Journal</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="new.html">New Entry</a></li>
-      <li><a href="saai.html">Chat with Saai</a></li>
+      <li><a href="new.html">Create Entry</a></li>
       <li><a href="entries.html">My Entries</a></li>
       <li>
         <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
@@ -28,6 +27,11 @@
   <main>
     <div class="view-container">
       <div class="view-header">
+        <div class="view-badges-row">
+          <span class="view-badge" id="view-privacy"></span>
+          <span class="view-badge" id="view-favorite"></span>
+          <span class="view-badge" id="view-location"></span>
+        </div>
         <div class="view-meta">
           <span class="view-date" id="view-date"></span>
           <span class="mood" id="view-mood"></span>
@@ -35,9 +39,9 @@
         <h2 class="view-title" id="view-title"></h2>
       </div>
       
-      <img src="" alt="Entry Image" class="view-image" id="view-image" style="display: none;">
+      <div class="view-gallery" id="view-gallery"></div>
       
-      <div class="view-content" id="view-content"></div>
+      <div class="view-content rich-view" id="view-content"></div>
       
       <div class="action-bar">
         <button id="edit-btn" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit Entry</button>

@@ -3,309 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Entry - My Memory Journal</title>
+  <meta name="theme-color" content="#f5dfcf">
+  <title>Create Entry - My Memory Journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/editor.css"> <!-- For Scrapbook Mode -->
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Indie+Flower&display=swap" rel="stylesheet">
-  <style>
-    /* Mode Selection Screen */
-    .mode-selector {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 60vh;
-      text-align: center;
-    }
-    .mode-cards {
-      display: flex;
-      gap: 2rem;
-      margin-top: 3rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .mode-card {
-      background: var(--card-bg);
-      padding: 3rem 2rem;
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 320px;
-      border: 2px solid transparent;
-    }
-    .mode-card:hover {
-      transform: translateY(-10px);
-      border-color: var(--primary-color);
-    }
-    .mode-card i {
-      font-size: 3.5rem;
-      color: var(--primary-color);
-      margin-bottom: 1.5rem;
-    }
-    .mode-card h3 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: var(--text-color);
-    }
-    .mode-card p {
-      color: var(--secondary-color);
-      font-size: 0.95rem;
-    }
-  </style>
+  <link rel="stylesheet" href="css/create-entry.css">
 </head>
-<body>
-
-  <!-- Top Navigation -->
-  <nav id="top-nav">
+<body class="create-entry-page">
+  <nav class="journal-nav" aria-label="Primary">
     <div class="logo">My Memory Journal</div>
     <ul class="nav-links">
       <li><a href="index.html">Home</a></li>
-      <li><a href="new.html" class="active">New Entry</a></li>
-      <li><a href="saai.html">Chat with Saai</a></li>
+      <li><a href="new.html" class="active">Create Entry</a></li>
       <li><a href="entries.html">My Entries</a></li>
       <li>
-        <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
+        <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode" aria-label="Toggle color theme">
           <i class="fas fa-moon"></i>
-        </button>
-      </li>
-    </ul>
-    
-    <!-- Scrapbook specific nav tools (hidden initially) -->
-    <ul class="nav-links" id="scrapbook-nav" style="display: none;">
-      <li><button id="cancel-scrapbook" class="btn btn-secondary border-btn"><i class="fas fa-times"></i> Cancel</button></li>
-      <li>
-        <button id="save-scrapbook-btn" class="btn btn-primary">
-          <i class="fas fa-save"></i> Save Memory
         </button>
       </li>
     </ul>
   </nav>
 
-  <!-- 1. Selection Screen -->
-  <main id="selection-screen">
-    <div class="mode-selector">
-      <h2 class="page-title">How would you like to memorialize today?</h2>
-      <div class="mode-cards">
-        <div class="mode-card" id="btn-simple-mode">
-          <i class="fas fa-pen-nib"></i>
-          <h3>Simple Entry</h3>
-          <p>A classic, distraction-free writing experience. Perfect for quick thoughts and traditional journaling.</p>
-        </div>
-        <div class="mode-card" id="btn-scrapbook-mode">
-          <i class="fas fa-cut"></i>
-          <h3>Scrapbook</h3>
-          <p>A creative canvas. Add photos, stickers, text boxes, and arrange them freely into an artistic collage.</p>
+  <main class="composer-shell">
+    <section class="composer-intro" aria-label="Composer introduction">
+      <div>
+        <p class="eyebrow">Create Journal Entry</p>
+        <h1>Turn today into a page worth keeping.</h1>
+        <p class="intro-copy">Capture a feeling, add photos, mark what matters, and let the page save itself as you write.</p>
+      </div>
+
+      <div class="autosave-card" aria-live="polite">
+        <span class="autosave-dot" aria-hidden="true"></span>
+        <div>
+          <strong>Auto-save active</strong>
+          <p id="save-status">Saved just now</p>
         </div>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- 2. Simple Form Mode -->
-  <main id="simple-mode-screen" style="display: none;">
-    <h2 class="page-title">How are you feeling today?</h2>
-    
-    <div class="form-container">
-      <form id="entry-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="title">Title *</label>
-            <input type="text" id="title" class="form-control" placeholder="A snapshot of today..." required>
+    <form id="journal-entry-form" class="journal-card" novalidate>
+      <input type="hidden" id="journal-entry-id">
+
+      <div id="form-errors" class="form-errors" role="alert" aria-live="assertive"></div>
+
+      <section class="journal-grid">
+        <div class="editor-column">
+          <div class="field-row top-row">
+            <div class="field-group title-field">
+              <label for="journal-title">Title</label>
+              <input id="journal-title" class="form-control" type="text" placeholder="A snapshot of today..." autocomplete="off" maxlength="120" required>
+            </div>
+
+            <div class="field-group date-field">
+              <label for="journal-date">Date</label>
+              <input id="journal-date" class="form-control" type="date" required>
+            </div>
           </div>
-          
-          <div class="form-group" style="flex: 0.5;">
-            <label for="date">Date *</label>
-            <input type="date" id="date" class="form-control" required>
+
+          <div class="field-group mood-section">
+            <div class="field-label-row">
+              <label>Mood</label>
+              <span class="subtle-hint">Choose the feeling that fits best</span>
+            </div>
+            <div class="mood-picker" role="radiogroup" aria-label="Mood selection">
+              <button type="button" class="mood-chip is-active" data-mood="😊" aria-pressed="true">😊 Happy</button>
+              <button type="button" class="mood-chip" data-mood="😍" aria-pressed="false">😍 Loved</button>
+              <button type="button" class="mood-chip" data-mood="😌" aria-pressed="false">😌 Calm</button>
+              <button type="button" class="mood-chip" data-mood="😢" aria-pressed="false">😢 Tender</button>
+              <button type="button" class="mood-chip" data-mood="😠" aria-pressed="false">😠 Frustrated</button>
+              <button type="button" class="mood-chip" data-mood="🤩" aria-pressed="false">🤩 Excited</button>
+              <button type="button" class="mood-chip" data-mood="😰" aria-pressed="false">😰 Anxious</button>
+            </div>
           </div>
-          
-          <div class="form-group" style="flex: 0.5;">
-            <label for="mood">Mood</label>
-            <select id="mood" class="form-control">
-              <option value="😊" selected>😊 Happy</option>
-              <option value="😢">😢 Sad</option>
-              <option value="😌">😌 Calm</option>
-              <option value="😤">😤 Frustrated</option>
-              <option value="🤩">🤩 Excited</option>
-              <option value="😴">😴 Tired</option>
-              <option value="🤔">🤔 Thoughtful</option>
-              <option value="😰">😰 Anxious</option>
-              <option value="🥰">🥰 Loved</option>
-            </select>
-          </div>
+
+          <section class="composer-section">
+            <div class="field-label-row">
+              <label for="journal-editor">Journal Entry</label>
+              <span class="subtle-hint">Use the toolbar or keyboard shortcuts like Ctrl+B, Ctrl+I, and Ctrl+U</span>
+            </div>
+
+            <div class="rich-toolbar" role="toolbar" aria-label="Text formatting toolbar">
+              <button type="button" class="tool-action" data-command="bold" aria-label="Bold"><i class="fas fa-bold"></i></button>
+              <button type="button" class="tool-action" data-command="italic" aria-label="Italic"><i class="fas fa-italic"></i></button>
+              <button type="button" class="tool-action" data-command="underline" aria-label="Underline"><i class="fas fa-underline"></i></button>
+              <button type="button" class="tool-action" data-command="insertUnorderedList" aria-label="Bullet list"><i class="fas fa-list-ul"></i></button>
+              <button type="button" class="tool-action" data-command="insertOrderedList" aria-label="Numbered list"><i class="fas fa-list-ol"></i></button>
+              <button type="button" class="tool-action" data-command="formatBlockQuote" aria-label="Quote block"><i class="fas fa-quote-right"></i></button>
+              <button type="button" class="tool-action" data-command="removeFormat" aria-label="Clear formatting"><i class="fas fa-eraser"></i></button>
+            </div>
+
+            <div
+              id="journal-editor"
+              class="rich-editor"
+              contenteditable="true"
+              role="textbox"
+              aria-multiline="true"
+              aria-label="Journal content editor"
+              data-placeholder="What made today special?"
+            ></div>
+          </section>
+
+          <section class="composer-section attachments-section">
+            <div class="field-label-row">
+              <label for="journal-images">Photos</label>
+              <span class="subtle-hint">Attach up to 6 images. They are compressed before saving.</span>
+            </div>
+
+            <label class="upload-dropzone" for="journal-images">
+              <i class="fas fa-image"></i>
+              <span>Drag, drop, or choose photos</span>
+              <small>PNG, JPG, or WEBP</small>
+            </label>
+            <input id="journal-images" type="file" accept="image/*" multiple class="visually-hidden">
+
+            <div id="image-gallery" class="image-gallery" aria-live="polite"></div>
+          </section>
+
+          <section class="composer-section tags-section">
+            <div class="field-label-row">
+              <label for="tag-input">Tags</label>
+              <span class="subtle-hint">Press Enter or comma to add a tag</span>
+            </div>
+
+            <div class="tag-input-row">
+              <input id="tag-input" class="form-control" type="text" placeholder="Add a tag like gratitude, travel, family">
+              <button type="button" id="add-tag-btn" class="btn btn-secondary small-btn">Add</button>
+            </div>
+
+            <div class="quick-tags" aria-label="Suggested tags">
+              <button type="button" class="quick-tag" data-tag="gratitude">gratitude</button>
+              <button type="button" class="quick-tag" data-tag="family">family</button>
+              <button type="button" class="quick-tag" data-tag="work">work</button>
+              <button type="button" class="quick-tag" data-tag="travel">travel</button>
+              <button type="button" class="quick-tag" data-tag="healing">healing</button>
+            </div>
+
+            <div id="tag-list" class="tag-list" aria-live="polite"></div>
+          </section>
         </div>
 
-        <div class="form-group">
-          <label for="image">Add a photo memory (Optional)</label>
-          <div class="file-input-wrapper" style="display:block">
-            <button type="button" class="btn btn-secondary">
-              <i class="fas fa-camera"></i> Choose Image
+        <aside class="side-panel" aria-label="Entry settings">
+          <div class="side-card">
+            <div class="field-label-row">
+              <label for="entry-location">Location</label>
+              <span class="subtle-hint">Optional</span>
+            </div>
+            <input id="entry-location" class="form-control" type="text" placeholder="Where did this memory happen?">
+          </div>
+
+          <div class="side-card">
+            <div class="field-label-row">
+              <label>Privacy</label>
+              <span class="subtle-hint">Choose who can see it</span>
+            </div>
+            <button type="button" id="privacy-toggle" class="pill-toggle" aria-pressed="false" aria-label="Toggle privacy">
+              <span class="pill-toggle-knob"></span>
+              <span class="pill-toggle-text" id="privacy-label">Private</span>
             </button>
-            <input type="file" id="image" accept="image/*">
+            <p class="side-note">Private entries stay on this device only.</p>
           </div>
-          <div class="img-preview-container" id="preview-container" style="display: none;">
-            <img src="" alt="Preview" class="img-preview" id="image-preview" style="display: block;">
-            <button type="button" class="remove-img-btn" id="remove-img" title="Remove image" style="display: flex;">
-              <i class="fas fa-times"></i>
+
+          <div class="side-card">
+            <div class="field-label-row">
+              <label>Highlight</label>
+              <span class="subtle-hint">Mark especially meaningful memories</span>
+            </div>
+            <button type="button" id="favorite-toggle" class="favorite-toggle" aria-pressed="false">
+              <i class="far fa-star"></i>
+              <span>Favorite this memory</span>
             </button>
           </div>
-        </div>
 
-        <div class="form-group">
-          <label for="content">Dear Journal... *</label>
-          <textarea id="content" class="form-control" placeholder="Write your thoughts here..." required></textarea>
-          <div class="word-count" id="word-count">0 words</div>
-        </div>
-
-        <div style="text-align: right; margin-top: 2rem;">
-          <button type="button" id="cancel-simple" class="btn btn-secondary" style="margin-right: 1rem;">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="save-btn">
-            <i class="fas fa-save"></i> Save Entry
-          </button>
-        </div>
-      </form>
-    </div>
-  </main>
-
-  <!-- 3. Scrapbook Screen Mode -->
-  <main class="editor-main" id="scrapbook-screen" style="display: none;">
-    <!-- Left Toolbar -->
-    <aside class="toolbar-side">
-      <div class="tool-section">
-        <h3>Basic info</h3>
-        <div class="form-group mb-1">
-          <input type="text" id="scrapbook-title" class="form-control" placeholder="Journal title..." required>
-        </div>
-        <div class="form-group mb-1">
-          <input type="date" id="scrapbook-date" class="form-control" required>
-        </div>
-        <div class="form-group mb-1">
-          <select id="scrapbook-mood" class="form-control">
-            <option value="😊" selected>😊 Happy</option>
-            <option value="😢">😢 Sad</option>
-            <option value="😌">😌 Calm</option>
-            <option value="🤩">🤩 Excited</option>
-            <option value="🥰">🥰 Loved</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="tool-section">
-        <h3>Add Elements</h3>
-        <button class="tool-btn" id="add-text-btn"><i class="fas fa-font"></i> Add Text</button>
-        
-        <div class="file-input-wrapper" style="display:block; width:100%;">
-          <button type="button" class="tool-btn" style="width:100%;"><i class="fas fa-image"></i> Add Media</button>
-          <input type="file" id="add-media-input" accept="image/*,video/mp4" multiple style="width:100%;">
-        </div>
-
-        <div style="margin-top: 0.8rem">
-          <h4 style="font-size: 0.85rem; color: var(--secondary-color); margin-bottom: 0.5rem; text-transform: uppercase; font-weight: 600;">Custom Emojis</h4>
-          <div id="emoji-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0.8rem;">
-            <!-- Filled by JS -->
+          <div class="side-card">
+            <div class="field-label-row">
+              <label>Writing Ritual</label>
+              <span class="subtle-hint">Optional focus guide</span>
+            </div>
+            <div class="ritual-list">
+              <div><i class="fas fa-sun"></i> Start with one moment that stayed with you.</div>
+              <div><i class="fas fa-heart"></i> Add one detail you do not want to forget.</div>
+              <div><i class="fas fa-leaf"></i> Save when the page feels complete, not perfect.</div>
+            </div>
           </div>
-          <div style="display: flex; gap: 5px;">
-            <input type="text" id="custom-emoji-input" class="form-control" placeholder="Type or paste 🔥..." style="padding: 0.6rem;">
-            <button class="btn btn-secondary" id="add-custom-emoji" style="padding: 0.6rem 1rem;"><i class="fas fa-plus"></i></button>
+
+          <div class="side-card status-card">
+            <div class="field-label-row">
+              <label>Save State</label>
+            </div>
+            <div id="draft-status" class="status-line">Draft not saved yet</div>
+            <div class="status-meter" aria-hidden="true"><span id="status-meter-fill"></span></div>
           </div>
-        </div>
-      </div>
+        </aside>
+      </section>
 
-      <div class="tool-section">
-        <h3>Background</h3>
-        <select id="bg-selector" class="form-control mb-1">
-          <option value="plain">Plain Beige</option>
-          <option value="notebook">Notebook Paper</option>
-          <option value="grid">Dot Grid</option>
-          <option value="texture">Texture Paper</option>
-          <option value="pastel-pink">Pastel Pink</option>
-          <option value="pastel-blue">Pastel Blue</option>
-        </select>
-      </div>
-      <p style="font-size: 0.8rem; color: var(--secondary-color); text-align: center;">Press Delete/Backspace to remove selected element.</p>
-    </aside>
-
-    <!-- Workspace -->
-    <div class="workspace-wrapper">
-      <!-- Contextual Toolbar for selected item -->
-      <div class="context-menu" id="context-menu">
-        <span class="context-title" id="context-title">Selected</span>
-        <div class="context-tools" id="context-tools">
-          <!-- Populated by JS -->
+      <div class="action-bar">
+        <button type="button" id="cancel-entry" class="btn btn-secondary">Cancel / Back</button>
+        <div class="action-stack">
+          <button type="button" id="save-draft-btn" class="btn btn-secondary">Save as Draft</button>
+          <button type="submit" id="save-entry-btn" class="btn btn-primary">Save Entry</button>
         </div>
       </div>
-      
-      <div class="canvas-container">
-        <div class="scrapbook-canvas" id="canvas" data-bg="plain">
-          <!-- Elements added dynamically -->
-        </div>
-      </div>
-    </div>
+    </form>
   </main>
 
   <div id="toast"></div>
 
   <script src="js/app.js"></script>
-  <script src="js/editor.js"></script>
-  
-  <script>
-    // --- Mode Selection Logic ---
-    document.addEventListener('DOMContentLoaded', () => {
-      const selScreen = document.getElementById('selection-screen');
-      const simpleScreen = document.getElementById('simple-mode-screen');
-      const sbScreen = document.getElementById('scrapbook-screen');
-      
-      // Nav toggles
-      const defaultNav = document.querySelector('nav > .nav-links:first-of-type');
-      const sbNav = document.getElementById('scrapbook-nav');
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const editId = urlParams.get('id');
-
-      function openSimple() {
-        selScreen.style.display = 'none';
-        simpleScreen.style.display = 'block';
-      }
-      
-      function openScrapbook() {
-        selScreen.style.display = 'none';
-        sbScreen.style.display = 'flex';
-        defaultNav.style.display = 'none';
-        sbNav.style.display = 'flex';
-      }
-      
-      function resetView() {
-        selScreen.style.display = 'block';
-        simpleScreen.style.display = 'none';
-        sbScreen.style.display = 'none';
-        defaultNav.style.display = 'flex';
-        sbNav.style.display = 'none';
-      }
-
-      document.getElementById('btn-simple-mode').addEventListener('click', openSimple);
-      document.getElementById('btn-scrapbook-mode').addEventListener('click', openScrapbook);
-      
-      document.getElementById('cancel-simple').addEventListener('click', () => {
-        if (editId) window.location.href = 'entries.html';
-        else resetView();
-      });
-      document.getElementById('cancel-scrapbook').addEventListener('click', () => {
-        if (editId) window.location.href = 'entries.html';
-        else resetView();
-      });
-
-      // If Edit Mode, auto-open the associated editor mode
-      if (editId) {
-        const entry = getEntryById(editId); 
-        if (entry) {
-          if (entry.isScrapbook) {
-             openScrapbook();
-          } else {
-             openSimple();
-          }
-        }
-      }
-    });
-  </script>
+  <script src="js/create-entry.js"></script>
 </body>
 </html>

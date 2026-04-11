@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Memory Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth-styles.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">📔 Memory Journal</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="register.html" class="nav-link-active">Register</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="auth-container">
+    <div class="auth-box">
+      <!-- Header -->
+      <div class="auth-header">
+        <h1>Welcome Back</h1>
+        <p>Log in to access your treasured memories</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+        
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="loginUsername">Username *</label>
+          <input
+            type="text"
+            id="loginUsername"
+            name="username"
+            placeholder="Enter your username"
+            required
+          >
+          <span class="error-message" id="loginUsernameError"></span>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="loginPassword">Password *</label>
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Enter your password"
+              required
+            >
+            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword')">
+              <span class="toggle-icon">👁️</span>
+            </button>
+          </div>
+          <span class="error-message" id="loginPasswordError"></span>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-alert" id="loginErrorAlert" style="display: none;">
+          <span class="error-icon">⚠️</span>
+          <span id="loginErrorText"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="loginSubmitBtn">Log In</button>
+
+        <!-- Registration Link -->
+        <p class="auth-footer">
+          Don't have an account? 
+          <a href="register.html" class="auth-link">Create one here</a>
+        </p>
+
+        <!-- Demo Credentials (for testing) -->
+        <details class="demo-credentials">
+          <summary>Demo Credentials</summary>
+          <p><strong>Username:</strong> Demo@123</p>
+          <p><strong>Password:</strong> password123</p>
+          <small>Use these to test the login functionality</small>
+        </details>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="auth-footer-section">
+    <p>&copy; 2026 Memory Journal. All rights reserved.</p>
+  </footer>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Memory Journal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth-styles.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">📔 Memory Journal</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="login.html" class="nav-link-active">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="auth-container">
+    <div class="auth-box">
+      <!-- Header -->
+      <div class="auth-header">
+        <h1>Create Your Account</h1>
+        <p>Join us to start journaling your precious memories</p>
+      </div>
+
+      <!-- Registration Form -->
+      <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+        
+        <!-- Full Name Field -->
+        <div class="form-group">
+          <label for="fullName">Full Name *</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            placeholder="Enter your full name"
+            required
+          >
+          <span class="error-message" id="fullNameError"></span>
+        </div>
+
+        <!-- Username Field -->
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Choose a unique username"
+            onkeyup="validateUsername()"
+          >
+          <span class="error-message" id="usernameError"></span>
+          
+          <!-- Real-time Validation Messages -->
+          <div class="validation-requirements">
+            <div class="requirement" id="req-length">
+              <span class="icon">○</span>
+              <span class="text">6–20 characters (no spaces)</span>
+            </div>
+            <div class="requirement" id="req-uppercase">
+              <span class="icon">○</span>
+              <span class="text">At least one UPPERCASE letter</span>
+            </div>
+            <div class="requirement" id="req-number">
+              <span class="icon">○</span>
+              <span class="text">At least one number (0-9)</span>
+            </div>
+            <div class="requirement" id="req-special">
+              <span class="icon">○</span>
+              <span class="text">At least one special character (!@#$%^&*)</span>
+            </div>
+            <div class="requirement" id="req-name">
+              <span class="icon">○</span>
+              <span class="text">Contains part of your full name</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Email Field (Optional) -->
+        <div class="form-group">
+          <label for="email">Email <span class="optional">(Optional)</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="your.email@example.com"
+          >
+          <span class="error-message" id="emailError"></span>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password">Password *</label>
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter a strong password"
+              required
+            >
+            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password')">
+              <span class="toggle-icon">👁️</span>
+            </button>
+          </div>
+          <span class="error-message" id="passwordError"></span>
+          <div class="password-strength" id="passwordStrength"></div>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password *</label>
+          <div class="password-input-wrapper">
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Re-enter your password"
+              required
+              onkeyup="validatePasswordMatch()"
+            >
+            <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword')">
+              <span class="toggle-icon">👁️</span>
+            </button>
+          </div>
+          <span class="error-message" id="confirmPasswordError"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="submitBtn">Create Account</button>
+
+        <!-- Login Link -->
+        <p class="auth-footer">
+          Already have an account? 
+          <a href="login.html" class="auth-link">Log in here</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="auth-footer-section">
+    <p>&copy; 2026 Memory Journal. All rights reserved.</p>
+  </footer>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

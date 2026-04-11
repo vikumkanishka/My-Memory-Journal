@@ -1,0 +1,32 @@
+{
+  "name": "memory-journal-auth",
+  "version": "1.0.0",
+  "description": "Authentication system for Memory Journal with Node.js/Express backend",
+  "main": "BACKEND_OPTIONAL_express.js",
+  "scripts": {
+    "start": "node BACKEND_OPTIONAL_express.js",
+    "dev": "nodemon BACKEND_OPTIONAL_express.js",
+    "test": "jest"
+  },
+  "keywords": [
+    "authentication",
+    "journal",
+    "nodejs",
+    "express",
+    "bcryptjs",
+    "jwt"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "jest": "^29.5.0"
+  }
+}

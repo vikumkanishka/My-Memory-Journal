@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="forest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d9f0d7"/>
+      <stop offset="100%" stop-color="#f8fff4"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#forest)"/>
+  <g fill="#6b9f71" opacity="0.32">
+    <path d="M0 780 Q200 620 390 780 T780 780 T1170 780 T1600 780 V900 H0Z"/>
+    <path d="M0 830 Q260 700 520 830 T1050 830 T1600 830 V900 H0Z" fill="#5e8e64" opacity="0.4"/>
+  </g>
+  <g fill="#9fcb8f" opacity="0.4">
+    <circle cx="220" cy="260" r="52"/>
+    <circle cx="520" cy="190" r="36"/>
+    <circle cx="1200" cy="220" r="44"/>
+    <circle cx="1450" cy="260" r="34"/>
+  </g>
+</svg>

@@ -35,29 +35,27 @@ function deleteEntry(id) {
 
 // --- Theme Management ---
 function initTheme() {
-  const theme = localStorage.getItem(THEME_KEY) || 'light';
+  if (window.ThemeManager) {
+    window.ThemeManager.init();
+    return;
+  }
+
+  const theme = localStorage.getItem(THEME_KEY) || 'cloudy';
   document.documentElement.setAttribute('data-theme', theme);
-  updateThemeIcon(theme);
 }
 
 function toggleTheme() {
-  let theme = document.documentElement.getAttribute('data-theme');
-  theme = theme === 'dark' ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', theme);
-  localStorage.setItem(THEME_KEY, theme);
-  updateThemeIcon(theme);
-}
-
-function updateThemeIcon(theme) {
-  const icon = document.querySelector('#theme-toggle i');
-  if (icon) {
-    icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-    const button = document.querySelector('#theme-toggle');
-    if (button) {
-      button.setAttribute('aria-pressed', String(theme === 'dark'));
-      button.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
-    }
+  if (window.ThemeManager) {
+    window.ThemeManager.cycleTheme();
+    return;
   }
+
+  const current = document.documentElement.getAttribute('data-theme') || 'cloudy';
+  const themes = ['cloudy', 'nature', 'windy', 'disney'];
+  const nextIndex = (themes.indexOf(current) + 1) % themes.length;
+  const nextTheme = themes[nextIndex];
+  document.documentElement.setAttribute('data-theme', nextTheme);
+  localStorage.setItem(THEME_KEY, nextTheme);
 }
 
 // --- DOM Utilities ---
@@ -650,6 +648,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggleGrp = document.getElementById('theme-toggle');
   if (themeToggleGrp) {
     themeToggleGrp.addEventListener('click', toggleTheme);
+  }
+
+  const themeSelector = document.getElementById('theme-selector');
+  if (themeSelector && window.ThemeManager) {
+    window.ThemeManager.bindControls();
   }
   
   const path = window.location.pathname;

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="breeze" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d9f5ff"/>
+      <stop offset="100%" stop-color="#f8fbff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#breeze)"/>
+  <g fill="none" stroke="#5f90bd" stroke-width="6" stroke-linecap="round" opacity="0.25">
+    <path d="M90 220 C260 180, 420 250, 590 210"/>
+    <path d="M260 340 C470 290, 700 380, 920 330"/>
+    <path d="M60 480 C280 430, 530 520, 760 470"/>
+    <path d="M430 610 C640 560, 860 650, 1100 600"/>
+    <path d="M800 250 C980 210, 1180 290, 1420 240"/>
+  </g>
+</svg>

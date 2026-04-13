@@ -54,12 +54,22 @@
     }
   }
 
+  function updatePreviewState(theme) {
+    const swatches = document.querySelectorAll('.theme-swatch[data-theme]');
+    swatches.forEach((swatch) => {
+      const isActive = swatch.getAttribute('data-theme') === theme;
+      swatch.classList.toggle('active', isActive);
+      swatch.setAttribute('aria-checked', String(isActive));
+    });
+  }
+
   function applyTheme(theme) {
     const safeTheme = sanitizeTheme(theme);
     document.documentElement.setAttribute('data-theme', safeTheme);
     localStorage.setItem(STORAGE_KEY, safeTheme);
     updateSelectorState(safeTheme);
     updateButtonState(safeTheme);
+    updatePreviewState(safeTheme);
     return safeTheme;
   }
 
@@ -79,8 +89,27 @@
       selector.dataset.themeBound = 'true';
     }
 
+    const swatches = document.querySelectorAll('.theme-swatch[data-theme]');
+    swatches.forEach((swatch) => {
+      if (swatch.dataset.themeBound) return;
+
+      swatch.addEventListener('click', () => {
+        applyTheme(swatch.getAttribute('data-theme'));
+      });
+
+      swatch.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          applyTheme(swatch.getAttribute('data-theme'));
+        }
+      });
+
+      swatch.dataset.themeBound = 'true';
+    });
+
     updateButtonState(sanitizeTheme(document.documentElement.getAttribute('data-theme') || getStoredTheme()));
     updateSelectorState(sanitizeTheme(document.documentElement.getAttribute('data-theme') || getStoredTheme()));
+    updatePreviewState(sanitizeTheme(document.documentElement.getAttribute('data-theme') || getStoredTheme()));
   }
 
   function init() {

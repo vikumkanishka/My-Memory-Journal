@@ -5,9 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Memory Journal</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/design-system.css">
 </head>
 <body>
+
+  <div class="theme-decoration clouds" aria-hidden="true"></div>
+  <div class="theme-decoration leaves" aria-hidden="true"></div>
+  <div class="theme-decoration waves" aria-hidden="true"></div>
+  <div class="theme-decoration sparkles" aria-hidden="true"></div>
 
   <nav>
     <div class="logo">📔 Memory Journal</div>
@@ -15,7 +21,7 @@
       <li><a href="index.html" class="active">Home</a></li>
       <li><a href="new.html">Create Entry</a></li>
       <li><a href="entries.html">My Entries</a></li>
-      <li id="auth-container" style="display: flex; gap: 1rem; align-items: center;">
+      <li id="auth-container" class="auth-slot">
         <!-- Login/Register buttons or User Menu will go here -->
       </li>
       <li class="theme-controls">
@@ -34,6 +40,39 @@
   </nav>
 
   <main>
+    <section class="theme-studio" aria-label="Theme selection studio">
+      <div class="theme-selector-panel">
+        <div class="theme-selector-header">
+          <div>
+            <h2>Choose Your Memory Wall</h2>
+            <p>Select a visual mood. Your choice is saved automatically.</p>
+          </div>
+        </div>
+
+        <div class="theme-preview-grid" id="theme-preview-grid" role="radiogroup" aria-label="Wall theme previews">
+          <button class="theme-swatch" data-theme="cloudy" role="radio" aria-checked="false" aria-label="Cloudy theme preview">
+            <img src="assets/themes/cloudy/thumb.svg" alt="Cloudy preview thumbnail">
+            <span class="theme-swatch-title">Cloudy <i class="fas fa-cloud" aria-hidden="true"></i></span>
+          </button>
+
+          <button class="theme-swatch" data-theme="nature" role="radio" aria-checked="false" aria-label="Nature theme preview">
+            <img src="assets/themes/nature/thumb.svg" alt="Nature preview thumbnail">
+            <span class="theme-swatch-title">Nature <i class="fas fa-leaf" aria-hidden="true"></i></span>
+          </button>
+
+          <button class="theme-swatch" data-theme="windy" role="radio" aria-checked="false" aria-label="Windy theme preview">
+            <img src="assets/themes/windy/thumb.svg" alt="Windy preview thumbnail">
+            <span class="theme-swatch-title">Windy <i class="fas fa-wind" aria-hidden="true"></i></span>
+          </button>
+
+          <button class="theme-swatch" data-theme="disney" role="radio" aria-checked="false" aria-label="Disney style theme preview">
+            <img src="assets/themes/disney/thumb.svg" alt="Disney style preview thumbnail">
+            <span class="theme-swatch-title">Disney-style <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section class="hero" id="hero-banner" style="background-image: url('assets/images/welcome_background.png');">
       <div class="hero-content">
         <h1>Welcome to Your Mental Oasis</h1>
@@ -53,66 +92,8 @@
   </main>
 
   <script src="js/auth.js"></script>
+  <script src="js/layout.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    // Initialize authentication UI
-    function initializeAuthUI() {
-      const authContainer = document.getElementById('auth-container');
-      const currentUser = getCurrentUser();
-
-      if (currentUser) {
-        // User is logged in - show user menu
-        authContainer.innerHTML = `
-          <span style="color: var(--text-color); font-size: 0.95rem;">
-            Welcome, <strong>${currentUser.fullName}</strong>
-          </span>
-          <button onclick="logout()" style="
-            padding: 0.5rem 1rem;
-            background-color: var(--danger-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-          " onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-            Logout
-          </button>
-        `;
-      } else {
-        // User not logged in - show login/register buttons
-        authContainer.innerHTML = `
-          <a href="login.html" style="
-            padding: 0.5rem 1rem;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
-          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 15px rgba(244,194,194,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            Log In
-          </a>
-          <a href="register.html" style="
-            padding: 0.5rem 1rem;
-            background-color: var(--secondary-color);
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: inline-block;
-          " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 15px rgba(216,180,226,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-            Sign Up
-          </a>
-        `;
-      }
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', initializeAuthUI);
-  </script>
 </body>
 </html>

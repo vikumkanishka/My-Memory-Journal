@@ -78,3 +78,83 @@
             <!-- Mood Chart -->
             <div class="stat-card">
               <h3 class="stat-title">Mood Distribution (Last 30 Days)</h3>
+              <div class="chart-container">
+                <canvas id="moodChart" aria-label="Mood distribution chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="stat-card">
+              <h3 class="stat-title">Top Activities</h3>
+              <div class="chart-container">
+                <canvas id="activityChart" aria-label="Top activities chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="stat-card stat-card-large">
+              <h3 class="stat-title">Quick Stats</h3>
+              <div class="quick-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Total Entries</span>
+                  <span class="stat-value" id="totalEntries">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">This Week</span>
+                  <span class="stat-value" id="weekEntries">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Most Common Mood</span>
+                  <span class="stat-value" id="commonMood">-</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Current Streak</span>
+                  <span class="stat-value" id="streak">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Calendar Section -->
+      <section class="calendar-section" aria-labelledby="calendar-title">
+        <div class="section-container">
+          <h2 id="calendar-title" class="section-title">Calendar View</h2>
+          
+          <div class="calendar-controls">
+            <button id="prevMonthBtn" class="btn-icon-small" aria-label="Previous month">&lt;</button>
+            <h3 id="currentMonth" class="calendar-month"></h3>
+            <button id="nextMonthBtn" class="btn-icon-small" aria-label="Next month">&gt;</button>
+          </div>
+
+          <div class="calendar-header">
+            <div class="calendar-day-name">Sun</div>
+            <div class="calendar-day-name">Mon</div>
+            <div class="calendar-day-name">Tue</div>
+            <div class="calendar-day-name">Wed</div>
+            <div class="calendar-day-name">Thu</div>
+            <div class="calendar-day-name">Fri</div>
+            <div class="calendar-day-name">Sat</div>
+          </div>
+
+          <div class="calendar-grid" id="calendarGrid">
+            <!-- Days will be populated by JavaScript -->
+          </div>
+
+          <div class="calendar-legend">
+            <span class="legend-item"><span class="legend-dot has-entry"></span>Has entry</span>
+            <span class="legend-item"><span class="legend-dot no-entry"></span>No entry</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Entry History Section -->
+      <section class="history-section" aria-labelledby="history-title">
+        <div class="section-container">
+          <h2 id="history-title" class="section-title">Your Journal Entries</h2>
+          
+          <!-- Filter Controls -->
+          <div class="filter-controls">
+            <div class="filter-group">
+              <label for="filterMood" class="filter-label">Filter by Mood:</label>

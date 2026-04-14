@@ -218,3 +218,133 @@ class MoodJournal {
     }
 
     const entry = {
+      id: `entry_${now.getTime()}_${Math.random().toString(36).substr(2, 9)}`,
+      date: now.toISOString(),
+      mood: this.selectedMood,
+      activities: [...this.selectedActivities],
+      notes: notes
+    };
+
+    this.entries.unshift(entry);
+    this.saveData();
+
+    // Reset form
+    this.selectedMood = null;
+    this.selectedActivities = [];
+    document.getElementById('entryNotes').value = '';
+    document.getElementById('selectedMood').value = '';
+
+    this.renderMoodButtons();
+    this.renderActivityButtons();
+    this.renderEntries();
+    this.renderCalendar();
+    this.updateStatistics();
+    this.showMessage('Entry saved successfully! ðŸŽ‰', 'success');
+  }
+
+  renderEntries() {
+    const entriesList = document.getElementById('entriesList');
+    const noEntriesMsg = document.getElementById('noEntriesMessage');
+    if (!entriesList) return;
+
+    const filterMood = document.getElementById('filterMood').value;
+    const searchText = document.getElementById('searchInput').value.toLowerCase();
+
+    let filtered = this.entries.filter(entry => {
+      const moodMatch = !filterMood || entry.mood === filterMood;
+      const textMatch = !searchText ||
+        entry.notes.toLowerCase().includes(searchText) ||
+        this.getMoodLabel(entry.mood).toLowerCase().includes(searchText) ||
+        entry.activities.some(a => this.getActivityLabel(a).toLowerCase().includes(searchText));
+      return moodMatch && textMatch;
+    });
+
+    entriesList.innerHTML = '';
+
+    if (filtered.length === 0) {
+      noEntriesMsg.style.display = 'block';
+      return;
+    }
+
+    noEntriesMsg.style.display = 'none';
+
+    filtered.forEach(entry => {
+      const entryCard = this.createEntryCard(entry);
+      entriesList.appendChild(entryCard);
+    });
+
+    // Update filter dropdown
+    this.updateFilterDropdown();
+  }
+
+  createEntryCard(entry) {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+
+    const mood = this.moods.find(m => m.id === entry.mood);
+    const date = new Date(entry.date);
+    const dateStr = this.formatDateLong(date);
+
+    const activitiesHTML = entry.activities.map(actId => {
+      const activity = this.activities.find(a => a.id === actId);
+      return `<span class="activity-tag">${activity.emoji} ${activity.label}</span>`;
+    }).join('');
+
+    card.innerHTML = `
+      <div class="entry-header">
+        <div>
+          <div class="entry-mood">
+            <span class="entry-mood-emoji">${mood.emoji}</span>
+            <span>${mood.label}</span>
+          </div>
+          <div class="entry-date">${dateStr}</div>
+        </div>
+        <div class="entry-actions">
+          <button class="entry-action-btn" title="Edit entry" data-action="edit-entry" data-entry-id="${entry.id}">âœï¸</button>
+        </div>
+      </div>
+      ${activitiesHTML ? `<div class="entry-activities">${activitiesHTML}</div>` : ''}
+      ${entry.notes ? `<div class="entry-notes">${this.escapeHtml(entry.notes)}</div>` : ''}
+    `;
+
+    card.querySelector('[data-action="edit-entry"]').addEventListener('click', (e) => {
+      this.openEditModal(entry.id);
+    });
+
+    return card;
+  }
+
+  openEditModal(entryId) {
+    const entry = this.entries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    this.currentEditingEntryId = entryId;
+
+    // Populate edit form
+    const editMoodSelector = document.getElementById('editMoodSelector');
+    editMoodSelector.innerHTML = '';
+    this.moods.forEach(mood => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `mood-btn ${entry.mood === mood.id ? 'selected' : ''}`;
+      btn.innerHTML = `<span class="mood-emoji">${mood.emoji}</span><span>${mood.label}</span>`;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#editMoodSelector .mood-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+      });
+      editMoodSelector.appendChild(btn);
+    });
+
+    const editActivitySelector = document.getElementById('editActivitySelector');
+    editActivitySelector.innerHTML = '';
+    this.activities.forEach(activity => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `activity-btn ${entry.activities.includes(activity.id) ? 'selected' : ''}`;
+      btn.innerHTML = `<span class="activity-emoji">${activity.emoji}</span><span>${activity.label}</span>`;
+      btn.addEventListener('click', () => btn.classList.toggle('selected'));
+      editActivitySelector.appendChild(btn);
+    });
+
+    document.getElementById('editNotes').value = entry.notes;
+

@@ -778,3 +778,123 @@ class MoodJournal {
       const notes = `"${entry.notes.replace(/"/g, '""')}"`;
 
       csv += `${this.formatDateLong(date)},${mood},"${activities}",${notes}\n`;
+    });
+
+    this.downloadCSV(csv, 'mood-journal-entries.csv');
+    this.closeModal('settingsModal');
+  }
+
+  downloadJSON(data, filename) {
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    this.downloadFile(blob, filename);
+  }
+
+  downloadCSV(csv, filename) {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    this.downloadFile(blob, filename);
+  }
+
+  downloadFile(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  clearAllData() {
+    if (confirm('This will permanently delete ALL your entries, moods, and activities. Are you sure?')) {
+      if (confirm('Click OK again to confirm deletion.')) {
+        localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.MOODS_KEY);
+        localStorage.removeItem(this.ACTIVITIES_KEY);
+        this.entries = [];
+        this.moods = [...this.defaultMoods];
+        this.activities = [...this.defaultActivities];
+        this.saveData();
+        this.renderEntries();
+        this.renderMoodButtons();
+        this.renderActivityButtons();
+        this.renderCalendar();
+        this.updateStatistics();
+        this.closeModal('settingsModal');
+        this.showMessage('All data cleared', 'success');
+      }
+    }
+  }
+
+  /* ============================================
+     THEME MANAGEMENT
+     ============================================ */
+
+  setupTheme() {
+    const saved = localStorage.getItem(this.THEME_KEY);
+    const isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (isDark) {
+      document.body.classList.add('dark-theme');
+    }
+  }
+
+  toggleTheme() {
+    const isDark = document.body.classList.toggle('dark-theme');
+    localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
+    document.getElementById('themeToggleBtn').querySelector('.theme-icon').textContent = isDark ? 'â˜€ï¸' : 'ðŸŒ™';
+  }
+
+  /* ============================================
+     NOTIFICATIONS
+     ============================================ */
+
+  setupNotifications() {
+    const enabled = localStorage.getItem(this.NOTIFICATIONS_KEY) === 'true';
+    const checkbox = document.getElementById('enableNotifications');
+    if (checkbox) {
+      checkbox.checked = enabled;
+      document.getElementById('notificationTimeGroup').style.display = enabled ? 'flex' : 'none';
+    }
+
+    if ('Notification' in window && enabled) {
+      if (Notification.permission === 'granted') {
+        this.scheduleNotification();
+      }
+    }
+  }
+
+  toggleNotifications(enabled) {
+    localStorage.setItem(this.NOTIFICATIONS_KEY, enabled);
+
+    if (enabled && 'Notification' in window) {
+      if (Notification.permission === 'default') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            this.scheduleNotification();
+          }
+        });
+      } else if (Notification.permission === 'granted') {
+        this.scheduleNotification();
+      }
+    }
+  }
+
+  scheduleNotification() {
+    const timeInput = document.getElementById('notificationTime');
+    if (!timeInput) return;
+
+    const [hours, minutes] = timeInput.value.split(':');
+    const now = new Date();
+    const notifTime = new Date();
+    notifTime.setHours(parseInt(hours), parseInt(minutes), 0);
+
+    if (notifTime <= now) {
+      notifTime.setDate(notifTime.getDate() + 1);
+    }
+
+    const delay = notifTime.getTime() - now.getTime();
+
+    setTimeout(() => {
+      if (Notification.permission === 'granted') {
+        new Notification('Mood Journal Reminder', {

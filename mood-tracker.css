@@ -978,3 +978,238 @@ button {
 }
 
 .custom-item-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.custom-item-delete {
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--color-danger);
+  cursor: pointer;
+  font-size: 16px;
+  transition: opacity var(--transition-fast);
+  margin-left: var(--space-sm);
+}
+
+.custom-item-delete:hover {
+  opacity: 0.7;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modalAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .section-container {
+    padding: var(--space-lg);
+  }
+
+  .mood-selector,
+  .activity-selector {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+
+  .mood-emoji {
+    font-size: 28px;
+  }
+
+  .activity-emoji {
+    font-size: 20px;
+  }
+
+  .mood-btn,
+  .activity-btn {
+    padding: var(--space-sm);
+    font-size: var(--font-size-xs);
+  }
+
+  .entries-list {
+    grid-template-columns: 1fr;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+  }
+
+  .input-text {
+    min-width: auto;
+  }
+
+  .select-input {
+    min-width: auto;
+  }
+
+  .modal {
+    width: 95%;
+  }
+
+  .quick-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space-lg: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+  }
+
+  .app-header {
+    padding: var(--space-md);
+  }
+
+  .app-main {
+    padding: var(--space-md);
+  }
+
+  .section-container {
+    padding: var(--space-md);
+  }
+
+  .mood-selector,
+  .activity-selector {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: var(--space-sm);
+  }
+
+  .mood-emoji {
+    font-size: 24px;
+  }
+
+  .activity-emoji {
+    font-size: 18px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .calendar-day {
+    font-size: 12px;
+  }
+
+  .entry-card {
+    padding: var(--space-md);
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: var(--space-md);
+  }
+
+  .quick-stats {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
+
+/* ============================================
+   UTILS
+   ============================================ */
+
+.text-center {
+  text-align: center;
+}
+
+.mt-md {
+  margin-top: var(--space-md);
+}
+
+.mb-md {
+  margin-bottom: var(--space-md);
+}
+
+.mt-lg {
+  margin-top: var(--space-lg);
+}
+
+.mb-lg {
+  margin-bottom: var(--space-lg);
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.debug {
+  border: 1px solid red;
+}

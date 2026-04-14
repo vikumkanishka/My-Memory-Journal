@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Journal - Track Your Daily Mood</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.css">
+  <link rel="stylesheet" href="mood-tracker.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1 class="app-title">ðŸŽ­ Mood Journal</h1>
+        <div class="header-controls">
+          <button id="themeToggleBtn" class="icon-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+            <span class="theme-icon">ðŸŒ™</span>
+          </button>
+          <button id="settingsBtn" class="icon-btn" aria-label="Settings" title="Settings">
+            <span>âš™ï¸</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- Entry Form Section -->
+      <section class="entry-form-section" aria-labelledby="entry-form-title">
+        <div class="section-container">
+          <h2 id="entry-form-title" class="section-title">How are you feeling today?</h2>
+          
+          <!-- Mood Selection -->
+          <div class="form-group">
+            <label class="group-label">Select Your Mood</label>
+            <div class="mood-selector" id="moodSelector" role="group" aria-label="Mood selection">
+              <!-- Moods will be populated by JavaScript -->
+            </div>
+            <input type="hidden" id="selectedMood" name="mood">
+          </div>
+
+          <!-- Activity Selection -->
+          <div class="form-group">
+            <label class="group-label">What are you doing? (Select all that apply)</label>
+            <div class="activity-selector" id="activitySelector" role="group" aria-label="Activity selection">
+              <!-- Activities will be populated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label for="entryNotes" class="group-label">Add your thoughts (optional)</label>
+            <textarea
+              id="entryNotes"
+              class="notes-input"
+              placeholder="What's on your mind? Feel free to share..."
+              rows="5"
+              aria-describedby="notes-hint"
+            ></textarea>
+            <small id="notes-hint" class="hint-text">You can write anything here - keep it simple or detailed.</small>
+          </div>
+
+          <!-- Save Button -->
+          <button id="saveEntryBtn" class="btn btn-primary btn-lg" aria-label="Save mood entry">
+            <span class="btn-text">Save Entry</span>
+            <span class="btn-icon">âœ“</span>
+          </button>
+          <div id="saveMessage" class="save-message" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- Statistics Section -->
+      <section class="stats-section" aria-labelledby="stats-title">
+        <div class="section-container">
+          <h2 id="stats-title" class="section-title">Your Mood Statistics</h2>
+          
+          <div class="stats-grid">
+            <!-- Mood Chart -->
+            <div class="stat-card">
+              <h3 class="stat-title">Mood Distribution (Last 30 Days)</h3>

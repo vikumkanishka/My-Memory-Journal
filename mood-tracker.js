@@ -348,3 +348,153 @@ class MoodJournal {
 
     document.getElementById('editNotes').value = entry.notes;
 
+    this.openModal('editModal');
+  }
+
+  saveEdit() {
+    const entry = this.entries.find(e => e.id === this.currentEditingEntryId);
+    if (!entry) return;
+
+    const selectedMoodBtn = document.querySelector('#editMoodSelector .mood-btn.selected');
+    if (!selectedMoodBtn) {
+      this.showMessage('Please select a mood', 'error');
+      return;
+    }
+
+    const mood = this.moods.find(m => m.label === selectedMoodBtn.textContent.trim());
+    entry.mood = mood.id;
+
+    const selectedActivityBtns = document.querySelectorAll('#editActivitySelector .activity-btn.selected');
+    entry.activities = Array.from(selectedActivityBtns).map(btn => {
+      const activity = this.activities.find(a => a.label === btn.textContent.trim());
+      return activity.id;
+    });
+
+    entry.notes = document.getElementById('editNotes').value.trim();
+
+    this.saveData();
+    this.renderEntries();
+    this.renderCalendar();
+    this.updateStatistics();
+    this.closeModal('editModal');
+    this.showMessage('Entry updated successfully! âœ“', 'success');
+  }
+
+  deleteEntry() {
+    if (confirm('Are you sure you want to delete this entry?')) {
+      this.entries = this.entries.filter(e => e.id !== this.currentEditingEntryId);
+      this.saveData();
+      this.renderEntries();
+      this.renderCalendar();
+      this.updateStatistics();
+      this.closeModal('editModal');
+      this.showMessage('Entry deleted', 'success');
+    }
+  }
+
+  /* ============================================
+     CALENDAR
+     ============================================ */
+
+  renderCalendar() {
+    const year = this.currentMonth.getFullYear();
+    const month = this.currentMonth.getMonth();
+
+    // Update month display
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+    document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+
+    // Get first day of month and number of days
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+    const calendarGrid = document.getElementById('calendarGrid');
+    calendarGrid.innerHTML = '';
+
+    // Days from previous month
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const day = daysInPrevMonth - i;
+      const dayEl = this.createCalendarDay(day, true, null);
+      calendarGrid.appendChild(dayEl);
+    }
+
+    // Days of current month
+    const today = new Date();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(year, month, day);
+      const hasEntry = this.entries.some(e => this.formatDate(new Date(e.date)) === this.formatDate(date));
+      const isToday = date.toDateString() === today.toDateString();
+      const dayEl = this.createCalendarDay(day, false, { hasEntry, isToday, date });
+      calendarGrid.appendChild(dayEl);
+    }
+
+    // Days from next month
+    const remainingDays = 42 - (firstDay + daysInMonth);
+    for (let day = 1; day <= remainingDays; day++) {
+      const dayEl = this.createCalendarDay(day, true, null);
+      calendarGrid.appendChild(dayEl);
+    }
+  }
+
+  createCalendarDay(day, isOtherMonth, info) {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day';
+    dayEl.textContent = day;
+
+    if (isOtherMonth) {
+      dayEl.classList.add('other-month');
+    } else {
+      if (info.hasEntry) dayEl.classList.add('has-entry');
+      if (info.isToday) dayEl.classList.add('today');
+      dayEl.addEventListener('click', () => this.scrollToDateEntry(info.date));
+      dayEl.style.cursor = info.hasEntry ? 'pointer' : 'default';
+    }
+
+    return dayEl;
+  }
+
+  previousMonth() {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1);
+    this.renderCalendar();
+  }
+
+  nextMonth() {
+    this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1);
+    this.renderCalendar();
+  }
+
+  scrollToDateEntry(date) {
+    const dateStr = this.formatDate(date);
+    const entry = this.entries.find(e => this.formatDate(new Date(e.date)) === dateStr);
+    if (entry) {
+      // Clear filters first
+      document.getElementById('filterMood').value = '';
+      document.getElementById('searchInput').value = '';
+      this.renderEntries();
+
+      // Find and scroll to the card
+      setTimeout(() => {
+        const cards = document.querySelectorAll('.entry-card');
+        for (let card of cards) {
+          if (card.querySelector(`[data-entry-id="${entry.id}"]`)) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.style.animation = 'fadeIn 500ms';
+            break;
+          }
+        }
+      }, 100);
+    }
+  }
+
+  /* ============================================
+     STATISTICS & CHARTS
+     ============================================ */
+
+  updateStatistics() {
+    // Total entries
+    document.getElementById('totalEntries').textContent = this.entries.length;
+
+    // Entries this week
+    const weekAgo = new Date();

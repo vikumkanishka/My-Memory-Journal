@@ -158,3 +158,63 @@
           <div class="filter-controls">
             <div class="filter-group">
               <label for="filterMood" class="filter-label">Filter by Mood:</label>
+              <select id="filterMood" class="select-input">
+                <option value="">All Moods</option>
+                <!-- Options will be populated by JavaScript -->
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="searchInput" class="filter-label">Search:</label>
+              <input
+                type="text"
+                id="searchInput"
+                class="input-text"
+                placeholder="Search entries..."
+                aria-label="Search journal entries"
+              >
+            </div>
+
+            <button id="exportBtn" class="btn btn-secondary" aria-label="Export entries as JSON">
+              ðŸ“¥ Export
+            </button>
+          </div>
+
+          <!-- Entries List -->
+          <div class="entries-list" id="entriesList">
+            <!-- Entries will be populated by JavaScript -->
+          </div>
+
+          <div id="noEntriesMessage" class="no-entries-message">
+            <p>ðŸ“ No entries yet. Start by tracking your mood above!</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>&copy; 2026 Mood Journal. Track your daily mood and discover patterns. Made with ðŸ’™</p>
+    </footer>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal" aria-labelledby="settingsModalTitle" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="settingsModalTitle">Settings</h2>
+        <button class="modal-close" aria-label="Close settings" data-action="close-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <!-- Customize Moods -->
+        <div class="settings-section">
+          <h3>Customize Moods</h3>
+          <div id="customMoodsList" class="custom-items-list">
+            <!-- Moods will be populated by JavaScript -->
+          </div>
+          <button id="addMoodBtn" class="btn btn-secondary btn-sm">+ Add Mood</button>
+        </div>
+
+        <!-- Customize Activities -->
+        <div class="settings-section">

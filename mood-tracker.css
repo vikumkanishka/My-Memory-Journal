@@ -448,3 +448,203 @@ button {
 
 .header-controls {
   display: flex;
+  gap: var(--space-md);
+}
+
+/* ============================================
+   MAIN LAYOUT
+   ============================================ */
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.app-main {
+  flex: 1;
+  padding: var(--space-xl) var(--space-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-container {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-xl);
+}
+
+.section-title {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--space-lg);
+  color: var(--color-text);
+}
+
+/* ============================================
+   ENTRY FORM SECTION
+   ============================================ */
+
+.entry-form-section {
+  margin-bottom: var(--space-xl);
+}
+
+.entry-form-section .section-container {
+  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
+}
+
+.save-message {
+  margin-top: var(--space-md);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-weight: 600;
+  display: none;
+  animation: slideDown var(--transition-base) ease-out;
+}
+
+.save-message.success {
+  background-color: rgba(81, 207, 102, 0.1);
+  color: var(--color-success);
+  display: block;
+}
+
+.save-message.error {
+  background-color: rgba(255, 107, 107, 0.1);
+  color: var(--color-danger);
+  display: block;
+}
+
+/* ============================================
+   STATISTICS SECTION
+   ============================================ */
+
+.stats-section {
+  margin-bottom: var(--space-xl);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+.stat-card {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px var(--color-shadow-medium);
+}
+
+.stat-card-large {
+  grid-column: span auto;
+}
+
+@media (min-width: 768px) {
+  .stat-card-large {
+    grid-column: 1 / -1;
+  }
+}
+
+.stat-title {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-lg);
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+}
+
+.quick-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-lg);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+}
+
+.stat-value {
+  display: block;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* ============================================
+   CALENDAR SECTION
+   ============================================ */
+
+.calendar-section {
+  margin-bottom: var(--space-xl);
+}
+
+.calendar-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+
+.calendar-month {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  min-width: 200px;
+  text-align: center;
+  margin: 0;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--space-sm);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-weight: 600;

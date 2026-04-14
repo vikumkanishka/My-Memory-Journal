@@ -498,3 +498,153 @@ class MoodJournal {
 
     // Entries this week
     const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    const weekEntries = this.entries.filter(e => new Date(e.date) > weekAgo).length;
+    document.getElementById('weekEntries').textContent = weekEntries;
+
+    // Most common mood
+    const moodCounts = {};
+    this.entries.forEach(entry => {
+      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+    });
+    const commonMoodId = Object.keys(moodCounts).sort((a, b) => moodCounts[b] - moodCounts[a])[0];
+    const commonMood = this.moods.find(m => m.id === commonMoodId);
+    document.getElementById('commonMood').textContent = commonMood ? `${commonMood.emoji} ${commonMood.label}` : '-';
+
+    // Current streak
+    const streak = this.calculateStreak();
+    document.getElementById('streak').textContent = streak;
+
+    // Update charts
+    this.updateMoodChart();
+    this.updateActivityChart();
+  }
+
+  calculateStreak() {
+    let streak = 0;
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+
+    while (true) {
+      const dateStr = this.formatDate(currentDate);
+      const hasEntry = this.entries.some(e => this.formatDate(new Date(e.date)) === dateStr);
+
+      if (!hasEntry) break;
+
+      streak++;
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    return streak;
+  }
+
+  updateMoodChart() {
+    const canvas = document.getElementById('moodChart');
+    if (!canvas) return;
+
+    // Get last 30 days of entries
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const recentEntries = this.entries.filter(e => new Date(e.date) > thirtyDaysAgo);
+
+    const moodCounts = {};
+    this.moods.forEach(mood => moodCounts[mood.id] = 0);
+    recentEntries.forEach(entry => {
+      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+    });
+
+    const labels = this.moods.map(m => `${m.emoji} ${m.label}`);
+    const data = this.moods.map(m => moodCounts[m.id]);
+    const backgroundColor = this.moods.map(m => m.color);
+
+    this.createChart(canvas, 'moodChart', 'bar', {
+      labels: labels,
+      datasets: [{
+        label: 'Mood Count',
+        data: data,
+        backgroundColor: backgroundColor,
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    });
+  }
+
+  updateActivityChart() {
+    const canvas = document.getElementById('activityChart');
+    if (!canvas) return;
+
+    const activityCounts = {};
+    this.activities.forEach(act => activityCounts[act.id] = 0);
+    this.entries.forEach(entry => {
+      entry.activities.forEach(actId => {
+        activityCounts[actId] = (activityCounts[actId] || 0) + 1;
+      });
+    });
+
+    // Sort by count and take top 8
+    const sorted = Object.entries(activityCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8);
+
+    const labels = sorted.map(([id]) => {
+      const act = this.activities.find(a => a.id === id);
+      return `${act.emoji} ${act.label}`;
+    });
+    const data = sorted.map(([, count]) => count);
+    const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#F38181', '#AA96DA', '#FCBAD3', '#A8D8EA'];
+
+    this.createChart(canvas, 'activityChart', 'bar', {
+      labels: labels,
+      datasets: [{
+        label: 'Activity Count',
+        data: data,
+        backgroundColor: colors.slice(0, data.length),
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    }, true);
+  }
+
+  createChart(canvas, chartId, type, config, indexAxis = false) {
+    if (this.charts[chartId]) {
+      this.charts[chartId].destroy();
+    }
+
+    const ctx = canvas.getContext('2d');
+    const options = {
+      indexAxis: indexAxis ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    };
+
+    this.charts[chartId] = new Chart(ctx, {
+      type: type,
+      data: config,
+      options: options
+    });
+  }
+
+  /* ============================================
+     CUSTOMIZATION
+     ============================================ */
+
+  updateFilterDropdown() {
+    const filterMood = document.getElementById('filterMood');
+    filterMood.innerHTML = '<option value="">All Moods</option>';
+    this.moods.forEach(mood => {
+      const option = document.createElement('option');
+      option.value = mood.id;
+      option.textContent = `${mood.emoji} ${mood.label}`;

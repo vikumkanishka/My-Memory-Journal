@@ -218,3 +218,43 @@
 
         <!-- Customize Activities -->
         <div class="settings-section">
+          <h3>Customize Activities</h3>
+          <div id="customActivitiesList" class="custom-items-list">
+            <!-- Activities will be populated by JavaScript -->
+          </div>
+          <button id="addActivityBtn" class="btn btn-secondary btn-sm">+ Add Activity</button>
+        </div>
+
+        <!-- Data Management -->
+        <div class="settings-section">
+          <h3>Data Management</h3>
+          <button id="exportDataBtn" class="btn btn-secondary btn-block">ðŸ“¥ Export Data (JSON)</button>
+          <button id="exportCSVBtn" class="btn btn-secondary btn-block">ðŸ“Š Export Data (CSV)</button>
+          <button id="clearDataBtn" class="btn btn-danger btn-block">ðŸ—‘ï¸ Clear All Data</button>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-section">
+          <h3>Notifications</h3>
+          <label class="checkbox-label">
+            <input type="checkbox" id="enableNotifications" aria-label="Enable daily mood reminder notifications">
+            <span>Enable daily mood reminder</span>
+          </label>
+          <div id="notificationTimeGroup" class="input-group" style="display: none;">
+            <label for="notificationTime" class="input-label">Remind me at:</label>
+            <input type="time" id="notificationTime" class="input-text" value="09:00">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="closeSettingsBtn" class="btn btn-primary" data-action="close-modal">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div id="modalBackdrop" class="modal-backdrop" data-action="close-modal"></div>
+
+  <!-- Import/Edit Modal -->
+  <div id="editModal" class="modal" aria-labelledby="editModalTitle" aria-hidden="true">

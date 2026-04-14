@@ -648,3 +648,133 @@ class MoodJournal {
       const option = document.createElement('option');
       option.value = mood.id;
       option.textContent = `${mood.emoji} ${mood.label}`;
+      filterMood.appendChild(option);
+    });
+  }
+
+  addMoodPrompt() {
+    const emoji = prompt('Enter mood emoji (e.g., ðŸ˜):');
+    if (!emoji) return;
+
+    const label = prompt('Enter mood label (e.g., Loved):');
+    if (!label) return;
+
+    const id = label.toLowerCase().replace(/\s+/g, '_');
+    this.moods.push({ id, label, emoji, color: '#' + Math.floor(Math.random() * 16777215).toString(16) });
+    this.saveData();
+    this.renderCustomMoodsList();
+    this.renderMoodButtons();
+  }
+
+  addActivityPrompt() {
+    const emoji = prompt('Enter activity emoji (e.g., ðŸ§˜):');
+    if (!emoji) return;
+
+    const label = prompt('Enter activity label (e.g., Meditation):');
+    if (!label) return;
+
+    const id = label.toLowerCase().replace(/\s+/g, '_');
+    this.activities.push({ id, label, emoji });
+    this.saveData();
+    this.renderCustomActivitiesList();
+    this.renderActivityButtons();
+  }
+
+  renderCustomMoodsList() {
+    const list = document.getElementById('customMoodsList');
+    if (!list) return;
+
+    list.innerHTML = '';
+    this.moods.forEach(mood => {
+      const item = document.createElement('div');
+      item.className = 'custom-item';
+      item.innerHTML = `
+        <div class="custom-item-content">
+          <div class="custom-item-emoji">${mood.emoji}</div>
+          <div class="custom-item-label">${mood.label}</div>
+        </div>
+        <button class="custom-item-delete" data-mood-id="${mood.id}" title="Delete mood">âœ•</button>
+      `;
+      item.querySelector('.custom-item-delete').addEventListener('click', () => {
+        this.deleteMood(mood.id);
+      });
+      list.appendChild(item);
+    });
+  }
+
+  renderCustomActivitiesList() {
+    const list = document.getElementById('customActivitiesList');
+    if (!list) return;
+
+    list.innerHTML = '';
+    this.activities.forEach(activity => {
+      const item = document.createElement('div');
+      item.className = 'custom-item';
+      item.innerHTML = `
+        <div class="custom-item-content">
+          <div class="custom-item-emoji">${activity.emoji}</div>
+          <div class="custom-item-label">${activity.label}</div>
+        </div>
+        <button class="custom-item-delete" data-activity-id="${activity.id}" title="Delete activity">âœ•</button>
+      `;
+      item.querySelector('.custom-item-delete').addEventListener('click', () => {
+        this.deleteActivity(activity.id);
+      });
+      list.appendChild(item);
+    });
+  }
+
+  deleteMood(moodId) {
+    if (confirm('Delete this mood? Entries with this mood will remain.')) {
+      this.moods = this.moods.filter(m => m.id !== moodId);
+      this.saveData();
+      this.renderCustomMoodsList();
+      this.renderMoodButtons();
+    }
+  }
+
+  deleteActivity(activityId) {
+    if (confirm('Delete this activity? Entries with this activity will remain.')) {
+      this.activities = this.activities.filter(a => a.id !== activityId);
+      this.saveData();
+      this.renderCustomActivitiesList();
+      this.renderActivityButtons();
+    }
+  }
+
+  /* ============================================
+     EXPORT & IMPORT
+     ============================================ */
+
+  exportEntries() {
+    const filterMood = document.getElementById('filterMood').value;
+    let toExport = this.entries;
+
+    if (filterMood) {
+      toExport = this.entries.filter(e => e.mood === filterMood);
+    }
+
+    this.downloadJSON(toExport, 'mood-journal-entries.json');
+  }
+
+  exportDataJSON() {
+    const data = {
+      entries: this.entries,
+      moods: this.moods,
+      activities: this.activities,
+      exportDate: new Date().toISOString()
+    };
+    this.downloadJSON(data, 'mood-journal-backup.json');
+    this.closeModal('settingsModal');
+  }
+
+  exportDataCSV() {
+    let csv = 'Date,Mood,Activities,Notes\n';
+
+    this.entries.forEach(entry => {
+      const date = new Date(entry.date);
+      const mood = this.getMoodLabel(entry.mood);
+      const activities = entry.activities.map(a => this.getActivityLabel(a)).join('; ');
+      const notes = `"${entry.notes.replace(/"/g, '""')}"`;
+
+      csv += `${this.formatDateLong(date)},${mood},"${activities}",${notes}\n`;

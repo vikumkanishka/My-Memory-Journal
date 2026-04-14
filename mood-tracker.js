@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MOOD JOURNAL - Main Application Logic
  * Track moods, activities, and journal entries with charts and statistics
  */
@@ -17,23 +17,23 @@ class MoodJournal {
 
     // Default moods with emojis
     this.defaultMoods = [
-      { id: 'happy', label: 'Happy', emoji: 'ðŸ˜„', color: '#FFD700' },
-      { id: 'good', label: 'Good', emoji: 'ðŸ˜Š', color: '#87CEEB' },
-      { id: 'neutral', label: 'Neutral', emoji: 'ðŸ˜', color: '#D3D3D3' },
-      { id: 'sad', label: 'Sad', emoji: 'ðŸ˜¢', color: '#4169E1' },
-      { id: 'angry', label: 'Angry', emoji: 'ðŸ˜ ', color: '#DC143C' }
+      { id: 'happy', label: 'Happy', emoji: '😄', color: '#FFD700' },
+      { id: 'good', label: 'Good', emoji: '😊', color: '#87CEEB' },
+      { id: 'neutral', label: 'Neutral', emoji: '😐', color: '#D3D3D3' },
+      { id: 'sad', label: 'Sad', emoji: '😢', color: '#4169E1' },
+      { id: 'angry', label: 'Angry', emoji: '😠', color: '#DC143C' }
     ];
 
     // Default activities with emojis
     this.defaultActivities = [
-      { id: 'study', label: 'Study', emoji: 'ðŸ“š' },
-      { id: 'exercise', label: 'Exercise', emoji: 'ðŸ’ª' },
-      { id: 'work', label: 'Work', emoji: 'ðŸ’¼' },
-      { id: 'friends', label: 'Friends', emoji: 'ðŸ‘¥' },
-      { id: 'gaming', label: 'Gaming', emoji: 'ðŸŽ®' },
-      { id: 'reading', label: 'Reading', emoji: 'ðŸ“–' },
-      { id: 'cooking', label: 'Cooking', emoji: 'ðŸ³' },
-      { id: 'music', label: 'Music', emoji: 'ðŸŽµ' }
+      { id: 'study', label: 'Study', emoji: '📚' },
+      { id: 'exercise', label: 'Exercise', emoji: '💪' },
+      { id: 'work', label: 'Work', emoji: '💼' },
+      { id: 'friends', label: 'Friends', emoji: '👥' },
+      { id: 'gaming', label: 'Gaming', emoji: '🎮' },
+      { id: 'reading', label: 'Reading', emoji: '📖' },
+      { id: 'cooking', label: 'Cooking', emoji: '🍳' },
+      { id: 'music', label: 'Music', emoji: '🎵' }
     ];
 
     this.moods = [];
@@ -239,7 +239,7 @@ class MoodJournal {
     this.renderEntries();
     this.renderCalendar();
     this.updateStatistics();
-    this.showMessage('Entry saved successfully! ðŸŽ‰', 'success');
+    this.showMessage('Entry saved successfully! 🎉', 'success');
   }
 
   renderEntries() {
@@ -300,7 +300,7 @@ class MoodJournal {
           <div class="entry-date">${dateStr}</div>
         </div>
         <div class="entry-actions">
-          <button class="entry-action-btn" title="Edit entry" data-action="edit-entry" data-entry-id="${entry.id}">âœï¸</button>
+          <button class="entry-action-btn" title="Edit entry" data-action="edit-entry" data-entry-id="${entry.id}">✏️</button>
         </div>
       </div>
       ${activitiesHTML ? `<div class="entry-activities">${activitiesHTML}</div>` : ''}
@@ -377,7 +377,7 @@ class MoodJournal {
     this.renderCalendar();
     this.updateStatistics();
     this.closeModal('editModal');
-    this.showMessage('Entry updated successfully! âœ“', 'success');
+    this.showMessage('Entry updated successfully! ✓', 'success');
   }
 
   deleteEntry() {
@@ -653,7 +653,7 @@ class MoodJournal {
   }
 
   addMoodPrompt() {
-    const emoji = prompt('Enter mood emoji (e.g., ðŸ˜):');
+    const emoji = prompt('Enter mood emoji (e.g., 😍):');
     if (!emoji) return;
 
     const label = prompt('Enter mood label (e.g., Loved):');
@@ -667,7 +667,7 @@ class MoodJournal {
   }
 
   addActivityPrompt() {
-    const emoji = prompt('Enter activity emoji (e.g., ðŸ§˜):');
+    const emoji = prompt('Enter activity emoji (e.g., 🧘):');
     if (!emoji) return;
 
     const label = prompt('Enter activity label (e.g., Meditation):');
@@ -693,7 +693,7 @@ class MoodJournal {
           <div class="custom-item-emoji">${mood.emoji}</div>
           <div class="custom-item-label">${mood.label}</div>
         </div>
-        <button class="custom-item-delete" data-mood-id="${mood.id}" title="Delete mood">âœ•</button>
+        <button class="custom-item-delete" data-mood-id="${mood.id}" title="Delete mood">✕</button>
       `;
       item.querySelector('.custom-item-delete').addEventListener('click', () => {
         this.deleteMood(mood.id);
@@ -715,7 +715,7 @@ class MoodJournal {
           <div class="custom-item-emoji">${activity.emoji}</div>
           <div class="custom-item-label">${activity.label}</div>
         </div>
-        <button class="custom-item-delete" data-activity-id="${activity.id}" title="Delete activity">âœ•</button>
+        <button class="custom-item-delete" data-activity-id="${activity.id}" title="Delete activity">✕</button>
       `;
       item.querySelector('.custom-item-delete').addEventListener('click', () => {
         this.deleteActivity(activity.id);
@@ -842,7 +842,7 @@ class MoodJournal {
   toggleTheme() {
     const isDark = document.body.classList.toggle('dark-theme');
     localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
-    document.getElementById('themeToggleBtn').querySelector('.theme-icon').textContent = isDark ? 'â˜€ï¸' : 'ðŸŒ™';
+    document.getElementById('themeToggleBtn').querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
   }
 
   /* ============================================
@@ -898,3 +898,102 @@ class MoodJournal {
     setTimeout(() => {
       if (Notification.permission === 'granted') {
         new Notification('Mood Journal Reminder', {
+          body: 'How are you feeling today? Tell us your mood! 🎭',
+          icon: '🎭',
+          tag: 'mood-reminder',
+          requireInteraction: false
+        });
+        this.scheduleNotification();
+      }
+    }, delay);
+  }
+
+  /* ============================================
+     MODAL MANAGEMENT
+     ============================================ */
+
+  openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    const backdrop = document.getElementById('modalBackdrop');
+    if (modal) {
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    if (backdrop) {
+      backdrop.classList.add('active');
+    }
+
+    // Render custom items if settings modal
+    if (modalId === 'settingsModal') {
+      this.renderCustomMoodsList();
+      this.renderCustomActivitiesList();
+    }
+  }
+
+  closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    const backdrop = document.getElementById('modalBackdrop');
+    if (modal) {
+      modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    if (backdrop) {
+      backdrop.classList.remove('active');
+    }
+  }
+
+  /* ============================================
+     UTILITY METHODS
+     ============================================ */
+
+  formatDate(date) {
+    return date.toISOString().split('T')[0];
+  }
+
+  formatDateLong(date) {
+    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  getMoodLabel(moodId) {
+    const mood = this.moods.find(m => m.id === moodId);
+    return mood ? mood.label : 'Unknown';
+  }
+
+  getActivityLabel(activityId) {
+    const activity = this.activities.find(a => a.id === activityId);
+    return activity ? activity.label : 'Unknown';
+  }
+
+  showMessage(message, type = 'success') {
+    const messageEl = document.getElementById('saveMessage');
+    if (messageEl) {
+      messageEl.textContent = message;
+      messageEl.className = `save-message ${type}`;
+      setTimeout(() => {
+        messageEl.className = 'save-message';
+      }, 3000);
+    }
+  }
+
+  escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+}
+
+/* ============================================
+   INITIALIZATION
+   ============================================ */
+
+let app;
+
+document.addEventListener('DOMContentLoaded', () => {
+  app = new MoodJournal();
+});

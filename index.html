@@ -15,64 +15,50 @@
   <div class="theme-decoration waves" aria-hidden="true"></div>
   <div class="theme-decoration sparkles" aria-hidden="true"></div>
 
-  <nav>
-    <div class="logo">📔 Memory Journal</div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="new.html">Create Entry</a></li>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html" class="active" aria-current="page">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
       <li><a href="entries.html">My Entries</a></li>
-      <li id="auth-container" class="auth-slot">
-        <!-- Login/Register buttons or User Menu will go here -->
-      </li>
-      <li class="theme-controls">
-        <label for="theme-selector" class="sr-only">Choose wall theme</label>
-        <select id="theme-selector" class="theme-selector" aria-label="Choose wall theme">
-          <option value="cloudy">Cloudy</option>
-          <option value="nature">Nature</option>
-          <option value="windy">Windy</option>
-          <option value="disney">Disney-style</option>
-        </select>
-        <button id="theme-toggle" class="icon-btn" title="Switch to next wall theme" aria-label="Switch to next wall theme">
-          <i class="fas fa-cloud"></i>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
         </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall">Choose Memory Wall (Themes)</a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
       </li>
     </ul>
   </nav>
 
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
   <main>
-    <section class="theme-studio" aria-label="Theme selection studio">
-      <div class="theme-selector-panel">
-        <div class="theme-selector-header">
-          <div>
-            <h2>Choose Your Memory Wall</h2>
-            <p>Select a visual mood. Your choice is saved automatically.</p>
-          </div>
-        </div>
-
-        <div class="theme-preview-grid" id="theme-preview-grid" role="radiogroup" aria-label="Wall theme previews">
-          <button class="theme-swatch" data-theme="cloudy" role="radio" aria-checked="false" aria-label="Cloudy theme preview">
-            <img src="assets/themes/cloudy/thumb.svg" alt="Cloudy preview thumbnail">
-            <span class="theme-swatch-title">Cloudy <i class="fas fa-cloud" aria-hidden="true"></i></span>
-          </button>
-
-          <button class="theme-swatch" data-theme="nature" role="radio" aria-checked="false" aria-label="Nature theme preview">
-            <img src="assets/themes/nature/thumb.svg" alt="Nature preview thumbnail">
-            <span class="theme-swatch-title">Nature <i class="fas fa-leaf" aria-hidden="true"></i></span>
-          </button>
-
-          <button class="theme-swatch" data-theme="windy" role="radio" aria-checked="false" aria-label="Windy theme preview">
-            <img src="assets/themes/windy/thumb.svg" alt="Windy preview thumbnail">
-            <span class="theme-swatch-title">Windy <i class="fas fa-wind" aria-hidden="true"></i></span>
-          </button>
-
-          <button class="theme-swatch" data-theme="disney" role="radio" aria-checked="false" aria-label="Disney style theme preview">
-            <img src="assets/themes/disney/thumb.svg" alt="Disney style preview thumbnail">
-            <span class="theme-swatch-title">Disney-style <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i></span>
-          </button>
-        </div>
-      </div>
-    </section>
-
     <section class="hero" id="hero-banner" style="background-image: url('assets/images/welcome_background.png');">
       <div class="hero-content">
         <h1>Welcome to Your Mental Oasis</h1>
@@ -83,16 +69,13 @@
         </div>
       </div>
     </section>
-<div>
-  
-</div>
     <div class="quote-section" id="daily-quote">
       <!-- Quote will be randomly inserted here by JS -->
     </div>
   </main>
 
+  <script src="navbar.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/layout.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/app.js"></script>
 </body>

@@ -51,29 +51,46 @@
 </head>
 <body>
 
-  <nav>
-    <div class="logo">📔 Memory Journal</div>
-    <ul class="nav-links">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
       <li><a href="index.html">Home</a></li>
-      <li><a href="new.html">Create Entry</a></li>
-      <li><a href="entries.html" class="active">My Entries</a></li>
-      <li id="auth-container" class="auth-slot">
-        <!-- Login/Register buttons or User Menu will go here -->
-      </li>
-      <li class="theme-controls">
-        <label for="theme-selector" class="sr-only">Choose wall theme</label>
-        <select id="theme-selector" class="theme-selector" aria-label="Choose wall theme">
-          <option value="cloudy">Cloudy</option>
-          <option value="nature">Nature</option>
-          <option value="windy">Windy</option>
-          <option value="disney">Disney-style</option>
-        </select>
-        <button id="theme-toggle" class="icon-btn" title="Switch to next wall theme" aria-label="Switch to next wall theme">
-          <i class="fas fa-cloud"></i>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html" class="active" aria-current="page">My Entries</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
         </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall">Choose Memory Wall (Themes)</a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
       </li>
     </ul>
   </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
 
   <main>
     <h2 class="page-title">Your Memories</h2>
@@ -190,8 +207,8 @@
     <div id="pdf-export-container" data-pdf-size="a4" data-pdf-width-mm="210" data-pdf-height-mm="297" data-pdf-padding-px="40"></div>
   </div>
 
+  <script src="navbar.js"></script>
   <script src="js/auth.js"></script>
-  <script src="js/layout.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/app.js"></script>
   <script src="js/export.js"></script>

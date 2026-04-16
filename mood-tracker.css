@@ -456,10 +456,11 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .section-container {
-  background-color: var(--color-bg-secondary);
+  background-color: color-mix(in srgb, var(--card-bg) 92%, transparent);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   border: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
   margin-bottom: var(--space-xl);
 }
 
@@ -478,7 +479,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .entry-form-section .section-container {
-  background: linear-gradient(135deg, var(--color-bg-secondary) 0%, var(--color-bg) 100%);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--card-bg) 94%, transparent) 0%, color-mix(in srgb, var(--light-accent) 84%, #ffffff) 100%);
 }
 
 .save-message {
@@ -518,7 +519,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .stat-card {
-  background-color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--card-bg) 88%, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -650,7 +651,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .calendar-day.has-entry {
-  background-color: var(--color-secondary);
+  background-color: color-mix(in srgb, var(--color-secondary) 84%, #ffffff);
   color: white;
   border-color: var(--color-secondary);
 }
@@ -733,7 +734,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .entry-card {
-  background-color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--card-bg) 90%, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -801,7 +802,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  background-color: var(--color-bg-secondary);
+  background-color: color-mix(in srgb, var(--light-accent) 86%, #ffffff);
   color: var(--color-text);
   padding: var(--space-xs) var(--space-sm);
   border-radius: var(--radius-full);
@@ -828,7 +829,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
    ============================================ */
 
 .app-footer {
-  background-color: var(--color-bg-secondary);
+  background-color: transparent;
   border-top: 1px solid var(--color-border);
   padding: var(--space-xl) var(--space-lg);
   text-align: center;
@@ -847,9 +848,10 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: var(--z-modal);
-  background-color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--card-bg) 96%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: 0 20px 60px var(--color-shadow-medium);
+  border: 1px solid var(--color-border);
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
@@ -948,7 +950,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-md);
-  background-color: var(--color-bg-secondary);
+  background-color: color-mix(in srgb, var(--light-accent) 84%, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
 }

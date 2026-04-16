@@ -1,29 +1,29 @@
 /* ============================================
-   MOOD JOURNAL - STYLES
-   Responsive, modern UI inspired by Daylio
-   ============================================ */
+  MOOD JOURNAL - STYLES
+  Aligned with Memory Journal shared theme system
+  ============================================ */
 
 /* CSS Variables */
 :root {
-  /* Colors - Light Theme */
-  --color-primary: #ff6b6b;
-  --color-primary-dark: #ee5a52;
-  --color-primary-light: #ff9999;
-  --color-secondary: #4ecdc4;
-  --color-accent: #ffe66d;
-  --color-success: #51cf66;
-  --color-danger: #ff6b6b;
-  --color-warning: #ffd93d;
+  /* Shared site tokens */
+  --color-primary: var(--primary-color);
+  --color-primary-dark: color-mix(in srgb, var(--primary-color) 82%, #000000);
+  --color-primary-light: color-mix(in srgb, var(--primary-color) 22%, #ffffff);
+  --color-secondary: var(--secondary-color);
+  --color-accent: var(--accent-color);
+  --color-success: #3f9f68;
+  --color-danger: #cf5c6e;
+  --color-warning: #dba83a;
 
-  --color-bg: #ffffff;
-  --color-bg-secondary: #f8f9fa;
-  --color-bg-tertiary: #e9ecef;
-  --color-text: #2c3e50;
-  --color-text-secondary: #6c757d;
-  --color-text-light: #adb5bd;
-  --color-border: #dee2e6;
-  --color-shadow-light: rgba(0, 0, 0, 0.05);
-  --color-shadow-medium: rgba(0, 0, 0, 0.1);
+  --color-bg: color-mix(in srgb, var(--bg-color) 72%, #ffffff);
+  --color-bg-secondary: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  --color-bg-tertiary: color-mix(in srgb, var(--light-accent) 78%, #ffffff);
+  --color-text: var(--text-color);
+  --color-text-secondary: color-mix(in srgb, var(--text-color) 74%, #7a8694);
+  --color-text-light: color-mix(in srgb, var(--text-color) 45%, #a8b4c2);
+  --color-border: var(--border-color);
+  --color-shadow-light: rgba(20, 42, 58, 0.08);
+  --color-shadow-medium: rgba(20, 42, 58, 0.16);
 
   /* Mood Colors */
   --mood-happy: #FFD700;
@@ -41,14 +41,14 @@
   --space-2xl: 48px;
 
   /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: var(--card-radius, 20px);
+  --radius-xl: 24px;
   --radius-full: 9999px;
 
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family: var(--body-font, 'Nunito', sans-serif);
   --font-mono: 'Courier New', monospace;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
@@ -70,19 +70,6 @@
   --z-modal: 500;
 }
 
-/* Dark Theme */
-body.dark-theme {
-  --color-bg: #1a1a1a;
-  --color-bg-secondary: #2d2d2d;
-  --color-bg-tertiary: #3d3d3d;
-  --color-text: #e8e8e8;
-  --color-text-secondary: #b0b0b0;
-  --color-text-light: #808080;
-  --color-border: #404040;
-  --color-shadow-light: rgba(0, 0, 0, 0.2);
-  --color-shadow-medium: rgba(0, 0, 0, 0.3);
-}
-
 /* ============================================
    RESET & GLOBALS
    ============================================ */
@@ -98,14 +85,11 @@ html {
 }
 
 body {
-  font-family: var(--body-font, 'Quicksand', sans-serif);
+  font-family: var(--font-family);
   font-size: var(--font-size-md);
   line-height: 1.6;
-  background-color: var(--color-bg);
-  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.15));
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-color: transparent;
+  background-image: none;
   color: var(--color-text);
   min-height: 100vh;
   transition: background-color var(--transition-base), color var(--transition-base);
@@ -155,7 +139,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-md);
   font-weight: 600;
-  border-radius: var(--radius-md);
+  border-radius: var(--button-radius, var(--radius-full));
   transition: all var(--transition-fast);
   text-decoration: none;
   cursor: pointer;
@@ -165,23 +149,24 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 .btn-primary {
   background-color: var(--color-primary);
   color: white;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--color-primary) 24%, transparent);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
+  background-color: color-mix(in srgb, var(--color-primary) 82%, #ffffff);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 16px 28px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .btn-secondary {
-  background-color: var(--color-bg-secondary);
+  background-color: color-mix(in srgb, var(--card-bg) 82%, transparent);
   color: var(--color-text);
   border: 1px solid var(--color-border);
 }
 
 .btn-secondary:hover:not(:disabled) {
   background-color: var(--color-bg-tertiary);
-  border-color: var(--color-text-secondary);
+  border-color: var(--color-primary);
 }
 
 .btn-danger {
@@ -220,8 +205,9 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   width: 40px;
   height: 40px;
   padding: var(--space-sm);
-  background-color: transparent;
-  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--card-bg) 80%, transparent);
+  border-radius: var(--button-radius, var(--radius-full));
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,7 +218,8 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 }
 
 .icon-btn:hover {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-primary);
 }
 
 .btn-icon-small {
@@ -241,7 +228,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   padding: 0;
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--button-radius, var(--radius-full));
   font-size: var(--font-size-lg);
   display: flex;
   align-items: center;
@@ -252,7 +239,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
 
 .btn-icon-small:hover {
   background-color: var(--color-bg-tertiary);
-  border-color: var(--color-text-secondary);
+  border-color: var(--color-primary);
 }
 
 /* ============================================

@@ -832,17 +832,49 @@ class MoodJournal {
      ============================================ */
 
   setupTheme() {
-    const saved = localStorage.getItem(this.THEME_KEY);
-    const isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (isDark) {
-      document.body.classList.add('dark-theme');
+    const fallbackTheme = localStorage.getItem(this.THEME_KEY) || 'cloudy';
+    if (window.ThemeManager && typeof window.ThemeManager.init === 'function') {
+      const activeTheme = window.ThemeManager.init();
+      this.updateThemeButton(activeTheme);
+      return;
     }
+
+    document.documentElement.setAttribute('data-theme', fallbackTheme);
+    this.updateThemeButton(fallbackTheme);
   }
 
   toggleTheme() {
-    const isDark = document.body.classList.toggle('dark-theme');
-    localStorage.setItem(this.THEME_KEY, isDark ? 'dark' : 'light');
-    document.getElementById('themeToggleBtn').querySelector('.theme-icon').textContent = isDark ? '☀️' : '🌙';
+    let activeTheme = document.documentElement.getAttribute('data-theme') || 'cloudy';
+    if (window.ThemeManager && typeof window.ThemeManager.cycleTheme === 'function') {
+      activeTheme = window.ThemeManager.cycleTheme();
+    } else {
+      const themeOrder = ['cloudy', 'nature', 'windy', 'disney'];
+      const currentIndex = themeOrder.indexOf(activeTheme);
+      activeTheme = themeOrder[(currentIndex + 1 + themeOrder.length) % themeOrder.length];
+      document.documentElement.setAttribute('data-theme', activeTheme);
+      localStorage.setItem(this.THEME_KEY, activeTheme);
+    }
+
+    this.updateThemeButton(activeTheme);
+  }
+
+  updateThemeButton(theme) {
+    const themeIcons = {
+      cloudy: '☁️',
+      nature: '🌿',
+      windy: '🌬️',
+      disney: '✨'
+    };
+
+    const button = document.getElementById('themeToggleBtn');
+    const icon = button?.querySelector('.theme-icon');
+    if (button) {
+      button.setAttribute('aria-label', 'Switch memory wall theme');
+      button.setAttribute('title', `Current theme: ${theme}`);
+    }
+    if (icon) {
+      icon.textContent = themeIcons[theme] || '🎨';
+    }
   }
 
   /* ============================================

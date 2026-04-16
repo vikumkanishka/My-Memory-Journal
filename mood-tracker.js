@@ -12,7 +12,7 @@ class MoodJournal {
     this.STORAGE_KEY = 'mood_journal_entries';
     this.MOODS_KEY = 'mood_journal_moods';
     this.ACTIVITIES_KEY = 'mood_journal_activities';
-    this.THEME_KEY = 'mood_journal_theme';
+    this.THEME_KEY = 'memory_journal_theme';
     this.NOTIFICATIONS_KEY = 'mood_journal_notifications';
 
     // Default moods with emojis

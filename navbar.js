@@ -192,6 +192,54 @@
       });
     }
 
+    // Theme switcher in dropdown
+    const THEME_STORAGE_KEY = 'memory_journal_theme';
+    
+    function setupThemeSwitcher() {
+      const themeButtons = document.querySelectorAll('.theme-icon-btn');
+      
+      if (themeButtons.length === 0) {
+        console.warn('Theme buttons not found');
+        return;
+      }
+
+      function updateThemeButtonStates(activeTheme) {
+        themeButtons.forEach((btn) => {
+          const btnTheme = btn.getAttribute('data-theme');
+          const isActive = btnTheme === activeTheme;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-pressed', String(isActive));
+        });
+      }
+
+      // Initialize button states
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'cloudy';
+      updateThemeButtonStates(storedTheme);
+
+      // Attach click handlers
+      themeButtons.forEach((btn) => {
+        btn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const selectedTheme = this.getAttribute('data-theme');
+          
+          // Apply theme
+          if (window.ThemeManager && typeof window.ThemeManager.applyTheme === 'function') {
+            window.ThemeManager.applyTheme(selectedTheme);
+          } else {
+            localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
+            document.documentElement.setAttribute('data-theme', selectedTheme);
+          }
+
+          updateThemeButtonStates(selectedTheme);
+          closeProfileDropdown(false);
+        });
+      });
+    }
+
+    setupThemeSwitcher();
+
     document.addEventListener('click', function (event) {
       const clickedInsideNav = navRoot.contains(event.target);
 

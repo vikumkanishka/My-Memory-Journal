@@ -1232,6 +1232,44 @@ mark {
   color: var(--primary-color);
 }
 
+/* Theme switcher in dropdown */
+.site-nav .theme-switcher {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.6rem 0.5rem;
+}
+
+.site-nav .theme-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.4rem;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  flex: 1;
+}
+
+.site-nav .theme-icon-btn:hover {
+  background: color-mix(in srgb, var(--primary-color) 14%, transparent);
+  transform: scale(1.05);
+}
+
+.site-nav .theme-icon-btn.active {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 22%, transparent);
+}
+
+.site-nav .theme-icon-btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 1px;
+}
+
 .menu-toggle {
   display: none;
   width: 2.95rem;

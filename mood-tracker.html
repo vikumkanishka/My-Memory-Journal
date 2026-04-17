@@ -44,7 +44,14 @@
         </button>
         <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
           <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
-          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall">Choose Memory Wall (Themes)</a></li>
+          <li role="none">
+            <div class="theme-switcher" role="group" aria-label="Change memory wall theme">
+              <button class="theme-icon-btn" data-theme="cloudy" aria-label="Cloudy theme" title="Cloudy">☁️</button>
+              <button class="theme-icon-btn" data-theme="nature" aria-label="Nature theme" title="Nature">🌿</button>
+              <button class="theme-icon-btn" data-theme="windy" aria-label="Windy theme" title="Windy">💨</button>
+              <button class="theme-icon-btn" data-theme="disney" aria-label="Magical theme" title="Magical">✨</button>
+            </div>
+          </li>
           <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
         </ul>
       </li>

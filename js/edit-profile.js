@@ -1,11 +1,29 @@
 /*
  * Edit profile page behavior.
- * Saves user profile fields and confirms theme choices selected in the memory wall section.
+ * Saves user profile fields and handles theme selection with emoji buttons.
  */
 (function () {
   'use strict';
 
   const PROFILE_STORAGE_KEY = 'memoryJournal_currentUser';
+  const THEME_STORAGE_KEY = 'memory_journal_theme';
+
+  // Theme emojis for visual representation
+  const THEME_EMOJIS = {
+    cloudy: '☁️',
+    nature: '🌿',
+    windy: '💨',
+    disney: '✨'
+  };
+
+  const THEME_LABELS = {
+    cloudy: 'Cloudy',
+    nature: 'Nature',
+    windy: 'Windy',
+    disney: 'Magical'
+  };
+
+  const THEMES = ['cloudy', 'nature', 'windy', 'disney'];
 
   function getCurrentUserSafe() {
     if (typeof getCurrentUser === 'function') {
@@ -79,6 +97,46 @@
     });
   }
 
+  function initThemeSelector() {
+    const themeSelector = document.getElementById('profileThemeSelector');
+    if (!themeSelector) {
+      return;
+    }
+
+    // Get stored theme
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'cloudy';
+
+    // Populate theme buttons
+    THEMES.forEach((theme) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'mood-btn';
+      button.setAttribute('data-theme', theme);
+      button.setAttribute('role', 'radio');
+      button.setAttribute('aria-checked', String(theme === storedTheme));
+      button.setAttribute('aria-label', THEME_LABELS[theme]);
+      button.textContent = THEME_EMOJIS[theme];
+
+      if (theme === storedTheme) {
+        button.classList.add('active');
+      }
+
+      button.addEventListener('click', () => {
+        // Update all buttons
+        document.querySelectorAll('#profileThemeSelector .mood-btn').forEach((btn) => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-checked', 'false');
+        });
+
+        // Activate this button
+        button.classList.add('active');
+        button.setAttribute('aria-checked', 'true');
+      });
+
+      themeSelector.appendChild(button);
+    });
+  }
+
   function initThemeSaveAction() {
     const saveThemeButton = document.getElementById('save-theme-btn');
     if (!saveThemeButton) {
@@ -86,12 +144,23 @@
     }
 
     saveThemeButton.addEventListener('click', function () {
-      if (window.ThemeManager && typeof window.ThemeManager.getStoredTheme === 'function') {
-        const activeTheme = window.ThemeManager.getStoredTheme();
-        window.ThemeManager.applyTheme(activeTheme);
-      }
+      const activeButton = document.querySelector('#profileThemeSelector .mood-btn.active');
+      if (activeButton) {
+        const selectedTheme = activeButton.getAttribute('data-theme');
+        
+        // Apply theme using ThemeManager if available
+        if (window.ThemeManager && typeof window.ThemeManager.applyTheme === 'function') {
+          window.ThemeManager.applyTheme(selectedTheme);
+        } else {
+          // Fallback: save directly
+          localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
+          document.documentElement.setAttribute('data-theme', selectedTheme);
+        }
 
-      showToast('Memory wall theme saved for all pages.', false);
+        showToast('Theme saved successfully.', false);
+      } else {
+        showToast('Please select a theme first.', true);
+      }
     });
   }
 
@@ -102,6 +171,7 @@
     }
 
     initProfileForm();
+    initThemeSelector();
     initThemeSaveAction();
   }
 

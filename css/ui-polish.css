@@ -1,0 +1,246 @@
+:root {
+  --ui-surface-radius: 22px;
+  --ui-card-radius: 18px;
+  --ui-gap-xs: 0.5rem;
+  --ui-gap-sm: 0.75rem;
+  --ui-gap-md: 1rem;
+  --ui-gap-lg: 1.5rem;
+  --ui-gap-xl: 2rem;
+  --ui-border-soft: 1px solid color-mix(in srgb, var(--border-color) 72%, transparent);
+  --ui-shadow-soft: 0 14px 38px rgba(25, 42, 58, 0.11);
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+main {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.site-nav {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+  margin-top: 0.85rem;
+  border-radius: var(--ui-surface-radius);
+  border: var(--ui-border-soft);
+  box-shadow: var(--ui-shadow-soft);
+  backdrop-filter: blur(16px);
+}
+
+.site-nav .logo {
+  font-size: clamp(1.25rem, 0.95rem + 1.2vw, 1.7rem);
+  letter-spacing: -0.02em;
+}
+
+.site-nav .nav-links > li > a,
+.site-nav .profile-trigger {
+  min-height: 2.5rem;
+  font-size: 0.95rem;
+}
+
+.hero,
+.quote-section,
+.toolbar,
+.form-container,
+.view-container,
+.auth-box,
+.section-container,
+.entry-card,
+.profile-panel,
+.journal-card {
+  border-radius: var(--ui-surface-radius);
+  border: var(--ui-border-soft);
+  box-shadow: var(--ui-shadow-soft);
+}
+
+.page-title,
+.section-title,
+.view-title,
+.auth-header h1 {
+  letter-spacing: -0.02em;
+}
+
+.btn,
+.btn-submit {
+  min-height: 2.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.form-control,
+.input-text,
+.select-input,
+.notes-input,
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+textarea {
+  border-radius: 14px;
+}
+
+.form-control:focus,
+.input-text:focus,
+.select-input:focus,
+.notes-input:focus,
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.toolbar {
+  gap: var(--ui-gap-md);
+}
+
+.search-bar {
+  min-height: 2.9rem;
+}
+
+.entries-grid {
+  gap: clamp(1rem, 2vw, 1.6rem);
+}
+
+.card-content {
+  padding: 1.3rem;
+}
+
+.auth-container {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.auth-footer-section,
+.app-footer,
+footer {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.profile-page {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ui-gap-lg);
+}
+
+.profile-panel h1,
+.profile-panel h2 {
+  margin-bottom: var(--ui-gap-xs);
+}
+
+.profile-panel p {
+  margin-bottom: var(--ui-gap-md);
+}
+
+.mood-intro {
+  align-items: center;
+}
+
+.header-controls {
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .site-nav,
+  main,
+  .auth-container,
+  .auth-footer-section,
+  .app-footer,
+  footer {
+    width: min(100%, calc(100% - 1.25rem));
+  }
+
+  .profile-page {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbar {
+    align-items: stretch;
+  }
+
+  .filters {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filters > * {
+    flex: 1 1 180px;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-nav {
+    margin-top: 0.5rem;
+  }
+
+  main {
+    width: min(100%, calc(100% - 1rem));
+  }
+
+  .mood-intro {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-controls {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .hero {
+    padding: 3.5rem 1.2rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 7vw, 2.7rem);
+  }
+
+  .hero p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .quote-section {
+    padding: 1.4rem;
+  }
+
+  .toolbar,
+  .section-container,
+  .auth-box,
+  .form-container,
+  .view-container,
+  .journal-card,
+  .profile-panel {
+    padding: 1rem;
+  }
+
+  .view-title {
+    font-size: clamp(1.55rem, 6vw, 2.1rem);
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 520px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .view-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+  }
+}

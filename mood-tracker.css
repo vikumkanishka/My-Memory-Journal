@@ -84,12 +84,15 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+.mood-tracker-page {
   font-family: var(--font-family);
   font-size: var(--font-size-md);
   line-height: 1.6;
-  background-color: transparent;
-  background-image: none;
+  background-color: var(--bg-color);
+  background-image: var(--wallpaper-overlay), var(--wallpaper-image);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
   color: var(--color-text);
   min-height: 100vh;
   transition: background-color var(--transition-base), color var(--transition-base);
@@ -423,16 +426,16 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
    MAIN LAYOUT
    ============================================ */
 
-.app-container {
+.mood-tracker-page .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: transparent;
 }
 
-.app-main {
+.mood-tracker-page .app-main {
   flex: 1;
-  padding: var(--space-xl) var(--space-lg);
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
@@ -455,12 +458,12 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   color: var(--color-text-secondary);
 }
 
-.section-container {
+.mood-tracker-page .section-container {
   background-color: color-mix(in srgb, var(--card-bg) 92%, transparent);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   border: 1px solid var(--color-border);
-  box-shadow: var(--shadow);
+  box-shadow: 0 16px 34px var(--color-shadow-light);
   margin-bottom: var(--space-xl);
 }
 
@@ -828,7 +831,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
    FOOTER
    ============================================ */
 
-.app-footer {
+.mood-tracker-page .app-footer {
   background-color: transparent;
   border-top: 1px solid var(--color-border);
   padding: var(--space-xl) var(--space-lg);
@@ -1046,7 +1049,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
    ============================================ */
 
 @media (max-width: 768px) {
-  .app-main {
+  .mood-tracker-page .app-main {
     padding: var(--space-lg) var(--space-md);
   }
 
@@ -1123,7 +1126,7 @@ button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
     padding: var(--space-md);
   }
 
-  .app-main {
+  .mood-tracker-page .app-main {
     padding: var(--space-md);
   }
 

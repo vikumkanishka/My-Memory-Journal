@@ -1,0 +1,85 @@
+.profile-page {
+  max-width: 1100px;
+}
+
+.profile-panel {
+  background: color-mix(in srgb, var(--card-bg) 95%, transparent);
+  padding: 1.35rem;
+}
+
+.profile-panel h1,
+.profile-panel h2 {
+  color: var(--text-color);
+  letter-spacing: -0.02em;
+}
+
+.profile-panel p {
+  color: color-mix(in srgb, var(--text-color) 78%, #6d7c89);
+}
+
+.profile-page .form-group label {
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.profile-page .form-control {
+  background: color-mix(in srgb, var(--card-bg) 88%, #ffffff);
+  border: 1px solid var(--border-color);
+}
+
+.profile-page .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+.profile-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#profileThemeSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.85rem;
+}
+
+#profileThemeSelector .mood-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  min-height: 82px;
+  font-size: 2rem;
+  background: color-mix(in srgb, var(--card-bg) 92%, transparent);
+  transition: transform 160ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+
+#profileThemeSelector .mood-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--primary-color) 18%, transparent);
+}
+
+#profileThemeSelector .mood-btn.active {
+  border-color: var(--primary-color);
+  background: color-mix(in srgb, var(--primary-color) 18%, var(--card-bg));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-color) 22%, transparent);
+}
+
+#profileThemeSelector .mood-btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary-color) 32%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  #profileThemeSelector {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-actions .btn {
+    width: 100%;
+  }
+}

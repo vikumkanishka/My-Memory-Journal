@@ -120,9 +120,6 @@ class MoodJournal {
       });
     });
 
-    // Theme toggle
-    document.getElementById('themeToggleBtn')?.addEventListener('click', () => this.toggleTheme());
-
     // Settings - Export/Clear
     document.getElementById('exportDataBtn')?.addEventListener('click', () => this.exportDataJSON());
     document.getElementById('exportCSVBtn')?.addEventListener('click', () => this.exportDataCSV());

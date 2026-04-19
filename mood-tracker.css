@@ -127,79 +127,31 @@ small {
    BUTTONS
    ============================================ */
 
-button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
+.mood-tracker-page button:not(.menu-toggle):not(.profile-trigger):not(.profile-logout) {
   font-family: inherit;
   cursor: pointer;
   border: none;
   outline: none;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
-  font-size: var(--font-size-md);
-  font-weight: 600;
-  border-radius: var(--button-radius, var(--radius-full));
-  transition: all var(--transition-fast);
-  text-decoration: none;
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: white;
-  box-shadow: 0 12px 24px color-mix(in srgb, var(--color-primary) 24%, transparent);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--color-primary) 82%, #ffffff);
-  transform: translateY(-2px);
-  box-shadow: 0 16px 28px color-mix(in srgb, var(--color-primary) 30%, transparent);
-}
-
-.btn-secondary {
-  background-color: color-mix(in srgb, var(--card-bg) 82%, transparent);
-  color: var(--color-text);
-  border: 1px solid var(--color-border);
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-bg-tertiary);
-  border-color: var(--color-primary);
-}
-
-.btn-danger {
-  background-color: var(--color-danger);
-  color: white;
-}
-
-.btn-danger:hover:not(:disabled) {
-  background-color: #e55a5a;
-  transform: translateY(-2px);
-}
-
-.btn-lg {
+.mood-tracker-page .btn-lg {
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-lg);
 }
 
-.btn-sm {
+.mood-tracker-page .btn-sm {
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--font-size-sm);
   border-radius: var(--radius-sm);
 }
 
-.btn-block {
+.mood-tracker-page .btn-block {
   display: block;
   width: 100%;
   margin-bottom: var(--space-md);
 }
 
-.btn:disabled {
+.mood-tracker-page .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

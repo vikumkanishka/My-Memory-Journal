@@ -11,13 +11,19 @@ function saveEntries(entries) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
 }
 
+function normalizeEntryId(id) {
+  return String(id ?? '');
+}
+
 function getEntryById(id) {
-  return getEntries().find(e => e.id === id);
+  const normalizedId = normalizeEntryId(id);
+  return getEntries().find((entry) => normalizeEntryId(entry?.id) === normalizedId);
 }
 
 function saveEntry(entry) {
   const entries = getEntries();
-  const existingIndex = entries.findIndex(e => e.id === entry.id);
+  const normalizedId = normalizeEntryId(entry?.id);
+  const existingIndex = entries.findIndex((savedEntry) => normalizeEntryId(savedEntry?.id) === normalizedId);
   if (existingIndex > -1) {
     entries[existingIndex] = entry;
   } else {
@@ -28,9 +34,33 @@ function saveEntry(entry) {
 }
 
 function deleteEntry(id) {
+  const normalizedId = normalizeEntryId(id);
   const entries = getEntries();
-  const filtered = entries.filter(e => e.id !== id);
+  const filtered = entries.filter((entry) => normalizeEntryId(entry?.id) !== normalizedId);
   saveEntries(filtered);
+}
+
+function createSafeFileName(value = 'memory') {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'memory';
+}
+
+function downloadEntry(entry) {
+  if (!entry) return;
+
+  const blob = new Blob([JSON.stringify(entry, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = `${createSafeFileName(entry.title || `memory-${entry.id}`)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 // --- Theme Management ---
@@ -299,11 +329,10 @@ let allEntries = [];
 
 function initEntriesPage() {
   allEntries = getEntries();
+  const container = document.getElementById('entries-container');
   const searchInput = document.getElementById('search-input');
   const moodFilter = document.getElementById('filter-mood');
   const sortDate = document.getElementById('sort-date');
-  const exportBtn = document.getElementById('export-btn');
-  const importInput = document.getElementById('import-input');
   const gridBtn = document.getElementById('grid-view-btn');
   const listBtn = document.getElementById('list-view-btn');
   
@@ -333,9 +362,9 @@ function initEntriesPage() {
     displayEntries(filtered, query);
   }
   
-  searchInput.addEventListener('input', applyFilters);
-  moodFilter.addEventListener('change', applyFilters);
-  sortDate.addEventListener('change', applyFilters);
+  searchInput?.addEventListener('input', applyFilters);
+  moodFilter?.addEventListener('change', applyFilters);
+  sortDate?.addEventListener('change', applyFilters);
   
   // View Toggle
   if (gridBtn && listBtn) {
@@ -351,44 +380,6 @@ function initEntriesPage() {
     });
   }
 
-  // Import / Export
-  exportBtn.addEventListener('click', () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(allEntries));
-    const dlAnchorElem = document.createElement('a');
-    dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", "journal_entries.json");
-    dlAnchorElem.click();
-  });
-  
-  importInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        try {
-          const imported = JSON.parse(ev.target.result);
-          if (Array.isArray(imported)) {
-            // merge
-            const current = getEntries();
-            const currentIds = new Set(current.map(en => en.id));
-            imported.forEach(en => {
-              if(!currentIds.has(en.id)) {
-                current.push(en);
-              }
-            });
-            saveEntries(current);
-            allEntries = getEntries();
-            applyFilters();
-            showToast('Memories imported successfully!');
-          }
-        } catch(err) {
-          showToast('Invalid JSON file.', true);
-        }
-      };
-      reader.readAsText(file);
-    }
-  });
-
   // Global Delete Modal handling
   const cancelDeleteBtn = document.getElementById('cancel-delete');
   const confirmDeleteBtn = document.getElementById('confirm-delete');
@@ -398,6 +389,29 @@ function initEntriesPage() {
     entryToDelete = id;
     document.getElementById('delete-modal').classList.add('active');
   };
+
+  container?.addEventListener('click', (event) => {
+    const downloadButton = event.target.closest('[data-download-id]');
+    if (downloadButton) {
+      event.preventDefault();
+      const entryId = downloadButton.getAttribute('data-download-id');
+      const entry = getEntryById(entryId);
+      if (entry) {
+        downloadEntry(entry);
+        showToast('Download started.');
+      }
+      return;
+    }
+
+    const deleteButton = event.target.closest('[data-delete-id]');
+    if (!deleteButton) return;
+
+    event.preventDefault();
+    const entryId = deleteButton.getAttribute('data-delete-id');
+    if (entryId) {
+      window.openDeleteModal(entryId);
+    }
+  });
 
   cancelDeleteBtn.addEventListener('click', () => {
     entryToDelete = null;
@@ -482,6 +496,8 @@ function displayEntries(entriesList, highlightQuery = '') {
         });
     } catch(e) {}
 
+    const encodedEntryId = encodeURIComponent(normalizeEntryId(entry.id));
+
     card.innerHTML = `
       ${imgHtml}
       <div class="card-content">
@@ -503,9 +519,9 @@ function displayEntries(entriesList, highlightQuery = '') {
         </div>
         <div class="card-footer">
           <div class="card-actions">
-            <a href="view.html?id=${entry.id}" class="icon-btn" title="View"><i class="fas fa-eye"></i></a>
-            <a href="new.html?id=${entry.id}" class="icon-btn" title="Edit"><i class="fas fa-edit"></i></a>
-            <button onclick="window.openDeleteModal('${entry.id}')" class="icon-btn danger" title="Delete"><i class="fas fa-trash"></i></button>
+            <a href="view.html?id=${encodedEntryId}" class="icon-btn" title="View"><i class="fas fa-eye"></i></a>
+            <button class="icon-btn" data-download-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Download"><i class="fas fa-download"></i></button>
+            <button class="icon-btn danger" data-delete-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Delete"><i class="fas fa-trash"></i></button>
           </div>
         </div>
       </div>
@@ -615,15 +631,20 @@ function initViewPage() {
        contentEl.appendChild(canvasWrap);
      }
      
-     document.getElementById('edit-btn').onclick = () => window.location.href = `new.html?id=${entry.id}`;
   } else {
      if (contentEl) {
        contentEl.innerHTML = renderJournalContent(entry.content || '');
      }
-     document.getElementById('edit-btn').onclick = () => window.location.href = `new.html?id=${entry.id}`;
   }
 
   const deleteModal = document.getElementById('delete-modal');
+  const downloadButton = document.getElementById('download-entry-btn');
+  if (downloadButton) {
+    downloadButton.addEventListener('click', () => {
+      downloadEntry(entry);
+      showToast('Download started.');
+    });
+  }
   document.getElementById('delete-entry-btn').addEventListener('click', () => {
     deleteModal.classList.add('active');
   });

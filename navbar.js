@@ -213,7 +213,7 @@
       }
 
       // Initialize button states
-      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'cloudy';
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
       updateThemeButtonStates(storedTheme);
 
       // Attach click handlers

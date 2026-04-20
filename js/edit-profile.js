@@ -10,20 +10,16 @@
 
   // Theme emojis for visual representation
   const THEME_EMOJIS = {
-    cloudy: '☁️',
-    nature: '🌿',
-    windy: '💨',
-    disney: '✨'
+    light: '☀️',
+    dark: '🌙'
   };
 
   const THEME_LABELS = {
-    cloudy: 'Cloudy',
-    nature: 'Nature',
-    windy: 'Windy',
-    disney: 'Magical'
+    light: 'Light',
+    dark: 'Dark'
   };
 
-  const THEMES = ['cloudy', 'nature', 'windy', 'disney'];
+  const THEMES = ['light', 'dark'];
 
   function getCurrentUserSafe() {
     if (typeof getCurrentUser === 'function') {
@@ -104,7 +100,7 @@
     }
 
     // Get stored theme
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'cloudy';
+    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
 
     // Populate theme buttons
     THEMES.forEach((theme) => {

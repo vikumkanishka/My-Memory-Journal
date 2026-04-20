@@ -4,25 +4,17 @@
  */
 (function () {
   const STORAGE_KEY = 'memory_journal_theme';
-  const DEFAULT_THEME = 'cloudy';
-  const THEMES = ['cloudy', 'nature', 'windy', 'disney'];
+  const DEFAULT_THEME = 'light';
+  const THEMES = ['light', 'dark'];
 
   const THEME_META = {
-    cloudy: {
-      icon: 'fas fa-cloud',
-      buttonLabel: 'Switch to next wall theme. Current: Cloudy'
+    light: {
+      icon: 'fas fa-moon',
+      buttonLabel: 'Switch to dark mode'
     },
-    nature: {
-      icon: 'fas fa-leaf',
-      buttonLabel: 'Switch to next wall theme. Current: Nature'
-    },
-    windy: {
-      icon: 'fas fa-wind',
-      buttonLabel: 'Switch to next wall theme. Current: Windy'
-    },
-    disney: {
-      icon: 'fas fa-wand-magic-sparkles',
-      buttonLabel: 'Switch to next wall theme. Current: Disney style'
+    dark: {
+      icon: 'fas fa-sun',
+      buttonLabel: 'Switch to light mode'
     }
   };
 

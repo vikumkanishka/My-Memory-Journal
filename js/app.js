@@ -70,7 +70,7 @@ function initTheme() {
     return;
   }
 
-  const theme = localStorage.getItem(THEME_KEY) || 'cloudy';
+  const theme = localStorage.getItem(THEME_KEY) || 'light';
   document.documentElement.setAttribute('data-theme', theme);
 }
 
@@ -80,8 +80,8 @@ function toggleTheme() {
     return;
   }
 
-  const current = document.documentElement.getAttribute('data-theme') || 'cloudy';
-  const themes = ['cloudy', 'nature', 'windy', 'disney'];
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const themes = ['light', 'dark'];
   const nextIndex = (themes.indexOf(current) + 1) % themes.length;
   const nextTheme = themes[nextIndex];
   document.documentElement.setAttribute('data-theme', nextTheme);

@@ -829,7 +829,7 @@ class MoodJournal {
      ============================================ */
 
   setupTheme() {
-    const fallbackTheme = localStorage.getItem(this.THEME_KEY) || 'cloudy';
+    const fallbackTheme = localStorage.getItem(this.THEME_KEY) || 'light';
     if (window.ThemeManager && typeof window.ThemeManager.init === 'function') {
       const activeTheme = window.ThemeManager.init();
       this.updateThemeButton(activeTheme);
@@ -841,11 +841,11 @@ class MoodJournal {
   }
 
   toggleTheme() {
-    let activeTheme = document.documentElement.getAttribute('data-theme') || 'cloudy';
+    let activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
     if (window.ThemeManager && typeof window.ThemeManager.cycleTheme === 'function') {
       activeTheme = window.ThemeManager.cycleTheme();
     } else {
-      const themeOrder = ['cloudy', 'nature', 'windy', 'disney'];
+      const themeOrder = ['light', 'dark'];
       const currentIndex = themeOrder.indexOf(activeTheme);
       activeTheme = themeOrder[(currentIndex + 1 + themeOrder.length) % themeOrder.length];
       document.documentElement.setAttribute('data-theme', activeTheme);
@@ -857,10 +857,8 @@ class MoodJournal {
 
   updateThemeButton(theme) {
     const themeIcons = {
-      cloudy: '☁️',
-      nature: '🌿',
-      windy: '🌬️',
-      disney: '✨'
+      light: '☀️',
+      dark: '🌙'
     };
 
     const button = document.getElementById('themeToggleBtn');

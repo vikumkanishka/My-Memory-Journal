@@ -138,9 +138,11 @@ function sanitizeJournalHtml(html = '') {
   const template = document.createElement('template');
   template.innerHTML = String(html);
 
-  const allowedTags = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'SPAN', 'DIV']);
+  const allowedTags = new Set(['P', 'BR', 'STRONG', 'B', 'EM', 'I', 'U', 'S', 'UL', 'OL', 'LI', 'BLOCKQUOTE', 'A', 'SPAN', 'DIV', 'FIGURE', 'FIGCAPTION', 'IMG', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
   const allowedAttrs = {
-    A: new Set(['href', 'target', 'rel', 'title'])
+    A: new Set(['href', 'target', 'rel', 'title']),
+    IMG: new Set(['src', 'alt', 'title', 'loading', 'width', 'height', 'draggable']),
+    FIGURE: new Set(['draggable'])
   };
 
   const sanitizeNode = (node) => {
@@ -174,6 +176,16 @@ function sanitizeJournalHtml(html = '') {
 
     Array.from(node.attributes).forEach((attribute) => {
       const allowed = allowedAttrs[tagName];
+      if (attribute.name === 'style') {
+        element.setAttribute(attribute.name, attribute.value);
+        return;
+      }
+
+      if (attribute.name.startsWith('data-')) {
+        element.setAttribute(attribute.name, attribute.value);
+        return;
+      }
+
       if (allowed && allowed.has(attribute.name)) {
         element.setAttribute(attribute.name, attribute.value);
       }

@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f5dfcf">
-  <title>Create Entry - My Memory Journal</title>
+  <meta name="theme-color" content="#f4ede4">
+  <title>Create Journal - Memory Journal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/create-entry.css">
   <link rel="stylesheet" href="css/design-system.css">
@@ -48,7 +49,7 @@
         </button>
         <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
           <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
-          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall">Choose Memory Wall (Themes)</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
           <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
         </ul>
       </li>
@@ -57,193 +58,226 @@
 
   <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
 
-  <main class="composer-shell">
-    <section class="composer-intro" aria-label="Composer introduction">
-      <div>
-        <p class="eyebrow">Create Journal Entry</p>
-        <h1>Turn today into a page worth keeping.</h1>
-        <p class="intro-copy">Capture a feeling, add photos, mark what matters, and let the page save itself as you write.</p>
-      </div>
-
-      <div class="autosave-card" aria-live="polite">
-        <span class="autosave-dot" aria-hidden="true"></span>
-        <div>
-          <strong>Auto-save active</strong>
-          <p id="save-status">Saved just now</p>
+  <main class="composer-layout">
+    <aside class="journal-sidebar" aria-label="Journal navigation and tools">
+      <section class="sidebar-panel sidebar-hero">
+        <p class="sidebar-kicker">Journal Studio</p>
+        <h1>Create Journal</h1>
+        <p>A calm, paper-like editor with autosave, PDF export, image cropping, and distraction-free focus mode.</p>
+        <div class="sidebar-actions">
+          <button type="button" class="sidebar-action-btn" id="sidebar-dark-toggle"><i class="fas fa-moon"></i><span>Dark Mode</span></button>
+          <button type="button" class="sidebar-action-btn" id="sidebar-focus-toggle"><i class="fas fa-compress"></i><span>Focus Mode</span></button>
+          <button type="button" class="sidebar-action-btn" id="sidebar-fullscreen-toggle"><i class="fas fa-expand"></i><span>Fullscreen</span></button>
+          <button type="button" class="sidebar-action-btn primary" id="sidebar-export-pdf"><i class="fas fa-file-pdf"></i><span>Export PDF</span></button>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <form id="journal-entry-form" class="journal-card" novalidate>
-      <input type="hidden" id="journal-entry-id">
+      <section class="sidebar-panel">
+        <div class="panel-heading">
+          <h2>Recent Entries</h2>
+          <span id="recent-entry-count">0</span>
+        </div>
+        <div id="recent-entries" class="recent-entries" aria-live="polite"></div>
+      </section>
 
-      <div id="form-errors" class="form-errors" role="alert" aria-live="assertive"></div>
+      <section class="sidebar-panel sidebar-note">
+        <h2>Shortcuts</h2>
+        <ul>
+          <li><strong>Ctrl+B</strong> bold</li>
+          <li><strong>Ctrl+I</strong> italic</li>
+          <li><strong>Ctrl+U</strong> underline</li>
+          <li><strong>Ctrl+S</strong> save draft</li>
+        </ul>
+      </section>
+    </aside>
 
-      <section class="journal-grid">
-        <div class="editor-column">
-          <div class="field-row top-row">
-            <div class="field-group title-field">
-              <label for="journal-title">Title</label>
-              <input id="journal-title" class="form-control" type="text" placeholder="A snapshot of today..." autocomplete="off" maxlength="120" required>
-            </div>
+    <section class="editor-stage">
+      <form id="journal-entry-form" class="paper-sheet" novalidate>
+        <input type="hidden" id="journal-entry-id">
 
-            <div class="field-group date-field">
-              <label for="journal-date">Date</label>
-              <input id="journal-date" class="form-control" type="date" required>
-            </div>
+        <header class="sheet-header">
+          <div>
+            <p class="eyebrow">Start writing your thoughts...</p>
+            <h2>Turn today into a page worth keeping</h2>
+            <p class="sheet-subtitle">Type directly on the sheet, format selected text, crop images before inserting, and save locally as you go.</p>
           </div>
 
-          <div class="field-group mood-section">
-            <div class="field-label-row">
-              <label>Mood</label>
-              <span class="subtle-hint">Choose the feeling that fits best</span>
+          <div class="sheet-status" aria-live="polite">
+            <div class="autosave-pill">
+              <span class="autosave-dot" aria-hidden="true"></span>
+              <span id="save-status">Autosave ready</span>
             </div>
-            <div class="mood-picker" role="radiogroup" aria-label="Mood selection">
-              <button type="button" class="mood-chip is-active" data-mood="😊" aria-pressed="true">😊 Happy</button>
-              <button type="button" class="mood-chip" data-mood="😍" aria-pressed="false">😍 Loved</button>
-              <button type="button" class="mood-chip" data-mood="😌" aria-pressed="false">😌 Calm</button>
-              <button type="button" class="mood-chip" data-mood="😢" aria-pressed="false">😢 Tender</button>
-              <button type="button" class="mood-chip" data-mood="😠" aria-pressed="false">😠 Frustrated</button>
-              <button type="button" class="mood-chip" data-mood="🤩" aria-pressed="false">🤩 Excited</button>
-              <button type="button" class="mood-chip" data-mood="😰" aria-pressed="false">😰 Anxious</button>
+            <div class="sheet-metrics">
+              <span id="word-count">0 words</span>
+              <span id="last-edited">Last edited just now</span>
             </div>
           </div>
+        </header>
 
-          <section class="composer-section">
-            <div class="field-label-row">
-              <label for="journal-editor">Journal Entry</label>
-              <span class="subtle-hint">Use the toolbar or keyboard shortcuts like Ctrl+B, Ctrl+I, and Ctrl+U</span>
-            </div>
+        <div id="form-errors" class="form-errors" role="alert" aria-live="assertive"></div>
 
-            <div class="rich-toolbar" role="toolbar" aria-label="Text formatting toolbar">
-              <button type="button" class="tool-action" data-command="bold" aria-label="Bold"><i class="fas fa-bold"></i></button>
-              <button type="button" class="tool-action" data-command="italic" aria-label="Italic"><i class="fas fa-italic"></i></button>
-              <button type="button" class="tool-action" data-command="underline" aria-label="Underline"><i class="fas fa-underline"></i></button>
-              <button type="button" class="tool-action" data-command="insertUnorderedList" aria-label="Bullet list"><i class="fas fa-list-ul"></i></button>
-              <button type="button" class="tool-action" data-command="insertOrderedList" aria-label="Numbered list"><i class="fas fa-list-ol"></i></button>
-              <button type="button" class="tool-action" data-command="formatBlockQuote" aria-label="Quote block"><i class="fas fa-quote-right"></i></button>
-              <button type="button" class="tool-action" data-command="removeFormat" aria-label="Clear formatting"><i class="fas fa-eraser"></i></button>
-            </div>
+        <section class="entry-meta-grid" aria-label="Entry details">
+          <div class="field-group title-field">
+            <label for="journal-title">Title</label>
+            <input id="journal-title" class="form-control title-input" type="text" placeholder="Start writing your thoughts..." autocomplete="off" maxlength="120" required>
+          </div>
 
-            <div
-              id="journal-editor"
-              class="rich-editor"
-              contenteditable="true"
-              role="textbox"
-              aria-multiline="true"
-              aria-label="Journal content editor"
-              data-placeholder="What made today special?"
-            ></div>
-          </section>
+          <div class="field-group date-field">
+            <label for="journal-date">Date</label>
+            <input id="journal-date" class="form-control" type="date" required>
+          </div>
 
-          <section class="composer-section attachments-section">
-            <div class="field-label-row">
-              <label for="journal-images">Photos</label>
-              <span class="subtle-hint">Attach up to 6 images. They are compressed before saving.</span>
-            </div>
+          <div class="field-group mood-field">
+            <label for="journal-mood">Mood</label>
+            <select id="journal-mood" class="form-control">
+              <option value="😊">😊 Happy</option>
+              <option value="😍">😍 Loved</option>
+              <option value="😌">😌 Calm</option>
+              <option value="😢">😢 Tender</option>
+              <option value="😠">😠 Frustrated</option>
+              <option value="🤩">🤩 Excited</option>
+              <option value="😰">😰 Anxious</option>
+              <option value="🤔">🤔 Thoughtful</option>
+              <option value="🥰">🥰 Grateful</option>
+            </select>
+          </div>
+        </section>
 
-            <label class="upload-dropzone" for="journal-images">
-              <i class="fas fa-image"></i>
-              <span>Drag, drop, or choose photos</span>
-              <small>PNG, JPG, or WEBP</small>
+        <section class="composer-toolbar" aria-label="Formatting toolbar">
+          <div class="toolbar-group">
+            <button type="button" class="tool-btn" data-command="bold" aria-label="Bold"><i class="fas fa-bold"></i></button>
+            <button type="button" class="tool-btn" data-command="italic" aria-label="Italic"><i class="fas fa-italic"></i></button>
+            <button type="button" class="tool-btn" data-command="underline" aria-label="Underline"><i class="fas fa-underline"></i></button>
+            <button type="button" class="tool-btn" data-command="strikeThrough" aria-label="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+            <button type="button" class="tool-btn" data-command="insertUnorderedList" aria-label="Bullet list"><i class="fas fa-list-ul"></i></button>
+            <button type="button" class="tool-btn" data-command="insertOrderedList" aria-label="Numbered list"><i class="fas fa-list-ol"></i></button>
+            <button type="button" class="tool-btn" data-command="blockquote" aria-label="Block quote"><i class="fas fa-quote-right"></i></button>
+          </div>
+
+          <div class="toolbar-group toolbar-selects">
+            <select id="heading-select" class="toolbar-select" aria-label="Heading level">
+              <option value="p">Paragraph</option>
+              <option value="h1">Heading 1</option>
+              <option value="h2">Heading 2</option>
+              <option value="h3">Heading 3</option>
+            </select>
+            <select id="font-family-select" class="toolbar-select" aria-label="Font family">
+              <option value="'Source Serif 4', Georgia, serif">Serif</option>
+              <option value="'DM Sans', Arial, sans-serif">Sans</option>
+              <option value="'Georgia', serif">Georgia</option>
+              <option value="'Courier New', monospace">Mono</option>
+              <option value="'Times New Roman', serif">Times</option>
+            </select>
+            <select id="font-size-select" class="toolbar-select" aria-label="Font size">
+              <option value="14px">14</option>
+              <option value="16px" selected>16</option>
+              <option value="18px">18</option>
+              <option value="20px">20</option>
+              <option value="24px">24</option>
+              <option value="28px">28</option>
+            </select>
+          </div>
+
+          <div class="toolbar-group toolbar-selects">
+            <button type="button" class="tool-btn" data-command="justifyLeft" aria-label="Align left"><i class="fas fa-align-left"></i></button>
+            <button type="button" class="tool-btn" data-command="justifyCenter" aria-label="Align center"><i class="fas fa-align-center"></i></button>
+            <button type="button" class="tool-btn" data-command="justifyRight" aria-label="Align right"><i class="fas fa-align-right"></i></button>
+            <button type="button" class="tool-btn" data-command="undo" aria-label="Undo"><i class="fas fa-rotate-left"></i></button>
+            <button type="button" class="tool-btn" data-command="redo" aria-label="Redo"><i class="fas fa-rotate-right"></i></button>
+            <button type="button" class="tool-btn" id="image-button" aria-label="Insert image"><i class="fas fa-image"></i></button>
+            <button type="button" class="tool-btn" id="clear-format-button" aria-label="Clear formatting"><i class="fas fa-eraser"></i></button>
+          </div>
+
+          <div class="toolbar-group toolbar-selects">
+            <label class="toolbar-label">
+              <span>Text</span>
+              <input id="text-color-input" type="color" value="#5a4338" aria-label="Text color">
             </label>
-            <input id="journal-images" type="file" accept="image/*" multiple class="visually-hidden">
+            <label class="toolbar-label">
+              <span>Highlight</span>
+              <input id="highlight-color-input" type="color" value="#fff0a8" aria-label="Highlight color">
+            </label>
+          </div>
+        </section>
 
-            <div id="image-gallery" class="image-gallery" aria-live="polite"></div>
-          </section>
+        <section class="editor-wrap">
+          <div
+            id="journal-editor"
+            class="journal-editor"
+            contenteditable="true"
+            role="textbox"
+            aria-multiline="true"
+            aria-label="Journal content editor"
+            data-placeholder="Start writing your thoughts..."
+          ></div>
+        </section>
 
-          <section class="composer-section tags-section">
-            <div class="field-label-row">
-              <label for="tag-input">Tags</label>
-              <span class="subtle-hint">Press Enter or comma to add a tag</span>
-            </div>
-
+        <section class="extras-grid">
+          <div class="field-group">
+            <label for="tag-input">Tags</label>
             <div class="tag-input-row">
-              <input id="tag-input" class="form-control" type="text" placeholder="Add a tag like gratitude, travel, family">
+              <input id="tag-input" class="form-control" type="text" placeholder="Add tags like gratitude, travel, family">
               <button type="button" id="add-tag-btn" class="btn btn-secondary small-btn">Add</button>
             </div>
-
             <div class="quick-tags" aria-label="Suggested tags">
               <button type="button" class="quick-tag" data-tag="gratitude">gratitude</button>
               <button type="button" class="quick-tag" data-tag="family">family</button>
-              <button type="button" class="quick-tag" data-tag="work">work</button>
               <button type="button" class="quick-tag" data-tag="travel">travel</button>
+              <button type="button" class="quick-tag" data-tag="work">work</button>
               <button type="button" class="quick-tag" data-tag="healing">healing</button>
             </div>
-
             <div id="tag-list" class="tag-list" aria-live="polite"></div>
-          </section>
-        </div>
+          </div>
 
-        <aside class="side-panel" aria-label="Entry settings">
-          <div class="side-card">
-            <div class="field-label-row">
-              <label for="entry-location">Location</label>
-              <span class="subtle-hint">Optional</span>
-            </div>
+          <div class="field-group">
+            <label for="entry-location">Location</label>
             <input id="entry-location" class="form-control" type="text" placeholder="Where did this memory happen?">
           </div>
+        </section>
 
-          <div class="side-card">
-            <div class="field-label-row">
-              <label>Privacy</label>
-              <span class="subtle-hint">Choose who can see it</span>
-            </div>
-            <button type="button" id="privacy-toggle" class="pill-toggle" aria-pressed="false" aria-label="Toggle privacy">
-              <span class="pill-toggle-knob"></span>
-              <span class="pill-toggle-text" id="privacy-label">Private</span>
-            </button>
-            <p class="side-note">Private entries stay on this device only.</p>
+        <footer class="sheet-footer">
+          <p class="footer-note">Keyboard shortcuts are active. Images can be cropped before insertion and resized directly on the page.</p>
+          <div class="footer-actions">
+            <button type="button" id="save-draft-btn" class="btn btn-secondary">Save Draft</button>
+            <button type="button" id="cancel-entry" class="btn btn-secondary">Back</button>
+            <button type="submit" id="save-entry-btn" class="btn btn-primary">Save Entry</button>
           </div>
-
-          <div class="side-card">
-            <div class="field-label-row">
-              <label>Highlight</label>
-              <span class="subtle-hint">Mark especially meaningful memories</span>
-            </div>
-            <button type="button" id="favorite-toggle" class="favorite-toggle" aria-pressed="false">
-              <i class="far fa-star"></i>
-              <span>Favorite this memory</span>
-            </button>
-          </div>
-
-          <div class="side-card">
-            <div class="field-label-row">
-              <label>Writing Ritual</label>
-              <span class="subtle-hint">Optional focus guide</span>
-            </div>
-            <div class="ritual-list">
-              <div><i class="fas fa-sun"></i> Start with one moment that stayed with you.</div>
-              <div><i class="fas fa-heart"></i> Add one detail you do not want to forget.</div>
-              <div><i class="fas fa-leaf"></i> Save when the page feels complete, not perfect.</div>
-            </div>
-          </div>
-
-          <div class="side-card status-card">
-            <div class="field-label-row">
-              <label>Save State</label>
-            </div>
-            <div id="draft-status" class="status-line">Draft not saved yet</div>
-            <div class="status-meter" aria-hidden="true"><span id="status-meter-fill"></span></div>
-          </div>
-        </aside>
-      </section>
-
-      <div class="action-bar">
-        <button type="button" id="cancel-entry" class="btn btn-secondary">Cancel / Back</button>
-        <div class="action-stack">
-          <button type="button" id="save-draft-btn" class="btn btn-secondary">Save as Draft</button>
-          <button type="submit" id="save-entry-btn" class="btn btn-primary">Save Entry</button>
-        </div>
-      </div>
-    </form>
+        </footer>
+      </form>
+    </section>
   </main>
+
+  <input id="journal-image-input" type="file" accept="image/*" multiple class="visually-hidden">
+
+  <div id="image-cropper-modal" class="editor-modal" hidden>
+    <div class="editor-modal-backdrop" data-modal-cancel></div>
+    <section class="editor-modal-card" role="dialog" aria-modal="true" aria-labelledby="cropper-title">
+      <header class="editor-modal-header">
+        <div>
+          <p class="eyebrow">Image editor</p>
+          <h2 id="cropper-title">Crop image before inserting</h2>
+        </div>
+        <button type="button" class="icon-close" data-modal-cancel aria-label="Close cropper"><i class="fas fa-times"></i></button>
+      </header>
+      <div class="cropper-stage">
+        <img id="cropper-preview" alt="Crop preview">
+      </div>
+      <div class="cropper-actions">
+        <button type="button" id="crop-rotate-left" class="btn btn-secondary">Rotate left</button>
+        <button type="button" id="crop-rotate-right" class="btn btn-secondary">Rotate right</button>
+        <button type="button" id="crop-cancel" class="btn btn-secondary" data-modal-cancel>Cancel</button>
+        <button type="button" id="crop-apply" class="btn btn-primary">Insert image</button>
+      </div>
+    </section>
+  </div>
 
   <div id="toast"></div>
 
   <script src="navbar.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/themes.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="js/app.js"></script>
   <script src="js/create-entry.js"></script>
 </body>

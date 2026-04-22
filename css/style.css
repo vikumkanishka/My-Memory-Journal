@@ -1202,6 +1202,9 @@ mark {
 
 .site-nav .profile-dropdown a,
 .site-nav .profile-dropdown button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
   width: 100%;
   border: 0;
   background: transparent;
@@ -1213,6 +1216,17 @@ mark {
   padding: 0.7rem 0.78rem;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.site-nav .profile-dropdown a[aria-label],
+.site-nav .profile-dropdown button[aria-label] {
+  justify-content: center;
+}
+
+.site-nav .profile-dropdown a[aria-label] i,
+.site-nav .profile-dropdown button[aria-label] i {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .site-nav .profile-dropdown a:hover,

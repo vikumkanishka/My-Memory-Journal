@@ -61,7 +61,8 @@
   <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
 
   <main>
-    <section class="hero" id="hero-banner" style="background-image: url('assets/images/welcome_background.png');">
+    <!-- Hero Section -->
+    <section class="hero" aria-label="Welcome banner">
       <div class="hero-content">
         <h1>Welcome to Your Mental Oasis</h1>
         <p>A safe, private space to write your thoughts, save your memories, and reflect on your daily life. Stored completely local to your device.</p>
@@ -71,9 +72,53 @@
         </div>
       </div>
     </section>
-    <div class="quote-section" id="daily-quote">
+
+    <!-- Quote of the Day Section -->
+    <div class="quote-section" id="daily-quote" aria-label="Daily inspiration">
       <!-- Quote will be randomly inserted here by JS -->
     </div>
+
+    <!-- Puzzle Grid: Memory Highlights -->
+    <section aria-labelledby="memories-heading">
+      <h2 id="memories-heading">Your Memory Collection</h2>
+      <div class="puzzle-grid" id="memories-grid">
+        <!-- Memory cards will be dynamically populated by JS -->
+        <div class="puzzle-item featured">
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">Your Latest Entry</h3>
+            <p class="puzzle-item-meta">Click to view your most recent memory</p>
+          </div>
+        </div>
+
+        <div class="puzzle-item">
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">Quick Start</h3>
+            <p class="puzzle-item-meta">Create your first memory today</p>
+          </div>
+        </div>
+
+        <div class="puzzle-item tall">
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">Your Mood Journey</h3>
+            <p class="puzzle-item-meta">Track emotions over time</p>
+          </div>
+        </div>
+
+        <div class="puzzle-item">
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">Statistics</h3>
+            <p class="puzzle-item-meta"><span id="entry-count">0</span> entries written</p>
+          </div>
+        </div>
+
+        <div class="puzzle-item wide">
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">Customize Your Experience</h3>
+            <p class="puzzle-item-meta">Choose themes, set preferences, and make it yours</p>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="navbar.js"></script>

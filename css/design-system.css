@@ -1,13 +1,46 @@
 :root {
-  --container-width: 1180px;
-  --container-gutter: clamp(1rem, 3vw, 1.75rem);
-  --section-gap: clamp(1.25rem, 3vw, 2rem);
-  --surface-radius: 24px;
-  --surface-border: 1px solid color-mix(in srgb, var(--border-color) 72%, transparent);
-  --surface-shadow: 0 18px 48px rgba(19, 33, 48, 0.10);
-  --transition-fast: 180ms ease;
-  --transition-base: 280ms ease;
-  --transition-slow: 420ms ease;
+  /* Layout & Container */
+  --container-width: 1200px;
+  --container-gutter: clamp(1rem, 3vw, 2rem);
+  --section-gap: clamp(1.5rem, 4vw, 2.5rem);
+  
+  /* Surface Design (Enhanced Glassmorphism) */
+  --surface-radius: 28px;
+  --surface-radius-sm: 16px;
+  --surface-radius-lg: 32px;
+  --surface-border: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
+  --surface-shadow: 0 20px 50px rgba(19, 33, 48, 0.12);
+  --surface-shadow-lg: 0 28px 60px rgba(19, 33, 48, 0.16);
+  --glass-blur: 16px;
+  --glass-opacity: 0.92;
+  
+  /* Transitions */
+  --transition-fast: 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-base: 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-slow: 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  
+  /* Typography System */
+  --font-serif: 'Georgia', 'Garamond', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --font-mono: 'Courier New', monospace;
+  
+  /* Grid System for Puzzle Layout */
+  --grid-cols: auto-fill;
+  --grid-min-width: 220px;
+  --grid-auto-rows: 200px;
+  --grid-gap: 1.25rem;
+  --grid-dense: auto-flow dense;
+  
+  /* Soft Neutral Palette with High-Contrast Accents */
+  --neutral-50: #fafafa;
+  --neutral-100: #f3f3f3;
+  --neutral-200: #e6e6e6;
+  --neutral-300: #d4d4d4;
+  --neutral-400: #999999;
+  --neutral-500: #666666;
+  --neutral-600: #404040;
+  --neutral-700: #262626;
+  --neutral-900: #0a0a0a;
 }
 
 html {
@@ -266,5 +299,144 @@ footer {
 
   .auth-action {
     flex: 1 1 120px;
+  }
+}
+
+/* ========== Typography System ========== */
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6,
+.page-title,
+.section-title,
+.hero h1,
+.view-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3.5rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.8rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p, body {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+code, pre {
+  font-family: var(--font-mono);
+}
+
+/* ========== Puzzle Grid Layout System ========== */
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--grid-min-width), 1fr));
+  grid-auto-rows: var(--grid-auto-rows);
+  grid-auto-flow: dense;
+  gap: var(--grid-gap);
+  padding: var(--container-gutter);
+  max-width: var(--container-width);
+  margin: 0 auto;
+}
+
+/* Card sizing variants for masonry effect */
+.puzzle-item {
+  border-radius: var(--surface-radius-sm);
+  border: var(--surface-border);
+  box-shadow: var(--surface-shadow);
+  background: color-mix(in srgb, var(--card-bg) 92%, transparent);
+  backdrop-filter: blur(var(--glass-blur));
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base), 
+              background var(--transition-base);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.puzzle-item:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--surface-shadow-lg);
+  background: color-mix(in srgb, var(--card-bg) 96%, transparent);
+}
+
+/* Tile size variants */
+.puzzle-item.wide {
+  grid-column: span 2;
+}
+
+.puzzle-item.tall {
+  grid-row: span 2;
+}
+
+.puzzle-item.featured {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.puzzle-item-content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.puzzle-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.puzzle-item-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.puzzle-item-meta {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+/* ========== Responsive Grid ========== */
+@media (max-width: 1024px) {
+  .puzzle-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-auto-rows: 180px;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .puzzle-item.featured {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .puzzle-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 1rem;
+    padding: 1rem var(--container-gutter);
+  }
+  
+  .puzzle-item.wide,
+  .puzzle-item.tall,
+  .puzzle-item.featured {
+    grid-column: span 1;
+    grid-row: span 1;
   }
 }

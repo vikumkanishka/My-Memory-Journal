@@ -88,16 +88,83 @@
       </div>
     </div>
 
-    <div class="entries-grid" id="entries-container">
-      <!-- Entries rendered via JS -->
+    <!-- Puzzle Grid Layout for Entries -->
+    <div class="puzzle-grid" id="entries-container">
+      <!-- Entries rendered via JS with varying sizes for puzzle effect -->
     </div>
 
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state" style="display: none;">
+      <i class="fas fa-book" aria-hidden="true"></i>
+      <h3>No memories yet</h3>
+      <p>Start writing your first memory to see it appear here in your personal collection.</p>
+      <a href="new.html" class="btn btn-primary">Create Your First Entry</a>
+    </div>
   </main>
 
   <!-- Delete Modal -->
   <div class="modal-overlay" id="delete-modal">
     <div class="modal">
       <h3>Delete Entry?</h3>
+      <p>Are you sure you want to delete this memory? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="modal-delete" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    // Add logic to render entries in puzzle grid with varying sizes
+    const entriesContainer = document.getElementById('entries-container');
+    const emptyState = document.getElementById('empty-state');
+    
+    function renderEntriesPuzzle() {
+      const entries = getAllEntries();
+      entriesContainer.innerHTML = '';
+      
+      if (entries.length === 0) {
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      emptyState.style.display = 'none';
+      
+      entries.forEach((entry, index) => {
+        const sizeClass = ['featured', 'wide', 'tall', ''][index % 4];
+        const card = document.createElement('div');
+        card.className = `puzzle-item ${sizeClass}`;
+        card.onclick = () => window.location.href = `view.html?id=${entry.id}`;
+        
+        const previewText = entry.content.substring(0, 100).replace(/<[^>]*>/g, '');
+        card.innerHTML = `
+          <div class="puzzle-item-content">
+            <h3 class="puzzle-item-title">${entry.title || 'Untitled'}</h3>
+            <p style="opacity: 0.7; font-size: 0.9rem; margin: 0.5rem 0; flex: 1;">${previewText}${entry.content.length > 100 ? '...' : ''}</p>
+            <div class="puzzle-item-meta">
+              <span>${entry.mood || '📝'}</span>
+              <span style="margin-left: 0.5rem;">${new Date(entry.date).toLocaleDateString()}</span>
+            </div>
+          </div>
+        `;
+        entriesContainer.appendChild(card);
+      });
+    }
+    
+    function getAllEntries() {
+      const stored = localStorage.getItem('journalEntries');
+      return stored ? JSON.parse(stored).sort((a, b) => new Date(b.date) - new Date(a.date)) : [];
+    }
+    
+    document.addEventListener('DOMContentLoaded', renderEntriesPuzzle);
+  </script>
+</body>
+</html>
       <p>Are you sure you want to delete this memory? This action cannot be undone.</p>
       <div class="modal-actions">
         <button class="btn btn-secondary" id="cancel-delete">Cancel</button>

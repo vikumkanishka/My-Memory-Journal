@@ -10,37 +10,6 @@
   --ui-shadow-soft: 0 14px 38px rgba(25, 42, 58, 0.11);
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
-
-main {
-  width: min(1180px, calc(100% - 2rem));
-  margin-inline: auto;
-}
-
-.site-nav {
-  width: min(1180px, calc(100% - 2rem));
-  margin-inline: auto;
-  margin-top: 0.85rem;
-  border-radius: var(--ui-surface-radius);
-  border: var(--ui-border-soft);
-  box-shadow: var(--ui-shadow-soft);
-  backdrop-filter: blur(16px);
-}
-
-.site-nav .logo {
-  font-size: clamp(1.25rem, 0.95rem + 1.2vw, 1.7rem);
-  letter-spacing: -0.02em;
-}
-
-.site-nav .nav-links > li > a,
-.site-nav .profile-trigger {
-  min-height: 2.5rem;
-  font-size: 0.95rem;
-}
-
 .hero,
 .quote-section,
 .toolbar,
@@ -143,8 +112,6 @@ footer {
 }
 
 @media (max-width: 900px) {
-  .site-nav,
-  main,
   .auth-container,
   .auth-footer-section,
   .app-footer,
@@ -171,14 +138,6 @@ footer {
 }
 
 @media (max-width: 768px) {
-  .site-nav {
-    margin-top: 0.5rem;
-  }
-
-  main {
-    width: min(100%, calc(100% - 1rem));
-  }
-
   .mood-intro {
     flex-direction: column;
     align-items: flex-start;

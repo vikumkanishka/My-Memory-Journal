@@ -337,43 +337,64 @@ function initNewEntryPage() {
   });
 }
 
-let allEntries = [];
-
 function initEntriesPage() {
-  allEntries = getEntries();
   const container = document.getElementById('entries-container');
   const searchInput = document.getElementById('search-input');
   const moodFilter = document.getElementById('filter-mood');
   const sortDate = document.getElementById('sort-date');
   const gridBtn = document.getElementById('grid-view-btn');
   const listBtn = document.getElementById('list-view-btn');
-  
-  displayEntries(allEntries);
-  
-  function applyFilters() {
+  const deleteModal = document.getElementById('delete-modal');
+  const cancelDeleteBtn = document.getElementById('cancel-delete') || document.getElementById('modal-cancel');
+  const confirmDeleteBtn = document.getElementById('confirm-delete') || document.getElementById('modal-delete');
+
+  if (!container || !searchInput || !moodFilter || !sortDate || !deleteModal || !cancelDeleteBtn || !confirmDeleteBtn) {
+    return;
+  }
+
+  let allEntries = getEntries();
+  let entryToDelete = null;
+
+  const openDeleteModal = (id) => {
+    entryToDelete = id;
+    deleteModal.classList.add('active');
+  };
+
+  const closeDeleteModal = () => {
+    entryToDelete = null;
+    deleteModal.classList.remove('active');
+  };
+
+  const getFilteredEntries = () => {
     const query = searchInput.value.toLowerCase();
     const mood = moodFilter.value;
     const sort = sortDate.value;
-    
+
     let filtered = allEntries;
-    
+
     if (query) {
-       filtered = searchEntries(query, filtered);
+      filtered = searchEntries(query, filtered);
     }
-    
+
     if (mood !== 'all') {
-       filtered = filterEntries(mood, filtered);
+      filtered = filterEntries(mood, filtered);
     }
-    
+
     if (sort === 'oldest') {
-       filtered = [...filtered].sort((a, b) => new Date(a.date) - new Date(b.date));
-    } else {
-       filtered = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+      return [...filtered].sort((a, b) => new Date(a.date) - new Date(b.date));
     }
-    
+
+    return [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+  };
+
+  const applyFilters = () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = getFilteredEntries();
     displayEntries(filtered, query);
-  }
+  };
   
+  displayEntries(allEntries);
+
   searchInput?.addEventListener('input', applyFilters);
   moodFilter?.addEventListener('change', applyFilters);
   sortDate?.addEventListener('change', applyFilters);
@@ -391,16 +412,6 @@ function initEntriesPage() {
       gridBtn.classList.remove('active');
     });
   }
-
-  // Global Delete Modal handling
-  const cancelDeleteBtn = document.getElementById('cancel-delete');
-  const confirmDeleteBtn = document.getElementById('confirm-delete');
-  let entryToDelete = null;
-
-  window.openDeleteModal = function(id) {
-    entryToDelete = id;
-    document.getElementById('delete-modal').classList.add('active');
-  };
 
   container?.addEventListener('click', (event) => {
     const downloadButton = event.target.closest('[data-download-id]');
@@ -421,23 +432,23 @@ function initEntriesPage() {
     event.preventDefault();
     const entryId = deleteButton.getAttribute('data-delete-id');
     if (entryId) {
-      window.openDeleteModal(entryId);
+      openDeleteModal(entryId);
     }
   });
 
-  cancelDeleteBtn.addEventListener('click', () => {
-    entryToDelete = null;
-    document.getElementById('delete-modal').classList.remove('active');
-  });
+  cancelDeleteBtn.addEventListener('click', closeDeleteModal);
 
   confirmDeleteBtn.addEventListener('click', () => {
     if (entryToDelete) {
       deleteEntry(entryToDelete);
       allEntries = getEntries();
       applyFilters();
-      document.getElementById('delete-modal').classList.remove('active');
+      closeDeleteModal();
       showToast('Memory deleted.');
+      return;
     }
+
+    closeDeleteModal();
   });
 }
 
@@ -463,6 +474,8 @@ function highlightText(text, query) {
 
 function displayEntries(entriesList, highlightQuery = '') {
   const container = document.getElementById('entries-container');
+  if (!container) return;
+
   container.innerHTML = '';
   
   if (entriesList.length === 0) {
@@ -476,70 +489,73 @@ function displayEntries(entriesList, highlightQuery = '') {
     return;
   }
   
-  entriesList.forEach(entry => {
-    const card = document.createElement('div');
-    card.className = 'entry-card';
-    
-    const coverImage = getEntryCoverImage(entry);
-    const tags = normalizeEntryTags(entry);
-    const statusPill = entry.isDraft ? 'Draft' : (entry.privacy === 'public' ? 'Public' : 'Private');
+  entriesList.forEach((entry) => {
+    container.appendChild(createEntryCardElement(entry, highlightQuery));
+  });
+}
 
-    let imgHtml = '';
-    if (coverImage) {
-      imgHtml = `
-        <div class="card-img-wrapper">
-          <img src="${escapeHtml(coverImage)}" class="card-img" alt="Memory thumbnail">
-        </div>
-      `;
-    }
-    
-    // Preview - Limit to first 100-150 characters
-    let plainTextContent = String(entry.content || '').replace(/<[^>]+>/g, '');
-    let preview = plainTextContent.length > 150 ? plainTextContent.substring(0, 150) + '...' : plainTextContent;
-    
-    let highlightedTitle = highlightText(entry.title, highlightQuery);
-    let highlightedPreview = highlightText(preview, highlightQuery);
-    
-    // Formatting date safely
-    let formattedDate = entry.date;
-    try {
-        formattedDate = new Date(entry.date).toLocaleDateString(undefined, {
-            weekday: 'short', year: 'numeric', month: 'long', day: 'numeric'
-        });
-    } catch(e) {}
+function createEntryCardElement(entry, highlightQuery = '') {
+  const card = document.createElement('div');
+  card.className = 'entry-card';
 
-    const encodedEntryId = encodeURIComponent(normalizeEntryId(entry.id));
+  const coverImage = getEntryCoverImage(entry);
+  const tags = normalizeEntryTags(entry);
+  const statusPill = entry.isDraft ? 'Draft' : (entry.privacy === 'public' ? 'Public' : 'Private');
 
-    card.innerHTML = `
-      ${imgHtml}
-      <div class="card-content">
-        <div class="card-header">
-          <div>
-            <div class="card-date">${escapeHtml(formattedDate)}</div>
-            <h3 class="card-title">${highlightedTitle}</h3>
-          </div>
-          <div class="card-badges">
-            ${entry.favorite ? '<span class="card-badge favorite"><i class="fas fa-star"></i></span>' : ''}
-            <div class="mood">${escapeHtml(entry.mood || '')}</div>
-          </div>
-        </div>
-        <div class="card-text">${highlightedPreview}</div>
-        ${tags.length ? `<div class="card-tags">${tags.slice(0, 3).map((tag) => `<span class="tag-chip">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
-        <div class="card-status-row">
-          <span class="status-pill ${entry.isDraft ? 'draft' : entry.privacy === 'public' ? 'public' : 'private'}">${escapeHtml(statusPill)}</span>
-          ${entry.location ? `<span class="location-pill"><i class="fas fa-location-dot"></i> ${escapeHtml(entry.location)}</span>` : ''}
-        </div>
-        <div class="card-footer">
-          <div class="card-actions">
-            <a href="view.html?id=${encodedEntryId}" class="icon-btn" title="View"><i class="fas fa-eye"></i></a>
-            <button class="icon-btn" data-download-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Download"><i class="fas fa-download"></i></button>
-            <button class="icon-btn danger" data-delete-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Delete"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>
+  let imgHtml = '';
+  if (coverImage) {
+    imgHtml = `
+      <div class="card-img-wrapper">
+        <img src="${escapeHtml(coverImage)}" class="card-img" alt="Memory thumbnail">
       </div>
     `;
-    container.appendChild(card);
-  });
+  }
+
+  const plainTextContent = String(entry.content || '').replace(/<[^>]+>/g, '');
+  const preview = plainTextContent.length > 150 ? plainTextContent.substring(0, 150) + '...' : plainTextContent;
+
+  const highlightedTitle = highlightText(entry.title, highlightQuery);
+  const highlightedPreview = highlightText(preview, highlightQuery);
+
+  let formattedDate = entry.date;
+  try {
+    formattedDate = new Date(entry.date).toLocaleDateString(undefined, {
+      weekday: 'short', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  } catch (e) {}
+
+  const encodedEntryId = encodeURIComponent(normalizeEntryId(entry.id));
+
+  card.innerHTML = `
+    ${imgHtml}
+    <div class="card-content">
+      <div class="card-header">
+        <div>
+          <div class="card-date">${escapeHtml(formattedDate)}</div>
+          <h3 class="card-title">${highlightedTitle}</h3>
+        </div>
+        <div class="card-badges">
+          ${entry.favorite ? '<span class="card-badge favorite"><i class="fas fa-star"></i></span>' : ''}
+          <div class="mood">${escapeHtml(entry.mood || '')}</div>
+        </div>
+      </div>
+      <div class="card-text">${highlightedPreview}</div>
+      ${tags.length ? `<div class="card-tags">${tags.slice(0, 3).map((tag) => `<span class="tag-chip">${escapeHtml(tag)}</span>`).join('')}</div>` : ''}
+      <div class="card-status-row">
+        <span class="status-pill ${entry.isDraft ? 'draft' : entry.privacy === 'public' ? 'public' : 'private'}">${escapeHtml(statusPill)}</span>
+        ${entry.location ? `<span class="location-pill"><i class="fas fa-location-dot"></i> ${escapeHtml(entry.location)}</span>` : ''}
+      </div>
+      <div class="card-footer">
+        <div class="card-actions">
+          <a href="view.html?id=${encodedEntryId}" class="icon-btn" title="View"><i class="fas fa-eye"></i></a>
+          <button class="icon-btn" data-download-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Download"><i class="fas fa-download"></i></button>
+          <button class="icon-btn danger" data-delete-id="${escapeHtml(normalizeEntryId(entry.id))}" title="Delete"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return card;
 }
 
 function initViewPage() {

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Journal | Water Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/ui-polish.css">
+  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/decorative-elements.css">
+  <link rel="stylesheet" href="water-tracker.css">
+</head>
+<body class="water-tracker-page">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li><a href="mood-tracker.html">Mood Tracker</a></li>
+      <li><a href="water-tracker.html" class="active" aria-current="page">Water Tracker</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
+  <main class="water-layout">
+    <section class="water-hero section-container" aria-labelledby="water-title">
+      <p class="eyebrow">Healthy Habit</p>
+      <h1 id="water-title" class="section-title">Daily Water Tracker</h1>
+      <p class="intro-copy">Track hydration through the day and keep your progress visible at a glance.</p>
+    </section>
+
+    <section class="water-grid section-container" aria-label="Water tracking dashboard">
+      <article class="water-card progress-card">
+        <h2>Today</h2>
+        <div class="progress-shell" role="img" aria-label="Daily hydration progress">
+          <div class="progress-ring" id="progressRing">
+            <span id="progressPercent">0%</span>
+          </div>
+          <p class="progress-copy"><strong id="todayAmount">0 ml</strong> of <strong id="dailyGoal">2000 ml</strong></p>
+        </div>
+      </article>
+
+      <article class="water-card goal-card">
+        <h2>Goal</h2>
+        <label for="goalInput" class="group-label">Set daily goal (ml)</label>
+        <div class="row">
+          <input id="goalInput" type="number" min="500" max="6000" step="100" value="2000" class="input-text" aria-describedby="goalHint">
+          <button id="saveGoalBtn" class="btn btn-primary" type="button">Save</button>
+        </div>
+        <small id="goalHint" class="hint-text">Typical daily range: 1500 to 3000 ml.</small>
+      </article>
+
+      <article class="water-card add-card">
+        <h2>Add Water</h2>
+        <div class="quick-add" role="group" aria-label="Quick add water amounts">
+          <button class="btn btn-secondary quick-btn" type="button" data-amount="150">+150 ml</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-amount="250">+250 ml</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-amount="350">+350 ml</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-amount="500">+500 ml</button>
+        </div>
+        <div class="row">
+          <input id="customAmount" type="number" min="50" max="2000" step="50" placeholder="Custom ml" class="input-text" aria-label="Custom water amount in milliliters">
+          <button id="addCustomBtn" class="btn btn-primary" type="button">Add</button>
+        </div>
+        <button id="resetTodayBtn" class="btn btn-danger reset-btn" type="button">Reset Today</button>
+      </article>
+
+      <article class="water-card stats-card">
+        <h2>Stats</h2>
+        <div class="stats-grid">
+          <div>
+            <p class="stat-label">Current Streak</p>
+            <p class="stat-value" id="streakValue">0 days</p>
+          </div>
+          <div>
+            <p class="stat-label">7-Day Average</p>
+            <p class="stat-value" id="averageValue">0 ml</p>
+          </div>
+          <div>
+            <p class="stat-label">Best Day</p>
+            <p class="stat-value" id="bestValue">0 ml</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-container history-section" aria-labelledby="history-title">
+      <h2 id="history-title" class="section-title">Recent Days</h2>
+      <div id="historyList" class="history-list"></div>
+      <p id="historyEmpty" class="empty-copy">No hydration data yet. Add your first glass above.</p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Memory Journal. Keep your hydration habit steady.</p>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="water-tracker.js"></script>
+</body>
+</html>

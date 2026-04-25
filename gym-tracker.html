@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Journal | Gym Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/ui-polish.css">
+  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/decorative-elements.css">
+  <link rel="stylesheet" href="gym-tracker.css">
+</head>
+<body class="gym-tracker-page">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li><a href="mood-tracker.html">Mood Tracker</a></li>
+      <li><a href="water-tracker.html">Water Tracker</a></li>
+      <li><a href="gym-tracker.html" class="active" aria-current="page">Gym Tracker</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
+  <main class="gym-layout">
+    <section class="gym-hero section-container" aria-labelledby="gym-title">
+      <p class="eyebrow">Fitness Habit</p>
+      <h1 id="gym-title" class="section-title">Gym Tracker</h1>
+      <p class="intro-copy">Record workouts, track progress, and keep your training streak visible day by day.</p>
+    </section>
+
+    <section class="gym-grid section-container" aria-label="Gym tracking dashboard">
+      <article class="gym-card progress-card">
+        <h2>Today</h2>
+        <div class="progress-shell" role="img" aria-label="Today workout progress">
+          <div class="progress-ring" id="progressRing">
+            <span id="progressPercent">0%</span>
+          </div>
+          <p class="progress-copy"><strong id="todayMinutes">0 min</strong> of <strong id="dailyGoal">60 min</strong></p>
+        </div>
+      </article>
+
+      <article class="gym-card goal-card">
+        <h2>Goal</h2>
+        <label for="goalInput" class="group-label">Set daily training goal (min)</label>
+        <div class="row">
+          <input id="goalInput" type="number" min="15" max="240" step="5" value="60" class="input-text" aria-describedby="goalHint">
+          <button id="saveGoalBtn" class="btn btn-primary" type="button">Save</button>
+        </div>
+        <small id="goalHint" class="hint-text">A solid daily range is 30 to 90 minutes.</small>
+      </article>
+
+      <article class="gym-card add-card">
+        <h2>Add Workout</h2>
+        <div class="quick-add" role="group" aria-label="Quick add workout duration">
+          <button class="btn btn-secondary quick-btn" type="button" data-minutes="15">+15 min</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-minutes="30">+30 min</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-minutes="45">+45 min</button>
+          <button class="btn btn-secondary quick-btn" type="button" data-minutes="60">+60 min</button>
+        </div>
+        <div class="row">
+          <input id="customMinutes" type="number" min="5" max="240" step="5" placeholder="Custom min" class="input-text" aria-label="Custom workout duration in minutes">
+          <button id="addCustomBtn" class="btn btn-primary" type="button">Add</button>
+        </div>
+        <button id="resetTodayBtn" class="btn btn-danger reset-btn" type="button">Reset Today</button>
+      </article>
+
+      <article class="gym-card stats-card">
+        <h2>Stats</h2>
+        <div class="stats-grid">
+          <div>
+            <p class="stat-label">Current Streak</p>
+            <p class="stat-value" id="streakValue">0 days</p>
+          </div>
+          <div>
+            <p class="stat-label">7-Day Total</p>
+            <p class="stat-value" id="totalValue">0 min</p>
+          </div>
+          <div>
+            <p class="stat-label">Best Day</p>
+            <p class="stat-value" id="bestValue">0 min</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-container history-section" aria-labelledby="history-title">
+      <h2 id="history-title" class="section-title">Recent Days</h2>
+      <div id="historyList" class="history-list"></div>
+      <p id="historyEmpty" class="empty-copy">No workout data yet. Log your first session above.</p>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Memory Journal. Keep your training habit steady.</p>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="gym-tracker.js"></script>
+</body>
+</html>

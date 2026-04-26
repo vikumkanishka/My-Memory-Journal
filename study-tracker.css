@@ -1,0 +1,190 @@
+:root {
+  --study-accent: #3f7f4d;
+  --study-accent-soft: #e5f4db;
+  --study-good: #2f9d67;
+  --study-border: color-mix(in srgb, var(--border-color) 84%, #ffffff);
+}
+
+.study-tracker-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  background-image: var(--wallpaper-overlay), var(--wallpaper-image);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
+}
+
+.study-layout {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 1.25rem auto 2.5rem;
+}
+
+.study-hero {
+  margin-bottom: 1rem;
+}
+
+.study-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.study-card {
+  background: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  border: 1px solid var(--study-border);
+  border-radius: 18px;
+  padding: 1rem;
+  box-shadow: 0 12px 24px rgba(20, 42, 58, 0.08);
+}
+
+.study-card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.progress-shell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-ring {
+  --percent: 0;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--study-accent) calc(var(--percent) * 1%), color-mix(in srgb, var(--study-accent-soft) 72%, #ffffff) 0);
+  position: relative;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.progress-ring::before {
+  content: "";
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-bg) 94%, #ffffff);
+  position: absolute;
+}
+
+.progress-ring span {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-copy {
+  margin: 0;
+  color: var(--text-color);
+}
+
+.row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.row .input-text {
+  flex: 1;
+}
+
+.quick-add {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quick-btn {
+  min-height: 40px;
+}
+
+.reset-btn {
+  margin-top: 0.5rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--text-color) 70%, #7a8694);
+}
+
+.stat-value {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.history-section {
+  margin-top: 1rem;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 170px 1fr 96px;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--study-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card-bg) 90%, #ffffff);
+}
+
+.history-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--study-accent-soft) 78%, #ffffff);
+  overflow: hidden;
+}
+
+.history-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--study-accent), #8ccf77);
+}
+
+.history-meta {
+  text-align: right;
+  font-weight: 600;
+}
+
+.history-item.hit-goal .history-meta {
+  color: var(--study-good);
+}
+
+.empty-copy {
+  margin: 0.5rem 0 0;
+  color: color-mix(in srgb, var(--text-color) 70%, #7a8694);
+}
+
+@media (max-width: 900px) {
+  .study-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-item {
+    grid-template-columns: 1fr;
+  }
+
+  .history-meta {
+    text-align: left;
+  }
+}

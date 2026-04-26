@@ -1,0 +1,202 @@
+:root {
+  --period-accent: #c43f79;
+  --period-accent-soft: #ffe1ef;
+  --period-good: #2f9d67;
+  --period-border: color-mix(in srgb, var(--border-color) 84%, #ffffff);
+}
+
+.period-tracker-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  background-image: var(--wallpaper-overlay), var(--wallpaper-image);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
+}
+
+.period-layout {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 1.25rem auto 2.5rem;
+}
+
+.period-hero {
+  margin-bottom: 1rem;
+}
+
+.period-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.period-card {
+  background: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  border: 1px solid var(--period-border);
+  border-radius: 18px;
+  padding: 1rem;
+  box-shadow: 0 12px 24px rgba(20, 42, 58, 0.08);
+}
+
+.period-card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.progress-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.progress-ring {
+  --percent: 0;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--period-accent) calc(var(--percent) * 1%), color-mix(in srgb, var(--period-accent-soft) 72%, #ffffff) 0);
+  position: relative;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.progress-ring::before {
+  content: "";
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--card-bg) 94%, #ffffff);
+  position: absolute;
+}
+
+.progress-ring span {
+  position: relative;
+  z-index: 1;
+}
+
+.progress-copy {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.progress-meta {
+  margin: 0;
+  color: color-mix(in srgb, var(--text-color) 76%, #7a8694);
+}
+
+.row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.row .input-text {
+  flex: 1;
+}
+
+.group-label {
+  display: inline-block;
+  margin: 0.3rem 0 0.35rem;
+}
+
+.quick-add {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.last-log {
+  margin: 0.5rem 0;
+}
+
+.reset-btn {
+  margin-top: 0.4rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: color-mix(in srgb, var(--text-color) 70%, #7a8694);
+}
+
+.stat-value {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.history-section {
+  margin-top: 1rem;
+}
+
+.history-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: 130px 1fr 110px;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--period-border);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--card-bg) 90%, #ffffff);
+}
+
+.history-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--period-accent-soft) 78%, #ffffff);
+  overflow: hidden;
+}
+
+.history-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--period-accent), #df7ca9);
+}
+
+.history-meta {
+  text-align: right;
+  font-weight: 600;
+}
+
+.history-item.completed .history-meta {
+  color: var(--period-good);
+}
+
+.empty-copy {
+  margin: 0.5rem 0 0;
+  color: color-mix(in srgb, var(--text-color) 70%, #7a8694);
+}
+
+@media (max-width: 900px) {
+  .period-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .history-item {
+    grid-template-columns: 1fr;
+  }
+
+  .history-meta {
+    text-align: left;
+  }
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Journal | Gratitude Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/ui-polish.css">
+  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/decorative-elements.css">
+  <link rel="stylesheet" href="gratitude-tracker.css">
+</head>
+<body class="gratitude-tracker-page">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li><a href="mood-tracker.html">Mood Tracker</a></li>
+      <li><a href="water-tracker.html">Water Tracker</a></li>
+      <li><a href="gym-tracker.html">Gym Tracker</a></li>
+      <li><a href="study-tracker.html">Study Tracker</a></li>
+      <li><a href="period-tracker.html">Period Tracker</a></li>
+      <li><a href="expense-tracker.html">Expense Tracker</a></li>
+      <li><a href="gratitude-tracker.html" class="active" aria-current="page">Gratitude Tracker</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
+  <main class="gratitude-layout">
+    <section class="gratitude-hero section-container" aria-labelledby="gratitude-title">
+      <p class="eyebrow">Mindfulness Habit</p>
+      <h1 id="gratitude-title" class="section-title">Gratitude Tracker</h1>
+      <p class="intro-copy">Cultivate gratitude by reflecting on the things you're thankful for each day.</p>
+    </section>
+
+    <section class="gratitude-grid section-container" aria-label="Gratitude tracking dashboard">
+      <article class="gratitude-card today-card">
+        <h2>Today</h2>
+        <div class="gratitude-count">
+          <p class="count-value" id="todayCount">0</p>
+          <p class="count-label">Gratitudes</p>
+        </div>
+      </article>
+
+      <article class="gratitude-card streak-card">
+        <h2>Streak</h2>
+        <div class="streak-display">
+          <p class="streak-value" id="streakValue">0</p>
+          <p class="streak-label">days</p>
+          <p class="streak-message" id="streakMessage">Add a gratitude to start your streak!</p>
+        </div>
+      </article>
+
+      <article class="gratitude-card add-card">
+        <h2>Add Gratitude</h2>
+        <div class="form-group">
+          <label for="gratitudeInput" class="form-label">What are you grateful for?</label>
+          <textarea 
+            id="gratitudeInput" 
+            class="gratitude-textarea" 
+            placeholder="Write something you're thankful for today..."
+            rows="3"
+            aria-label="Gratitude entry text"
+            aria-describedby="charCount"
+          ></textarea>
+          <small id="charCount" class="char-count"><span id="charUsed">0</span>/300</small>
+        </div>
+        <button id="addGratitudeBtn" class="btn btn-primary" type="button">Add Gratitude</button>
+      </article>
+
+      <article class="gratitude-card stats-card">
+        <h2>Stats</h2>
+        <div class="stats-grid">
+          <div>
+            <p class="stat-label">This Week</p>
+            <p class="stat-value" id="weekValue">0</p>
+          </div>
+          <div>
+            <p class="stat-label">This Month</p>
+            <p class="stat-value" id="monthValue">0</p>
+          </div>
+          <div>
+            <p class="stat-label">Total</p>
+            <p class="stat-value" id="totalValue">0</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="gratitude-card calendar-card">
+        <h2>Calendar</h2>
+        <div class="mini-calendar">
+          <div class="calendar-header">
+            <button id="prevMonth" class="calendar-nav" type="button" aria-label="Previous month">&lt;</button>
+            <span id="currentMonth" class="calendar-month"></span>
+            <button id="nextMonth" class="calendar-nav" type="button" aria-label="Next month">&gt;</button>
+          </div>
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-container history-section" aria-labelledby="history-title">
+      <h2 id="history-title" class="section-title">Gratitude Journal</h2>
+      <div class="history-controls">
+        <select id="filterPeriod" class="filter-select" aria-label="Filter by time period">
+          <option value="all">All Time</option>
+          <option value="week">This Week</option>
+          <option value="month">This Month</option>
+          <option value="today">Today</option>
+        </select>
+      </div>
+      <div id="historyList" class="history-list"></div>
+      <p id="historyEmpty" class="empty-copy">No gratitudes recorded yet. Start by adding one above!</p>
+      <button id="resetDataBtn" class="btn btn-danger reset-btn" type="button" style="margin-top: 1rem;">Clear All Data</button>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Memory Journal. Practice gratitude daily.</p>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="gratitude-tracker.js"></script>
+</body>
+</html>

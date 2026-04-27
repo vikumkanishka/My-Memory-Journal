@@ -1,0 +1,362 @@
+:root {
+  --expense-accent: #c84747;
+  --expense-accent-soft: #ffe8e8;
+  --expense-warning: #f59e0b;
+  --expense-safe: #2f9d67;
+  --expense-border: color-mix(in srgb, var(--border-color) 84%, #ffffff);
+}
+
+.expense-tracker-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  background-image: var(--wallpaper-overlay), var(--wallpaper-image);
+  background-size: cover, cover;
+  background-position: center, center;
+  background-attachment: fixed, fixed;
+}
+
+.expense-layout {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 1.25rem auto 2.5rem;
+}
+
+.expense-hero {
+  margin-bottom: 1rem;
+}
+
+.expense-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.expense-card {
+  background: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  border: 1px solid var(--expense-border);
+  border-radius: 18px;
+  padding: 1rem;
+  box-shadow: 0 12px 24px rgba(20, 42, 58, 0.08);
+}
+
+.expense-card h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.1rem;
+}
+
+.amount-display {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.amount-value {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--expense-accent);
+}
+
+.amount-label {
+  margin: 0.5rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.progress-shell {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: conic-gradient(
+    var(--expense-accent) 0deg,
+    var(--expense-accent) calc(var(--percent, 0) * 3.6deg),
+    var(--expense-accent-soft) calc(var(--percent, 0) * 3.6deg),
+    var(--expense-accent-soft) 360deg
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--expense-accent);
+  flex-shrink: 0;
+}
+
+.progress-copy {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.progress-copy strong {
+  color: var(--text-primary);
+}
+
+.form-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.input-text {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid var(--expense-border);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: var(--input-bg, #ffffff);
+  color: var(--text-primary);
+}
+
+.input-text:focus {
+  outline: none;
+  border-color: var(--expense-accent);
+  box-shadow: 0 0 0 3px var(--expense-accent-soft);
+}
+
+.input-text::placeholder {
+  color: var(--text-secondary);
+}
+
+.group-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.row .input-text {
+  flex: 1;
+}
+
+.hint-text {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.stats-grid > div {
+  text-align: center;
+}
+
+.stat-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: var(--expense-accent);
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: var(--bg-color);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.category-item-name {
+  flex: 1;
+}
+
+.category-item-amount {
+  font-weight: bold;
+  color: var(--expense-accent);
+  text-align: right;
+  min-width: 80px;
+}
+
+.history-section {
+  margin-top: 2rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  border: 1px solid var(--expense-border);
+  border-radius: 12px;
+  border-left: 4px solid var(--expense-accent-soft);
+}
+
+.history-item.over-budget {
+  border-left-color: var(--expense-accent);
+  background: color-mix(in srgb, var(--expense-accent-soft) 20%, transparent);
+}
+
+.history-item-date {
+  min-width: 100px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.history-item-details {
+  flex: 1;
+}
+
+.history-item-category {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.history-item-note {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.history-item-amount {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--expense-accent);
+  text-align: right;
+  min-width: 80px;
+}
+
+.empty-copy {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 2rem 1rem;
+  font-size: 0.95rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--expense-accent);
+  color: #ffffff;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: color-mix(in srgb, var(--expense-accent) 85%, #000000);
+  outline: none;
+}
+
+.btn-secondary {
+  background-color: var(--expense-accent-soft);
+  color: var(--expense-accent);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: color-mix(in srgb, var(--expense-accent-soft) 85%, #000000);
+  outline: none;
+}
+
+.btn-danger {
+  background-color: var(--expense-accent);
+  color: #ffffff;
+}
+
+.btn-danger:hover,
+.btn-danger:focus {
+  background-color: color-mix(in srgb, var(--expense-accent) 70%, #000000);
+  outline: none;
+}
+
+.reset-btn {
+  width: 100%;
+}
+
+.section-container {
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--card-bg) 92%, #ffffff);
+  border: 1px solid var(--expense-border);
+  border-radius: 18px;
+}
+
+.section-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.intro-copy {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .expense-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .amount-value {
+    font-size: 1.75rem;
+  }
+}

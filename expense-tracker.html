@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Journal | Expense Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/ui-polish.css">
+  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/decorative-elements.css">
+  <link rel="stylesheet" href="expense-tracker.css">
+</head>
+<body class="expense-tracker-page">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li><a href="mood-tracker.html">Mood Tracker</a></li>
+      <li><a href="water-tracker.html">Water Tracker</a></li>
+      <li><a href="gym-tracker.html">Gym Tracker</a></li>
+      <li><a href="study-tracker.html">Study Tracker</a></li>
+      <li><a href="period-tracker.html">Period Tracker</a></li>
+      <li><a href="expense-tracker.html" class="active" aria-current="page">Expense Tracker</a></li>
+      <li><a href="gratitude-tracker.html">Gratitude Tracker</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
+  <main class="expense-layout">
+    <section class="expense-hero section-container" aria-labelledby="expense-title">
+      <p class="eyebrow">Financial Habit</p>
+      <h1 id="expense-title" class="section-title">Expense Tracker</h1>
+      <p class="intro-copy">Track your spending and stay on budget with ease.</p>
+    </section>
+
+    <section class="expense-grid section-container" aria-label="Expense tracking dashboard">
+      <article class="expense-card today-card">
+        <h2>Today</h2>
+        <div class="amount-display">
+          <p class="amount-value" id="todayAmount">$0.00</p>
+          <p class="amount-label">Total Spent</p>
+        </div>
+      </article>
+
+      <article class="expense-card month-card">
+        <h2>This Month</h2>
+        <div class="progress-shell" role="img" aria-label="Monthly budget progress">
+          <div class="progress-ring" id="progressRing">
+            <span id="progressPercent">0%</span>
+          </div>
+          <p class="progress-copy"><strong id="monthAmount">$0.00</strong> of <strong id="monthBudget">$2000.00</strong></p>
+        </div>
+      </article>
+
+      <article class="expense-card budget-card">
+        <h2>Budget</h2>
+        <label for="budgetInput" class="group-label">Set monthly budget</label>
+        <div class="row">
+          <input id="budgetInput" type="number" min="100" max="50000" step="100" value="2000" class="input-text" aria-describedby="budgetHint">
+          <button id="saveBudgetBtn" class="btn btn-primary" type="button">Save</button>
+        </div>
+        <small id="budgetHint" class="hint-text">Set your monthly spending limit.</small>
+      </article>
+
+      <article class="expense-card add-card">
+        <h2>Add Expense</h2>
+        <div class="form-row">
+          <input id="expenseAmount" type="number" min="0.01" max="10000" step="0.01" placeholder="Amount" class="input-text" aria-label="Expense amount">
+          <select id="categorySelect" class="input-text" aria-label="Expense category">
+            <option value="food">🍔 Food</option>
+            <option value="transport">🚗 Transport</option>
+            <option value="utilities">⚡ Utilities</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="health">⚕️ Health</option>
+            <option value="shopping">🛍️ Shopping</option>
+            <option value="other">📝 Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input id="expenseNote" type="text" placeholder="Note (optional)" class="input-text" aria-label="Expense note">
+          <button id="addExpenseBtn" class="btn btn-primary" type="button">Add</button>
+        </div>
+      </article>
+
+      <article class="expense-card stats-card">
+        <h2>Stats</h2>
+        <div class="stats-grid">
+          <div>
+            <p class="stat-label">Monthly Avg</p>
+            <p class="stat-value" id="monthlyAvgValue">$0.00</p>
+          </div>
+          <div>
+            <p class="stat-label">Highest Day</p>
+            <p class="stat-value" id="highestDayValue">$0.00</p>
+          </div>
+          <div>
+            <p class="stat-label">Transactions</p>
+            <p class="stat-value" id="transactionCountValue">0</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="expense-card categories-card">
+        <h2>By Category</h2>
+        <div id="categoryBreakdown" class="category-list"></div>
+        <p id="categoryEmpty" class="empty-copy">No expenses yet. Add your first expense above.</p>
+      </article>
+    </section>
+
+    <section class="section-container history-section" aria-labelledby="history-title">
+      <h2 id="history-title" class="section-title">Recent Transactions</h2>
+      <div id="historyList" class="history-list"></div>
+      <p id="historyEmpty" class="empty-copy">No expenses recorded yet. Add your first expense above.</p>
+      <button id="resetMonthBtn" class="btn btn-danger reset-btn" type="button" style="margin-top: 1rem;">Reset Month</button>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Memory Journal. Keep your expenses in check.</p>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="expense-tracker.js"></script>
+</body>
+</html>

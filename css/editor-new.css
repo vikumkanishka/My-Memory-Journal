@@ -1,0 +1,484 @@
+/**
+ * EDITOR STYLES - Journal Entry Creation & Editing
+ * Clean, distraction-free writing environment
+ * Depends on: design-system.css, ui-polish.css
+ */
+
+/* ========================================
+   EDITOR LAYOUT
+   ======================================== */
+
+.editor-page {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: var(--space-8);
+}
+
+.editor-main {
+  min-width: 0;
+}
+
+.editor-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ========================================
+   EDITOR HEADER
+   ======================================== */
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.editor-title-input {
+  flex: 1;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.editor-title-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.editor-title-input:focus {
+  outline: none;
+}
+
+.editor-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.editor-btn {
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-sm);
+}
+
+.editor-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.editor-btn.primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.editor-btn.primary:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* ========================================
+   EDITOR TOOLBAR
+   ======================================== */
+
+.editor-toolbar {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: var(--space-2);
+  border-right: 1px solid var(--border-color);
+  padding-right: var(--space-4);
+}
+
+.toolbar-group:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: var(--font-size-lg);
+}
+
+.toolbar-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.toolbar-btn.active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* ========================================
+   EDITOR CONTENT AREA - "PAPER" STYLE
+   ======================================== */
+
+.editor-content {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  min-height: 500px;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow var(--transition-base);
+}
+
+.editor-content:focus-within {
+  box-shadow: var(--shadow-lg);
+}
+
+.editor-textarea {
+  width: 100%;
+  min-height: 400px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  resize: vertical;
+  font-weight: normal;
+}
+
+.editor-textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.editor-textarea:focus {
+  outline: none;
+}
+
+/* Rich text editor area */
+.rich-editor {
+  width: 100%;
+  min-height: 400px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+  outline: none;
+}
+
+/* ========================================
+   EDITOR SIDEBAR COMPONENTS
+   ======================================== */
+
+.sidebar-panel {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+
+.sidebar-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ========================================
+   MOOD SELECTOR
+   ======================================== */
+
+.mood-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.mood-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mood-btn:hover {
+  border-color: var(--color-primary);
+}
+
+.mood-btn.active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.mood-emoji {
+  font-size: var(--font-size-2xl);
+}
+
+.mood-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+}
+
+/* ========================================
+   TAGS INPUT
+   ======================================== */
+
+.tags-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.tags-input-field {
+  flex: 1;
+  min-width: 100px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+}
+
+.tags-input-field::placeholder {
+  color: var(--text-tertiary);
+}
+
+.tags-input-field:focus {
+  outline: none;
+}
+
+.tag-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+}
+
+.tag-remove {
+  cursor: pointer;
+  font-weight: bold;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.tag-remove:hover {
+  opacity: 1;
+}
+
+/* ========================================
+   PRIVACY SELECTOR
+   ======================================== */
+
+.privacy-selector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.privacy-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.privacy-option:hover {
+  border-color: var(--color-primary);
+}
+
+.privacy-option.active {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+}
+
+.privacy-radio {
+  width: 20px;
+  height: 20px;
+  appearance: none;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.privacy-option.active .privacy-radio {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.privacy-label {
+  flex: 1;
+}
+
+.privacy-label-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.privacy-label-desc {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+/* ========================================
+   MEDIA UPLOAD
+   ======================================== */
+
+.media-upload-area {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.media-upload-area:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.media-upload-area.dragover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.media-upload-icon {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-2);
+}
+
+.media-upload-text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.media-input {
+  display: none;
+}
+
+/* ========================================
+   DRAFT AUTO-SAVE
+   ======================================== */
+
+.draft-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.draft-indicator.saving {
+  color: var(--color-info);
+}
+
+.draft-indicator.saved {
+  color: var(--color-success);
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .editor-page {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+@media (max-width: 768px) {
+  .editor-page {
+    gap: var(--space-4);
+  }
+
+  .editor-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .editor-content {
+    padding: var(--space-4);
+    min-height: 300px;
+  }
+
+  .editor-textarea {
+    min-height: 250px;
+    font-size: var(--font-size-base);
+  }
+
+  .sidebar-panel {
+    padding: var(--space-4);
+  }
+
+  .editor-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-toolbar {
+    overflow-x: auto;
+  }
+}

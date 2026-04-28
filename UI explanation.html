@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Journal UI Explanation</title>
+  <style>
+    :root {
+      --bg: #f5efe7;
+      --panel: #fffaf4;
+      --panel-2: #f8f2ea;
+      --line: #d9cbb7;
+      --line-2: #c8b59d;
+      --text: #2f261f;
+      --muted: #6d5c4c;
+      --brand: #6b5b4e;
+      --accent: #d7a77b;
+      --accent-2: #a77d62;
+      --success: #6f8f76;
+      --shadow: 0 20px 50px rgba(56, 39, 24, 0.14);
+      --shadow-soft: 0 8px 24px rgba(56, 39, 24, 0.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --font: Inter, "Segoe UI", "Aptos", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(215, 167, 123, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(111, 143, 118, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f3ec 0%, #f3ebe2 100%);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+    }
+
+    .page {
+      width: min(1400px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(250,244,236,0.94));
+      border: 1px solid rgba(201, 183, 160, 0.55);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: 28px 32px;
+      margin-bottom: 28px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -120px -120px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(215,167,123,0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(107, 91, 78, 0.08);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(30px, 3.2vw, 44px);
+      line-height: 1.05;
+      margin-bottom: 12px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(201, 183, 160, 0.5);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .meta-card strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      color: var(--brand);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .meta-card span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .screen {
+      margin: 26px 0 34px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(201, 183, 160, 0.58);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .screen-header {
+      padding: 20px 24px 0;
+    }
+
+    .screen-header h2 {
+      font-size: 24px;
+      letter-spacing: -0.03em;
+      margin-bottom: 6px;
+    }
+
+    .screen-header p {
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 920px;
+      margin-bottom: 16px;
+    }
+
+    .browser-shell {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: linear-gradient(180deg, #faf6ef 0%, #f1e9df 100%);
+      border-top: 1px solid rgba(201, 183, 160, 0.45);
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      padding: 0 24px 24px;
+    }
+
+    .legend-item {
+      background: rgba(255,255,255,0.68);
+      border: 1px solid rgba(201, 183, 160, 0.55);
+      border-radius: 14px;
+      padding: 10px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .footer-note {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 0 8px;
+    }
+
+    .label-chip {
+      fill: rgba(255, 250, 244, 0.95);
+      stroke: rgba(107, 91, 78, 0.22);
+      stroke-width: 1;
+      filter: drop-shadow(0 10px 18px rgba(56, 39, 24, 0.12));
+    }
+
+    .label-text {
+      font-size: 16px;
+      font-weight: 700;
+      fill: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .label-subtext {
+      font-size: 11px;
+      font-weight: 500;
+      fill: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    .section-title {
+      fill: #3a2d23;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .section-copy {
+      fill: #6a5848;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .browser-window {
+      fill: #f7f2ea;
+      stroke: #d8c8b5;
+      stroke-width: 1.2;
+    }
+
+    .browser-top {
+      fill: #f3ebe1;
+    }
+
+    .window-dot-red { fill: #e26a63; }
+    .window-dot-yellow { fill: #ecbf50; }
+    .window-dot-green { fill: #6fb06f; }
+
+    .app-bg {
+      fill: #f8f4ee;
+    }
+
+    .nav-bar {
+      fill: #f7f1e8;
+      stroke: #dacbb8;
+      stroke-width: 1;
+    }
+
+    .surface {
+      fill: #fffaf4;
+      stroke: #d7c6b3;
+      stroke-width: 1;
+    }
+
+    .surface-muted {
+      fill: #f5efe7;
+      stroke: #d7c6b3;
+      stroke-width: 1;
+    }
+
+    .surface-accent {
+      fill: #fff3e6;
+      stroke: #d7ab7f;
+      stroke-width: 1;
+    }
+
+    .soft-shadow {
+      filter: drop-shadow(0 16px 30px rgba(72, 49, 31, 0.10));
+    }
+
+    .line {
+      stroke: #8b7056;
+      stroke-width: 2.4;
+      fill: none;
+    }
+
+    .line-soft {
+      stroke: #bfa68c;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-dasharray: 4 4;
+    }
+
+    .callout-badge {
+      fill: #ffffff;
+      stroke: #d4c2ae;
+      stroke-width: 1;
+    }
+
+    .callout-number {
+      fill: var(--brand);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .mini-label {
+      fill: #4c3f33;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .mini-muted {
+      fill: #6e5c4b;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .card-title {
+      fill: #2f261f;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card-copy {
+      fill: #685846;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .pill {
+      fill: #fff8f1;
+      stroke: #dbc8b3;
+      stroke-width: 1;
+    }
+
+    .pill-text {
+      fill: #6a5848;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .meta-row, .legend { grid-template-columns: 1fr; }
+      .page { width: min(100vw - 24px, 1400px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div class="eyebrow">UI explanation</div>
+      <h1>Memory Journal - labeled UI guide</h1>
+      <p>This document maps the primary screens in the application and names each visible section so any viewer can quickly understand how the interface is organized.</p>
+      <div class="meta-row">
+        <div class="meta-card">
+          <strong>Format</strong>
+          <span>Desktop browser mockups with callout labels and arrows.</span>
+        </div>
+        <div class="meta-card">
+          <strong>Style</strong>
+          <span>Clean SaaS layout with soft surfaces, rounded cards, and light theme styling.</span>
+        </div>
+        <div class="meta-card">
+          <strong>Naming</strong>
+          <span>Consistent terms across screens: Navbar, Page Header, Main Content Area, and more.</span>
+        </div>
+      </div>
+      <p class="footer-note">The screens below are documentation illustrations, not interactive app pages.</p>
+    </section>
+
+    <!-- HOME DASHBOARD -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>1. Home Dashboard</h2>
+        <p>Shows the landing experience of <strong>index.html</strong> with the main navigation, welcome banner, quick actions, recent entries, tracker shortcuts, and profile access.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated home dashboard mockup">
+        <defs>
+          <marker id="arrow-home" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="360" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / index.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="234" y="100" width="82" height="34" rx="17" class="pill" />
+        <text x="254" y="122" class="pill-text">Home</text>
+        <rect x="330" y="100" width="118" height="34" rx="17" class="surface" />
+        <text x="349" y="122" class="mini-muted">Create Journal</text>
+        <rect x="460" y="100" width="96" height="34" rx="17" class="surface" />
+        <text x="482" y="122" class="mini-muted">Entries</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="54" y="176" width="744" height="184" rx="28" class="surface soft-shadow" />
+        <text x="86" y="226" class="section-title">Welcome to Your Mental Oasis</text>
+        <text x="86" y="258" class="section-copy">A calm, private home screen for writing memories, reviewing your history, and jumping into tracker tools.</text>
+        <rect x="86" y="292" width="152" height="44" rx="14" class="surface-accent" />
+        <text x="112" y="319" class="mini-label">Start Writing</text>
+        <rect x="250" y="292" width="148" height="44" rx="14" class="surface" />
+        <text x="273" y="319" class="mini-label">View Entries</text>
+        <rect x="450" y="284" width="300" height="56" rx="18" class="surface-muted" />
+        <text x="474" y="312" class="mini-muted">Quote of the Day / Daily inspiration</text>
+
+        <rect x="824" y="176" width="390" height="184" rx="28" class="surface soft-shadow" />
+        <text x="854" y="214" class="mini-label">Quick Actions</text>
+        <rect x="852" y="234" width="158" height="50" rx="16" class="surface-accent" />
+        <rect x="1022" y="234" width="158" height="50" rx="16" class="surface" />
+        <rect x="852" y="294" width="328" height="40" rx="14" class="surface-muted" />
+        <text x="874" y="266" class="mini-label">Create</text>
+        <text x="1044" y="266" class="mini-label">Browse</text>
+        <text x="874" y="320" class="mini-muted">Pinned shortcuts for frequent actions</text>
+
+        <rect x="54" y="386" width="744" height="266" rx="28" class="surface soft-shadow" />
+        <text x="86" y="426" class="mini-label">Recent Entries</text>
+        <rect x="86" y="446" width="680" height="56" rx="16" class="surface-muted" />
+        <rect x="86" y="512" width="680" height="56" rx="16" class="surface-muted" />
+        <rect x="86" y="578" width="680" height="56" rx="16" class="surface-muted" />
+        <text x="108" y="480" class="card-title">Entry Card</text>
+        <text x="108" y="496" class="card-copy">Recent memory preview with title, mood, date, and action link.</text>
+
+        <rect x="824" y="386" width="390" height="266" rx="28" class="surface soft-shadow" />
+        <text x="854" y="426" class="mini-label">Tracker Shortcuts</text>
+        <rect x="852" y="446" width="150" height="72" rx="18" class="surface-accent" />
+        <rect x="1018" y="446" width="150" height="72" rx="18" class="surface-accent" />
+        <rect x="852" y="530" width="150" height="72" rx="18" class="surface-accent" />
+        <rect x="1018" y="530" width="150" height="72" rx="18" class="surface-accent" />
+        <text x="894" y="487" class="mini-label">Mood</text>
+        <text x="1055" y="487" class="mini-label">Water</text>
+        <text x="896" y="571" class="mini-label">Gym</text>
+        <text x="1050" y="571" class="mini-label">Study</text>
+
+        <rect x="1088" y="88" width="100" height="34" rx="17" class="surface-accent" opacity="0" />
+
+        <path d="M 1092 88 C 1092 68, 1110 64, 1134 64" class="line" marker-end="url(#arrow-home)" />
+        <path d="M 748 282 C 790 282, 792 266, 824 266" class="line" marker-end="url(#arrow-home)" />
+        <path d="M 360 176 C 360 158, 330 154, 288 154" class="line" marker-end="url(#arrow-home)" />
+        <path d="M 796 515 C 820 515, 820 506, 824 506" class="line" marker-end="url(#arrow-home)" />
+        <path d="M 419 626 C 460 626, 478 626, 516 626" class="line" marker-end="url(#arrow-home)" />
+        <path d="M 1050 620 C 1060 652, 1088 662, 1138 662" class="line" marker-end="url(#arrow-home)" />
+
+        <rect x="952" y="50" width="184" height="40" rx="18" class="label-chip" />
+        <text x="970" y="75" class="label-text">Profile Menu</text>
+        <rect x="930" y="212" width="190" height="42" rx="18" class="label-chip" />
+        <text x="948" y="237" class="label-text">Quick Actions</text>
+        <rect x="176" y="156" width="192" height="42" rx="18" class="label-chip" />
+        <text x="194" y="181" class="label-text">Welcome Section</text>
+        <rect x="138" y="652" width="164" height="42" rx="18" class="label-chip" />
+        <text x="156" y="677" class="label-text">Recent Entries</text>
+        <rect x="930" y="640" width="198" height="42" rx="18" class="label-chip" />
+        <text x="948" y="665" class="label-text">Tracker Shortcuts</text>
+        <rect x="842" y="362" width="168" height="42" rx="18" class="label-chip" />
+        <text x="860" y="387" class="label-text">Navbar</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Navbar:</strong> Primary navigation, logo, and profile access.</div>
+        <div class="legend-item"><strong>Welcome Section:</strong> Main hero area introducing the dashboard.</div>
+        <div class="legend-item"><strong>Tracker Shortcuts:</strong> Quick entry points to the habit modules.</div>
+      </div>
+    </section>
+
+    <!-- JOURNAL EDITOR -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>2. Journal Editor Page</h2>
+        <p>Shows <strong>new.html</strong> with the writing workspace, toolbar, metadata fields, mood selector, image tools, and action buttons.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated journal editor mockup">
+        <defs>
+          <marker id="arrow-editor" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="340" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / new.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="228" y="100" width="146" height="34" rx="17" class="pill" />
+        <text x="248" y="122" class="pill-text">Create Journal</text>
+        <rect x="390" y="100" width="96" height="34" rx="17" class="surface" />
+        <text x="412" y="122" class="mini-muted">Entries</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="54" y="176" width="280" height="520" rx="28" class="surface soft-shadow" />
+        <text x="84" y="220" class="mini-label">Sidebar Navigation</text>
+        <rect x="84" y="240" width="220" height="120" rx="20" class="surface-muted" />
+        <rect x="84" y="374" width="220" height="88" rx="20" class="surface-muted" />
+        <rect x="84" y="474" width="220" height="88" rx="20" class="surface-muted" />
+        <text x="106" y="292" class="card-title">Recent Entries</text>
+        <text x="106" y="308" class="card-copy">Recent memory list and session controls.</text>
+
+        <rect x="356" y="176" width="870" height="520" rx="28" class="surface soft-shadow" />
+        <text x="388" y="222" class="section-title">Page Title</text>
+        <text x="388" y="248" class="section-copy">Turn today into a page worth keeping.</text>
+
+        <rect x="388" y="268" width="806" height="58" rx="18" class="surface-accent" />
+        <text x="412" y="304" class="mini-label">Editor Area (main writing section)</text>
+        <rect x="388" y="344" width="806" height="50" rx="16" class="surface-muted" />
+        <text x="412" y="376" class="mini-muted">Toolbar for bold, italic, lists, quotes, and alignment</text>
+
+        <rect x="388" y="412" width="242" height="110" rx="18" class="surface" />
+        <rect x="644" y="412" width="242" height="110" rx="18" class="surface" />
+        <rect x="900" y="412" width="294" height="110" rx="18" class="surface" />
+        <text x="410" y="448" class="mini-label">Mood Selector</text>
+        <text x="666" y="448" class="mini-label">Tags Input</text>
+        <text x="922" y="448" class="mini-label">Image Upload Area</text>
+
+        <rect x="388" y="540" width="806" height="104" rx="20" class="surface-muted" />
+        <text x="412" y="578" class="mini-label">Save / Cancel Buttons</text>
+        <rect x="996" y="572" width="92" height="36" rx="18" class="surface" />
+        <rect x="1096" y="572" width="92" height="36" rx="18" class="surface-accent" />
+        <text x="1018" y="596" class="mini-muted">Cancel</text>
+        <text x="1121" y="596" class="mini-label">Save</text>
+
+        <path d="M 1090 88 C 1090 66, 1110 64, 1138 64" class="line" marker-end="url(#arrow-editor)" />
+        <path d="M 500 176 C 500 156, 486 150, 466 150" class="line" marker-end="url(#arrow-editor)" />
+        <path d="M 1212 300 C 1228 300, 1236 290, 1236 266" class="line" marker-end="url(#arrow-editor)" />
+        <path d="M 644 468 C 600 468, 586 468, 546 468" class="line" marker-end="url(#arrow-editor)" />
+        <path d="M 988 470 C 948 470, 938 470, 918 470" class="line" marker-end="url(#arrow-editor)" />
+        <path d="M 1040 540 C 1040 516, 1040 510, 1040 498" class="line" marker-end="url(#arrow-editor)" />
+
+        <rect x="960" y="58" width="174" height="42" rx="18" class="label-chip" />
+        <text x="978" y="84" class="label-text">Profile Menu</text>
+        <rect x="412" y="150" width="144" height="42" rx="18" class="label-chip" />
+        <text x="430" y="176" class="label-text">Page Title</text>
+        <rect x="900" y="126" width="104" height="42" rx="18" class="label-chip" />
+        <text x="918" y="152" class="label-text">Navbar</text>
+        <rect x="982" y="456" width="156" height="42" rx="18" class="label-chip" />
+        <text x="1000" y="482" class="label-text">Image Upload</text>
+        <rect x="704" y="638" width="202" height="42" rx="18" class="label-chip" />
+        <text x="722" y="664" class="label-text">Save / Cancel Buttons</text>
+        <rect x="416" y="406" width="160" height="42" rx="18" class="label-chip" />
+        <text x="434" y="432" class="label-text">Mood Selector</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Editor Area:</strong> Primary writing surface where the entry content is composed.</div>
+        <div class="legend-item"><strong>Tags Input:</strong> Metadata field for organizing entries.</div>
+        <div class="legend-item"><strong>Image Upload Area:</strong> Space for attaching photos to a memory.</div>
+      </div>
+    </section>
+
+    <!-- ENTRIES LIST -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>3. Entries List Page</h2>
+        <p>Shows <strong>entries.html</strong> with the search and filter bar, grid or list toggle, entry cards, and pagination controls.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated entries list mockup">
+        <defs>
+          <marker id="arrow-entries" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="344" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / entries.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="54" y="176" width="1170" height="104" rx="28" class="surface soft-shadow" />
+        <text x="84" y="214" class="section-title">Your Memories</text>
+        <rect x="84" y="226" width="430" height="36" rx="18" class="surface-muted" />
+        <text x="108" y="249" class="mini-muted">Search Bar</text>
+        <rect x="538" y="226" width="132" height="36" rx="18" class="surface-muted" />
+        <rect x="684" y="226" width="132" height="36" rx="18" class="surface-muted" />
+        <rect x="832" y="226" width="136" height="36" rx="18" class="surface-muted" />
+        <text x="558" y="249" class="mini-muted">Mood</text>
+        <text x="708" y="249" class="mini-muted">Sort</text>
+        <text x="864" y="249" class="mini-muted">Grid/List</text>
+
+        <rect x="54" y="300" width="1170" height="318" rx="28" class="surface soft-shadow" />
+        <text x="84" y="340" class="mini-label">Entries Grid / List</text>
+        <rect x="84" y="360" width="330" height="226" rx="22" class="surface-muted" />
+        <rect x="430" y="360" width="330" height="226" rx="22" class="surface-muted" />
+        <rect x="776" y="360" width="418" height="226" rx="22" class="surface-muted" />
+        <text x="108" y="398" class="card-title">Entry Card</text>
+        <text x="108" y="416" class="card-copy">Title, date, mood, preview text, tags, and quick actions.</text>
+        <rect x="108" y="444" width="248" height="120" rx="18" class="surface" />
+        <text x="130" y="512" class="mini-muted">Detailed card annotation</text>
+        <rect x="832" y="400" width="330" height="86" rx="18" class="surface-accent" />
+        <text x="856" y="434" class="mini-label">Pagination / Load More</text>
+        <rect x="832" y="500" width="330" height="64" rx="18" class="surface" />
+        <text x="856" y="540" class="mini-muted">Controls for browsing more entries</text>
+
+        <path d="M 1112 88 C 1112 66, 1128 64, 1158 64" class="line" marker-end="url(#arrow-entries)" />
+        <path d="M 510 242 C 540 242, 552 242, 578 242" class="line" marker-end="url(#arrow-entries)" />
+        <path d="M 768 242 C 792 242, 804 242, 830 242" class="line" marker-end="url(#arrow-entries)" />
+        <path d="M 982 242 C 1002 242, 1014 242, 1040 242" class="line" marker-end="url(#arrow-entries)" />
+        <path d="M 414 448 C 420 448, 424 448, 430 448" class="line" marker-end="url(#arrow-entries)" />
+        <path d="M 1112 404 C 1146 404, 1162 400, 1170 390" class="line" marker-end="url(#arrow-entries)" />
+
+        <rect x="960" y="58" width="174" height="42" rx="18" class="label-chip" />
+        <text x="978" y="84" class="label-text">Profile Menu</text>
+        <rect x="96" y="150" width="128" height="42" rx="18" class="label-chip" />
+        <text x="114" y="176" class="label-text">Navbar</text>
+        <rect x="150" y="164" width="146" height="42" rx="18" class="label-chip" />
+        <text x="168" y="190" class="label-text">Search Bar</text>
+        <rect x="562" y="166" width="138" height="42" rx="18" class="label-chip" />
+        <text x="580" y="192" class="label-text">Filter Controls</text>
+        <rect x="412" y="598" width="172" height="42" rx="18" class="label-chip" />
+        <text x="430" y="624" class="label-text">Entries Grid</text>
+        <rect x="986" y="576" width="146" height="42" rx="18" class="label-chip" />
+        <text x="1004" y="602" class="label-text">Load More</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Entry Card:</strong> One memory preview with metadata and quick access actions.</div>
+        <div class="legend-item"><strong>Filter Controls:</strong> Sort, mood, and layout controls that narrow results.</div>
+        <div class="legend-item"><strong>Pagination / Load More:</strong> Navigation for longer entry histories.</div>
+      </div>
+    </section>
+
+    <!-- SINGLE ENTRY VIEW -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>4. Single Entry View Page</h2>
+        <p>Shows <strong>view.html</strong> as a focused reading layout with the title, content, images, tags, and edit/delete actions.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated single entry view mockup">
+        <defs>
+          <marker id="arrow-view" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="340" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / view.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="110" y="188" width="1060" height="498" rx="32" class="surface soft-shadow" />
+        <text x="156" y="244" class="section-title">Entry Title</text>
+        <rect x="156" y="258" width="170" height="30" rx="15" class="surface-muted" />
+        <text x="176" y="279" class="mini-muted">Date / Mood</text>
+        <rect x="156" y="310" width="700" height="176" rx="22" class="surface-muted" />
+        <text x="180" y="354" class="mini-label">Entry Content</text>
+        <text x="180" y="378" class="section-copy">Reading area for the full journal entry text with formatted content blocks.</text>
+        <rect x="882" y="310" width="250" height="176" rx="22" class="surface-accent" />
+        <text x="906" y="354" class="mini-label">Images Section</text>
+        <rect x="156" y="506" width="330" height="96" rx="18" class="surface-muted" />
+        <text x="180" y="548" class="mini-label">Tags Display</text>
+        <rect x="770" y="518" width="362" height="84" rx="18" class="surface-muted" />
+        <text x="794" y="550" class="mini-label">Edit / Delete Buttons</text>
+
+        <path d="M 1112 88 C 1112 66, 1128 64, 1158 64" class="line" marker-end="url(#arrow-view)" />
+        <path d="M 260 190 C 260 168, 250 160, 222 156" class="line" marker-end="url(#arrow-view)" />
+        <path d="M 520 310 C 560 290, 618 286, 710 286" class="line" marker-end="url(#arrow-view)" />
+        <path d="M 1088 310 C 1098 286, 1100 284, 1108 262" class="line" marker-end="url(#arrow-view)" />
+        <path d="M 330 506 C 350 488, 376 482, 416 478" class="line" marker-end="url(#arrow-view)" />
+        <path d="M 824 518 C 832 492, 836 482, 836 468" class="line" marker-end="url(#arrow-view)" />
+
+        <rect x="960" y="58" width="174" height="42" rx="18" class="label-chip" />
+        <text x="978" y="84" class="label-text">Profile Menu</text>
+        <rect x="156" y="184" width="136" height="42" rx="18" class="label-chip" />
+        <text x="174" y="210" class="label-text">Entry Title</text>
+        <rect x="384" y="258" width="152" height="42" rx="18" class="label-chip" />
+        <text x="402" y="284" class="label-text">Entry Content</text>
+        <rect x="926" y="270" width="154" height="42" rx="18" class="label-chip" />
+        <text x="944" y="296" class="label-text">Images Section</text>
+        <rect x="156" y="612" width="142" height="42" rx="18" class="label-chip" />
+        <text x="174" y="638" class="label-text">Tags Display</text>
+        <rect x="850" y="640" width="170" height="42" rx="18" class="label-chip" />
+        <text x="868" y="666" class="label-text">Action Buttons</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Entry Content:</strong> Full article-style reading area for the selected journal post.</div>
+        <div class="legend-item"><strong>Images Section:</strong> Visual attachments that support the written memory.</div>
+        <div class="legend-item"><strong>Action Buttons:</strong> Controls for editing or removing the entry.</div>
+      </div>
+    </section>
+
+    <!-- PROFILE SETTINGS -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>5. Profile Settings Page</h2>
+        <p>Shows <strong>edit-profile.html</strong> with profile information, input fields, theme controls, and the save action.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated profile settings mockup">
+        <defs>
+          <marker id="arrow-profile" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="388" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / edit-profile.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="92" y="184" width="1096" height="492" rx="32" class="surface soft-shadow" />
+        <rect x="124" y="218" width="512" height="418" rx="28" class="surface-muted" />
+        <rect x="660" y="218" width="496" height="418" rx="28" class="surface-muted" />
+        <text x="152" y="264" class="section-title">Profile Information</text>
+        <text x="152" y="292" class="section-copy">Update your display name and email address.</text>
+        <rect x="152" y="324" width="452" height="58" rx="16" class="surface" />
+        <rect x="152" y="400" width="452" height="58" rx="16" class="surface" />
+        <text x="174" y="358" class="mini-label">Input Fields</text>
+        <text x="174" y="434" class="mini-label">Input Fields</text>
+
+        <text x="688" y="264" class="section-title">Theme Settings</text>
+        <text x="688" y="292" class="section-copy">Choose the visual mode for the whole app.</text>
+        <rect x="688" y="324" width="420" height="160" rx="22" class="surface-accent" />
+        <text x="712" y="362" class="mini-label">Theme Settings</text>
+        <rect x="712" y="386" width="138" height="70" rx="18" class="surface" />
+        <rect x="868" y="386" width="138" height="70" rx="18" class="surface" />
+        <rect x="1024" y="386" width="62" height="70" rx="18" class="surface" />
+        <text x="738" y="426" class="mini-muted">Light</text>
+        <text x="894" y="426" class="mini-muted">Dark</text>
+
+        <rect x="688" y="514" width="180" height="48" rx="24" class="surface-accent" />
+        <text x="722" y="544" class="mini-label">Save Changes</text>
+
+        <path d="M 1112 88 C 1112 66, 1128 64, 1158 64" class="line" marker-end="url(#arrow-profile)" />
+        <path d="M 410 184 C 410 162, 372 156, 316 156" class="line" marker-end="url(#arrow-profile)" />
+        <path d="M 388 324 C 388 308, 388 302, 388 296" class="line" marker-end="url(#arrow-profile)" />
+        <path d="M 388 400 C 388 384, 388 378, 388 372" class="line" marker-end="url(#arrow-profile)" />
+        <path d="M 864 324 C 864 304, 840 296, 804 286" class="line" marker-end="url(#arrow-profile)" />
+        <path d="M 870 514 C 856 498, 842 490, 822 484" class="line" marker-end="url(#arrow-profile)" />
+
+        <rect x="960" y="58" width="174" height="42" rx="18" class="label-chip" />
+        <text x="978" y="84" class="label-text">Profile Menu</text>
+        <rect x="142" y="166" width="188" height="42" rx="18" class="label-chip" />
+        <text x="160" y="192" class="label-text">Profile Information</text>
+        <rect x="164" y="318" width="126" height="42" rx="18" class="label-chip" />
+        <text x="182" y="344" class="label-text">Input Fields</text>
+        <rect x="702" y="304" width="148" height="42" rx="18" class="label-chip" />
+        <text x="720" y="330" class="label-text">Theme Settings</text>
+        <rect x="778" y="552" width="166" height="42" rx="18" class="label-chip" />
+        <text x="796" y="578" class="label-text">Save Changes</text>
+        <rect x="912" y="166" width="128" height="42" rx="18" class="label-chip" />
+        <text x="930" y="192" class="label-text">Navbar</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Profile Information:</strong> Section for identity and contact details.</div>
+        <div class="legend-item"><strong>Theme Settings:</strong> Appearance controls for the light or dark mode selection.</div>
+        <div class="legend-item"><strong>Save Changes:</strong> Primary action that stores the updates locally.</div>
+      </div>
+    </section>
+
+    <!-- TRACKER PAGE -->
+    <section class="screen">
+      <div class="screen-header">
+        <h2>6. Tracker Page</h2>
+        <p>Shows the shared layout used by the habit trackers such as mood, water, gym, study, period, expense, and gratitude.</p>
+      </div>
+      <svg class="browser-shell" viewBox="0 0 1280 760" role="img" aria-label="Annotated tracker page mockup">
+        <defs>
+          <marker id="arrow-tracker" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="#8b7056" />
+          </marker>
+        </defs>
+
+        <rect x="26" y="20" width="1228" height="712" rx="28" class="browser-window soft-shadow" />
+        <rect x="26" y="20" width="1228" height="44" rx="28" class="browser-top" />
+        <circle cx="56" cy="42" r="7" class="window-dot-red" />
+        <circle cx="80" cy="42" r="7" class="window-dot-yellow" />
+        <circle cx="104" cy="42" r="7" class="window-dot-green" />
+        <rect x="162" y="30" width="386" height="24" rx="12" class="surface-muted" />
+        <text x="182" y="47" class="mini-muted">memory-journal.local / tracker-page.html</text>
+
+        <rect x="54" y="86" width="1170" height="64" rx="18" class="nav-bar soft-shadow" />
+        <text x="82" y="124" class="mini-label">Memory Journal</text>
+        <rect x="1080" y="96" width="116" height="42" rx="21" class="surface-accent" />
+        <text x="1104" y="121" class="mini-label">Profile Menu</text>
+
+        <rect x="54" y="176" width="1170" height="112" rx="28" class="surface soft-shadow" />
+        <text x="84" y="220" class="section-title">Tracker Title</text>
+        <text x="84" y="248" class="section-copy">Each tracker uses the same structure: input, stats, chart, and history.</text>
+        <rect x="962" y="206" width="226" height="52" rx="18" class="surface-accent" />
+        <text x="988" y="238" class="mini-label">Input Section</text>
+
+        <rect x="54" y="308" width="1170" height="118" rx="28" class="surface soft-shadow" />
+        <rect x="84" y="334" width="250" height="64" rx="18" class="surface-muted" />
+        <rect x="350" y="334" width="250" height="64" rx="18" class="surface-muted" />
+        <rect x="616" y="334" width="250" height="64" rx="18" class="surface-muted" />
+        <rect x="882" y="334" width="306" height="64" rx="18" class="surface-muted" />
+        <text x="110" y="372" class="mini-label">Stats Summary</text>
+
+        <rect x="54" y="444" width="724" height="244" rx="28" class="surface soft-shadow" />
+        <rect x="84" y="472" width="664" height="182" rx="22" class="surface-accent" />
+        <text x="110" y="518" class="mini-label">Chart / Graph Area</text>
+        <text x="110" y="546" class="section-copy">A chart or progress visualization for the selected habit.</text>
+
+        <rect x="806" y="444" width="418" height="244" rx="28" class="surface soft-shadow" />
+        <text x="836" y="484" class="mini-label">History List</text>
+        <rect x="836" y="504" width="358" height="42" rx="14" class="surface-muted" />
+        <rect x="836" y="554" width="358" height="42" rx="14" class="surface-muted" />
+        <rect x="836" y="604" width="358" height="42" rx="14" class="surface-muted" />
+
+        <path d="M 1112 88 C 1112 66, 1128 64, 1158 64" class="line" marker-end="url(#arrow-tracker)" />
+        <path d="M 952 206 C 944 192, 942 182, 944 170" class="line" marker-end="url(#arrow-tracker)" />
+        <path d="M 500 308 C 500 288, 480 282, 452 278" class="line" marker-end="url(#arrow-tracker)" />
+        <path d="M 682 444 C 682 430, 670 420, 652 414" class="line" marker-end="url(#arrow-tracker)" />
+        <path d="M 1108 444 C 1108 432, 1100 420, 1088 414" class="line" marker-end="url(#arrow-tracker)" />
+        <path d="M 420 670 C 420 646, 438 636, 462 632" class="line" marker-end="url(#arrow-tracker)" />
+
+        <rect x="960" y="58" width="174" height="42" rx="18" class="label-chip" />
+        <text x="978" y="84" class="label-text">Profile Menu</text>
+        <rect x="176" y="166" width="144" height="42" rx="18" class="label-chip" />
+        <text x="194" y="192" class="label-text">Tracker Title</text>
+        <rect x="990" y="164" width="146" height="42" rx="18" class="label-chip" />
+        <text x="1008" y="190" class="label-text">Input Section</text>
+        <rect x="412" y="304" width="154" height="42" rx="18" class="label-chip" />
+        <text x="430" y="330" class="label-text">Stats Summary</text>
+        <rect x="404" y="682" width="166" height="42" rx="18" class="label-chip" />
+        <text x="422" y="708" class="label-text">Chart Area</text>
+        <rect x="954" y="682" width="130" height="42" rx="18" class="label-chip" />
+        <text x="972" y="708" class="label-text">History</text>
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><strong>Input Section:</strong> Logging controls for the selected tracker.</div>
+        <div class="legend-item"><strong>Stats Summary:</strong> Totals, streaks, averages, and other key measurements.</div>
+        <div class="legend-item"><strong>History List:</strong> Timeline of previously recorded tracker data.</div>
+      </div>
+    </section>
+
+    <p class="footer-note">Naming standard used across the guide: Navbar, Page Header, Main Content Area, Sidebar Navigation, Stats Summary, Entry Card, and Action Buttons.</p>
+  </div>
+</body>
+</html>

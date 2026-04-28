@@ -1,0 +1,416 @@
+/**
+ * APP SHELL - Layout & Structure
+ * Handles: Navigation, Main layout, Container sizing, Responsive grid
+ * Depends on: design-system.css
+ */
+
+/* ========================================
+   BASE LAYOUT
+   ======================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+/* ========================================
+   CONTAINER & MAX-WIDTH
+   ======================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--max-container-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding);
+  box-sizing: border-box;
+}
+
+.container-fluid {
+  width: 100%;
+  padding: 0 var(--container-padding);
+  box-sizing: border-box;
+}
+
+main {
+  padding: var(--space-8) var(--container-padding);
+  min-height: calc(100vh - 120px);
+}
+
+/* ========================================
+   NAVBAR / NAVIGATION
+   ======================================== */
+
+.site-nav {
+  position: sticky;
+  top: var(--space-4);
+  z-index: var(--z-sticky);
+  margin: var(--space-4) auto 0;
+  padding: var(--space-4) var(--space-6);
+  max-width: var(--max-container-width);
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  box-shadow: var(--shadow-md);
+  transition: background-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.site-nav:hover {
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ========================================
+   NAVIGATION FLEX LAYOUT
+   ======================================== */
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: var(--space-6);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current='page'],
+.nav-links a.active {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+/* Logo */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  text-decoration: none;
+  margin-right: var(--space-8);
+}
+
+.logo:hover {
+  color: var(--color-primary);
+}
+
+/* ========================================
+   PROFILE DROPDOWN
+   ======================================== */
+
+.profile-item {
+  margin-left: auto;
+  position: relative;
+}
+
+.profile-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.profile-trigger:hover {
+  color: var(--color-primary);
+  background: var(--bg-hover);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: var(--space-2);
+  min-width: 180px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  list-style: none;
+  padding: var(--space-2) 0;
+  z-index: var(--z-dropdown);
+  display: none;
+}
+
+.profile-dropdown.show {
+  display: block;
+}
+
+.profile-dropdown a,
+.profile-dropdown button {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.profile-dropdown a:hover,
+.profile-dropdown button:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.profile-logout {
+  color: var(--color-danger);
+}
+
+.profile-logout:hover {
+  background: var(--color-danger-light);
+  color: var(--color-danger-dark);
+}
+
+/* ========================================
+   RESPONSIVE NAVBAR
+   ======================================== */
+
+.menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--text-primary);
+  z-index: var(--z-fixed);
+}
+
+.menu-toggle-bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: currentColor;
+  margin: 6px 0;
+  transition: all var(--transition-fast);
+}
+
+/* ========================================
+   MAIN CONTENT GRID
+   ======================================== */
+
+/* Two-column layout for sidebar pages */
+.app-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.app-layout.with-sidebar {
+  grid-template-columns: 1fr 300px;
+}
+
+.app-main {
+  min-width: 0;
+}
+
+.app-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ========================================
+   SECTIONS & CARDS
+   ======================================== */
+
+section + section {
+  margin-top: var(--space-8);
+}
+
+.section-container {
+  padding: var(--space-6);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: background-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.section-container:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.section-title {
+  margin: 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   GRID SYSTEM
+   ======================================== */
+
+.grid {
+  display: grid;
+  gap: var(--grid-gap);
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+footer,
+.app-footer,
+.auth-footer-section {
+  margin-top: var(--space-16);
+  padding: var(--space-8) var(--container-padding);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+  border-top: 1px solid var(--border-color);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+  .site-nav {
+    top: 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    gap: var(--space-2);
+    z-index: var(--z-fixed);
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  .app-layout.with-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .app-sidebar {
+    order: -1;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: var(--space-4);
+  }
+
+  .site-nav {
+    margin: var(--space-2) auto;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .section-container {
+    padding: var(--space-4);
+  }
+
+  .logo {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

@@ -1,0 +1,229 @@
+/**
+ * CSS REFACTOR GUIDE - Memory Journal Design System
+ * 
+ * NEW FILE STRUCTURE:
+ * ==================
+ * 
+ * 1. design-system.css (FOUNDATION)
+ *    - Color tokens (light/dark themes)
+ *    - Typography variables
+ *    - Spacing system (8px grid)
+ *    - Border radius scale
+ *    - Transitions & animations
+ *    - Breakpoints
+ *    - Z-index scale
+ * 
+ * 2. style.css (BASE RESET & TYPOGRAPHY)
+ *    - CSS Reset
+ *    - Typography base styles
+ *    - Element defaults (links, tables, etc.)
+ *    - Scrollbar styling
+ *    - Print styles
+ * 
+ * 3. app-shell.css (LAYOUT & STRUCTURE)
+ *    - Main layout grid
+ *    - Navigation bar (navbar)
+ *    - Containers & max-width
+ *    - Responsive grid system
+ *    - Footer
+ *    - Responsive breakpoints
+ * 
+ * 4. ui-polish.css (REUSABLE COMPONENTS)
+ *    - Buttons (primary, secondary, danger, outline, ghost)
+ *    - Forms & inputs
+ *    - Cards
+ *    - Badges & tags
+ *    - Modals & dialogs
+ *    - Dropdowns
+ *    - Alerts & toasts
+ *    - Typography utilities
+ *    - Micro-interactions
+ * 
+ * OPTIONAL SPECIALIZED FILES:
+ * ===========================
+ * 
+ * auth-styles.css
+ * - Login/Register pages
+ * - Authentication-specific components
+ * 
+ * editor.css
+ * - Rich text editor styling
+ * - Journal entry creation
+ * 
+ * profile.css
+ * - Profile page layout
+ * - Settings panels
+ * 
+ * tracker-base.css
+ * - Shared tracker components
+ * - Stats cards
+ * - Charts & graphs
+ * 
+ * Individual tracker CSS (import tracker-base.css first):
+ * - mood-tracker.css
+ * - water-tracker.css
+ * - gym-tracker.css
+ * - study-tracker.css
+ * - period-tracker.css
+ * - expense-tracker.css
+ * - gratitude-tracker.css
+ * 
+ * ==========================================
+ * USAGE GUIDE
+ * ==========================================
+ * 
+ * 1. UPDATE HTML HEAD (ALL PAGES)
+ *    ============================
+ * 
+ *    <link rel="stylesheet" href="css/design-system.css">
+ *    <link rel="stylesheet" href="css/style.css">
+ *    <link rel="stylesheet" href="css/app-shell.css">
+ *    <link rel="stylesheet" href="css/ui-polish.css">
+ *    
+ *    <!-- Page-specific stylesheets -->
+ *    <link rel="stylesheet" href="css/auth-styles.css">      <!-- Login/Register -->
+ *    <link rel="stylesheet" href="css/editor.css">          <!-- New entry page -->
+ *    <link rel="stylesheet" href="css/profile.css">         <!-- Edit profile -->
+ *    <link rel="stylesheet" href="css/tracker-base.css">    <!-- All trackers -->
+ * 
+ * 2. USING CSS VARIABLES
+ *    ===================
+ * 
+ *    Colors:
+ *    --color-primary
+ *    --color-secondary
+ *    --color-success
+ *    --color-danger
+ *    --color-warning
+ *    
+ *    Backgrounds:
+ *    --bg-primary (main background)
+ *    --bg-secondary (cards, sections)
+ *    --bg-tertiary (hover states)
+ *    --bg-hover
+ *    
+ *    Text:
+ *    --text-primary (main text)
+ *    --text-secondary (secondary text)
+ *    --text-tertiary (muted text)
+ *    
+ *    Spacing:
+ *    --space-1 (4px)
+ *    --space-2 (8px)
+ *    --space-4 (16px)
+ *    --space-6 (24px)
+ *    --space-8 (32px)
+ *    
+ *    Shadows:
+ *    --shadow-sm (small)
+ *    --shadow-md (medium)
+ *    --shadow-lg (large)
+ *    
+ *    Transitions:
+ *    --transition-fast (150ms)
+ *    --transition-base (250ms)
+ *    --transition-slow (350ms)
+ * 
+ * 3. COMMON COMPONENTS USAGE
+ *    ========================
+ * 
+ *    BUTTONS:
+ *    <button class="btn btn-primary">Primary Button</button>
+ *    <button class="btn btn-secondary">Secondary</button>
+ *    <button class="btn btn-danger">Delete</button>
+ *    <button class="btn btn-outline">Outline</button>
+ *    <button class="btn btn-sm">Small</button>
+ *    <button class="btn btn-lg">Large</button>
+ *    <button class="icon-btn"><i class="fas fa-star"></i></button>
+ * 
+ *    CARDS:
+ *    <div class="card">
+ *      <div class="card-header">
+ *        <h2>Title</h2>
+ *      </div>
+ *      <div class="card-body">
+ *        Content here
+ *      </div>
+ *      <div class="card-footer">
+ *        <button class="btn btn-primary">Action</button>
+ *      </div>
+ *    </div>
+ * 
+ *    FORMS:
+ *    <form>
+ *      <div class="form-group">
+ *        <label class="label required">Name</label>
+ *        <input type="text" placeholder="Enter name">
+ *      </div>
+ *      <button type="submit" class="btn btn-primary">Submit</button>
+ *    </form>
+ * 
+ *    BADGES:
+ *    <span class="badge badge-primary">New</span>
+ *    <span class="badge badge-success">Active</span>
+ *    <span class="badge badge-danger">Alert</span>
+ * 
+ *    ALERTS:
+ *    <div class="alert alert-success">
+ *      <i class="fas fa-check-circle"></i>
+ *      Success message
+ *    </div>
+ * 
+ * 4. THEME SWITCHING
+ *    ===============
+ *    JavaScript adds [data-theme="dark"] to <html>
+ *    All CSS variables automatically update
+ *    No additional CSS needed per theme!
+ * 
+ * 5. RESPONSIVE BREAKPOINTS
+ *    ======================
+ *    Mobile First Approach:
+ *    
+ *    320px+     Base styles
+ *    640px+     @media (min-width: 640px)
+ *    768px+     @media (min-width: 768px)
+ *    1024px+    @media (min-width: 1024px)
+ *    1280px+    @media (min-width: 1280px)
+ * 
+ *    Use variables:
+ *    @media (max-width: var(--breakpoint-md)) {
+ *      // Tablet styles
+ *    }
+ * 
+ * ==========================================
+ * MIGRATION CHECKLIST
+ * ==========================================
+ * 
+ * □ Replace design-system.css with new version
+ * □ Replace style.css with new version
+ * □ Replace app-shell.css with new version
+ * □ Replace ui-polish.css with new version
+ * □ Update HTML <head> stylesheet links on all pages
+ * □ Remove old CSS files not needed anymore
+ * □ Test light theme
+ * □ Test dark theme
+ * □ Test responsive on mobile (640px)
+ * □ Test responsive on tablet (768px)
+ * □ Test on all browsers
+ * □ Update tracker CSS files
+ * □ Update auth-styles.css
+ * □ Update editor.css
+ * □ Update profile.css
+ * 
+ * ==========================================
+ * BENEFITS OF THIS DESIGN SYSTEM
+ * ==========================================
+ * 
+ * ✓ Unified color palette with light/dark themes
+ * ✓ Consistent spacing using 8px grid
+ * ✓ Reusable component classes
+ * ✓ Smooth transitions & micro-interactions
+ * ✓ Better accessibility with focus states
+ * ✓ Mobile-first responsive design
+ * ✓ Maintainable and scalable structure
+ * ✓ No build tools required (vanilla CSS)
+ * ✓ Performance optimized
+ * ✓ Professional, modern appearance
+ * 
+ * ==========================================
+ */

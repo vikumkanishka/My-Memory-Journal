@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Journal | Habit Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/ui-polish.css">
+  <link rel="stylesheet" href="css/app-shell.css">
+  <link rel="stylesheet" href="css/decorative-elements.css">
+  <link rel="stylesheet" href="habit-tracker.css">
+</head>
+<body class="habit-tracker-page">
+  <nav class="site-nav" aria-label="Primary">
+    <a href="index.html" class="logo">📔 Memory Journal</a>
+    <button
+      id="menu-toggle"
+      class="menu-toggle"
+      type="button"
+      aria-label="Open navigation menu"
+      aria-controls="primary-navigation"
+      aria-expanded="false"
+    >
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+      <span class="menu-toggle-bar" aria-hidden="true"></span>
+    </button>
+    <ul id="primary-navigation" class="nav-links" role="list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="new.html">Create Journal</a></li>
+      <li><a href="entries.html">My Entries</a></li>
+      <li><a href="mood-tracker.html">Mood Tracker</a></li>
+      <li><a href="water-tracker.html">Water Tracker</a></li>
+      <li><a href="gym-tracker.html">Gym Tracker</a></li>
+      <li><a href="study-tracker.html">Study Tracker</a></li>
+      <li><a href="period-tracker.html">Period Tracker</a></li>
+      <li><a href="expense-tracker.html">Expense Tracker</a></li>
+      <li><a href="habit-tracker.html" class="active" aria-current="page">Habit Tracker</a></li>
+      <li><a href="gratitude-tracker.html">Gratitude Tracker</a></li>
+      <li class="profile-item">
+        <button
+          id="profile-menu-button"
+          class="profile-trigger"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-controls="profile-dropdown"
+        >
+          <span id="profile-menu-label">Profile</span>
+          <i class="fas fa-chevron-down" aria-hidden="true"></i>
+        </button>
+        <ul id="profile-dropdown" class="profile-dropdown" role="menu" aria-label="Profile options">
+          <li role="none"><a role="menuitem" href="edit-profile.html">Edit Profile</a></li>
+          <li role="none"><a role="menuitem" href="edit-profile.html#memory-wall" aria-label="Choose Memory Wall (Themes)"><i class="fas fa-palette" aria-hidden="true"></i></a></li>
+          <li role="none"><button type="button" class="profile-logout" role="menuitem" id="profile-logout-button">Logout</button></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>
+
+  <main class="habit-layout">
+    <section class="habit-hero section-container" aria-labelledby="habit-title">
+      <p class="eyebrow">Digital Bullet Journal</p>
+      <h1 id="habit-title" class="section-title">Habit Tracker Journal</h1>
+      <p class="intro-copy">Build a calm, visual habit system for your day, then use the calendar and streaks to keep momentum going.</p>
+    </section>
+
+    <section class="habit-summary-grid section-container" aria-label="Habit overview">
+      <article class="habit-summary-card">
+        <p class="summary-label">Today</p>
+        <p class="summary-value" id="todayProgressValue">0/0</p>
+        <p class="summary-note" id="todayProgressNote">No habits yet.</p>
+      </article>
+      <article class="habit-summary-card">
+        <p class="summary-label">Consistency Streak</p>
+        <p class="summary-value" id="streakValue">0</p>
+        <p class="summary-note" id="streakNote">Track something today to start your streak.</p>
+      </article>
+      <article class="habit-summary-card">
+        <p class="summary-label">Active Habits</p>
+        <p class="summary-value" id="habitCountValue">0</p>
+        <p class="summary-note" id="habitCountNote">Create a few routines to begin.</p>
+      </article>
+      <article class="habit-summary-card">
+        <p class="summary-label">This Month</p>
+        <p class="summary-value" id="monthRateValue">0%</p>
+        <p class="summary-note" id="monthRateNote">Completion across all tracked days.</p>
+      </article>
+    </section>
+
+    <section class="habit-dashboard" aria-label="Habit tracking workspace">
+      <article class="habit-card habit-today-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h2>Today&apos;s Habits</h2>
+          </div>
+          <div class="date-toolbar">
+            <button id="prevDayBtn" class="icon-pill" type="button" aria-label="Previous day"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+            <button id="todayBtn" class="icon-pill today-pill" type="button">Today</button>
+            <button id="nextDayBtn" class="icon-pill" type="button" aria-label="Next day"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div class="selected-date-bar">
+          <p id="selectedDateLabel" class="selected-date-label">Loading date…</p>
+          <p id="selectedDateStatus" class="selected-date-status">Choose a date from the calendar or use the arrows above.</p>
+        </div>
+        <div id="habitList" class="habit-list" aria-live="polite"></div>
+        <p id="habitEmpty" class="empty-copy">Add your first habit to start tracking.</p>
+      </article>
+
+      <article class="habit-card habit-form-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Manage</p>
+            <h2 id="habitFormHeading">Add Habit</h2>
+          </div>
+          <p class="card-subtitle">Create simple routines you want to repeat daily.</p>
+        </div>
+        <form id="habitForm" class="habit-form">
+          <div class="form-row">
+            <label class="form-field">
+              <span>Habit name</span>
+              <input id="habitName" type="text" maxlength="40" placeholder="Drink Water" required>
+            </label>
+            <label class="form-field compact">
+              <span>Icon</span>
+              <input id="habitIcon" type="text" maxlength="4" placeholder="💧" aria-label="Habit icon">
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="form-field">
+              <span>Focus note</span>
+              <input id="habitNote" type="text" maxlength="80" placeholder="2 liters by bedtime">
+            </label>
+            <label class="form-field compact">
+              <span>Color</span>
+              <input id="habitColor" type="color" value="#4f8cff" aria-label="Habit color">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button id="saveHabitBtn" class="btn btn-primary" type="submit">Add Habit</button>
+            <button id="cancelEditBtn" class="btn btn-secondary" type="button" hidden>Cancel Edit</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="habit-card habit-motivation-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Motivation</p>
+            <h2>Daily Quote</h2>
+          </div>
+        </div>
+        <blockquote class="quote-block">
+          <p id="quoteText" class="quote-text"></p>
+          <footer id="quoteSource" class="quote-source"></footer>
+        </blockquote>
+      </article>
+
+      <article class="habit-card habit-calendar-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Calendar View</p>
+            <h2 id="calendarMonthLabel">Month</h2>
+          </div>
+          <div class="date-toolbar">
+            <button id="prevMonthBtn" class="icon-pill" type="button" aria-label="Previous month"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+            <button id="nextMonthBtn" class="icon-pill" type="button" aria-label="Next month"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <div class="calendar-legend" aria-label="Calendar legend">
+          <span><i class="legend-dot legend-complete" aria-hidden="true"></i> Complete</span>
+          <span><i class="legend-dot legend-missed" aria-hidden="true"></i> Missed</span>
+          <span><i class="legend-dot legend-empty" aria-hidden="true"></i> Not tracked</span>
+        </div>
+        <div id="habitCalendar" class="habit-calendar" aria-live="polite"></div>
+      </article>
+
+      <article class="habit-card habit-stats-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Statistics</p>
+            <h2>Progress by Habit</h2>
+          </div>
+        </div>
+        <div id="habitStatsList" class="habit-stats-list" aria-live="polite"></div>
+      </article>
+
+      <article class="habit-card habit-settings-card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Settings</p>
+            <h2>Display and Data</h2>
+          </div>
+        </div>
+        <div class="settings-stack">
+          <button id="theme-toggle" class="btn btn-secondary theme-toggle-btn" type="button">
+            <i class="fas fa-moon" aria-hidden="true"></i>
+            <span>Toggle Theme</span>
+          </button>
+          <button id="resetDataBtn" class="btn btn-danger" type="button">Reset All Habit Data</button>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>&copy; 2026 Memory Journal. Small habits, steady progress.</p>
+  </footer>
+
+  <script src="navbar.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="habit-tracker.js"></script>
+</body>
+</html>

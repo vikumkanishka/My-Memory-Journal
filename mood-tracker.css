@@ -1176,7 +1176,3 @@ small {
 .opacity-50 {
   opacity: 0.5;
 }
-
-.debug {
-  border: 1px solid red;
-}

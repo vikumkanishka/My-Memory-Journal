@@ -560,59 +560,7 @@ document.addEventListener('DOMContentLoaded', function() {
     passwordInput.addEventListener('input', updatePasswordStrength);
   }
   
-  // Check for logged-in status
-  checkAuthStatus();
 });
-
-/**
- * Check and handle authentication status messages
- */
-function checkAuthStatus() {
-  const params = new URLSearchParams(window.location.search);
-  
-  // Check if just registered
-  if (params.get('registered') === 'true') {
-    console.log('Registration successful! You can now log in.');
-  }
-  
-  // Check if just logged out
-  if (params.get('loggedOut') === 'true') {
-    console.log('You have been logged out.');
-  }
-  
-  // Check if already logged in
-  if (params.get('loggedIn') === 'true') {
-    console.log('Login successful! Welcome back.');
-  }
-}
-
-// ============================================
-// DEBUGGING UTILITIES (Remove in production)
-// ============================================
-
-/**
- * Debug: View all stored users (console only)
- */
-function debugViewUsers() {
-  console.log('Stored Users:', getUsersFromStorage());
-}
-
-/**
- * Debug: View current user (console only)
- */
-function debugViewCurrentUser() {
-  console.log('Current User:', getCurrentUser());
-}
-
-/**
- * Debug: Clear all users and reset storage
- */
-function debugResetStorage() {
-  localStorage.removeItem(USERS_STORAGE_KEY);
-  localStorage.removeItem(CURRENT_USER_KEY);
-  initializeStorage();
-  console.log('Storage reset. Demo user re-initialized.');
-}
 
 // Export for use with Node.js/Express (if needed)
 if (typeof module !== 'undefined' && module.exports) {
